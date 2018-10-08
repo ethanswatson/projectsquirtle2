@@ -1,5 +1,4 @@
-Squirtle Sqaud
-
+Squirtle Squad
 
 
 
