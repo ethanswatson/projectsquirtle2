@@ -6,7 +6,7 @@ from your apt repositories
 
 sudo apt install python3.x-dev redis # replace x with version number. redis might be redis.server? not sure yet
 
-pip install wheel setuptools channels channels-redis
+pip install -r requirements.txt
 
 
 
