@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
+    'quizapp.apps.QuizappConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -68,6 +70,20 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'projectsquirtle.wsgi.application'
+
+#This application is added to make channels work. Channels completly takes over the routing and directing in django. It will direct regular http request to urls like normal, and redirects websockets to routing.py
+ASGI_APPLICATION = 'projectsquirtle.routing.application'
+
+
+#This lets websockets pass messages to eachother or to their group. In the chat app the two tabs were in the group 'lobby' or whatever room name you put them in, and they would send their message to eachother.
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 
 # Database
