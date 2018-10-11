@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang=en>
+
+<head>
+    <title>Quiz App</title>
+    {% load static %}
+        <link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/style.css' %}"/>
+</head>
+            
+<body>
+
+    <header>
+        Quiz App
+    </header>
+
+    <p>This is a test for creating a user.</p>
+
+
+    <form action = "", method='post', style = 'text-align: center;'>
+        {% csrf_token %}
+        {% if error %}
+            <p>{{error}}</p>
+        {% endif %}
+        <div>
+            <label for = 'username'>Name</label>
+            <input id = 'username' name = 'namearea' type = 'text'>
+        </div>
+        <div>
+            <label for ='password'>Password</label>
+            <input id = 'password' name = 'passwordarea' type = 'password'>
+        </div>
+        <p>
+            <button type = "submit">
+                Submit
+            </button>
+        </p>
+    </form>
+</body>
+
+
+</html>
+    

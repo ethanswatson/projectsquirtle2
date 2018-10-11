@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang=en>
+
+<head>
+    <title>Quiz App</title>
+    {% load static %}
+        <link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/style.css' %}"/>
+</head>
+            
+<body>
+
+    <header>
+        Quiz App Login  
+    </header>
+
+
+    <p>This is a test for loging in a user.</p>
+
+    {% if form.errors %}
+    <p>Your username and password didn't match. Please try again.</p>
+    {% endif %}
+
+    <form action = "", method='post', style = 'text-align: center;'>
+        {% csrf_token %}
+        <!--These form objects are built into django, The login view looks for the username field and password field. which we pull from it's built in form objects.--> 
+        <p>{{ form.username.label_tag }}
+        {{ form.username }}</p>
+        
+        <p>{{ form.password.label_tag }}
+        {{ form.password }}</p>
+        <p>
+            <button type = "submit">
+                Login
+            </button>
+        </p>
+    </form>
+</body>
+
+
+</html>
+    

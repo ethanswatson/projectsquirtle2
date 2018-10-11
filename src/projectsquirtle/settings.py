@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'channels',
-    'quizapp.apps.QuizappConfig',
+    'quizapp',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
