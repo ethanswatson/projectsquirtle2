@@ -1,0 +1,12 @@
+body{
+	background-image: URL("../images/background.jpg");
+	background-repeat: no-repeat;
+	background-size: 100%;
+	text-align: center;
+	text-shadow: 1px 1px 10px white;
+}
+
+p{
+	text-align: center;
+	font-size: 25px;
+}

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang=en>
+    
+<head>
+    <title>Quiz App</title>
+    {% load static %}
+        <link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/style.css' %}"/>
+</head>
+
+<header><a href="{% url 'quizapp:logout' %}"> Signout  </a></header>
+
+<body style = "text-align: center">
+    <p >This is your profile!</p>
+    <p >Thanks for logging in {{username}}!</p>
+</body>
+
+</html>
