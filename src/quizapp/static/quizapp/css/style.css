@@ -12,6 +12,8 @@ p{
 	font-size: 25px;
 }
 
+/* HEADER CSS  */
+
 .header {
     overflow: hidden;
     background-color: #CA6610;
@@ -28,7 +30,7 @@ p{
     color: #f2f2f2;
     text-align: center;
     padding: 14px 16px;
-    margin: 20px 20px 30px 40px;
+    margin: 30px 20px 30px 40px;
 	background: #10223B;
     text-decoration: none;
 	border: 1px solid #4a6899;
@@ -37,3 +39,17 @@ p{
 .header a:hover{
 	background: #294277;
 }
+
+.header img {
+    margin: 20px 20px 30px 40px;
+}
+
+/* CSS FOR HOMEPAGE BUTTONS  */
+/* TODO: change to use flexbox  */
+
+.indexWrapper{
+	text-align: center;
+	width: 100%;
+	top: ;
+}
+
