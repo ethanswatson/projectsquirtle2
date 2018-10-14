@@ -23,3 +23,27 @@ class Quiz(models.Model):
     def __str__(self):
         return self._quizName + ' - ' + self._owner.username
 
+class Answer(models.Model):
+    _text = models.CharField(50)
+    _correct = models.BooleanField()
+    _pointValue = models.IntegerField()
+    _votes = models.IntegerField()
+
+    def getText(self):
+        return self._text
+    def isCorrect(self):
+        return self._correct
+    def getPointValue(self):
+        return self._pointValue
+    def getVotes(self):
+        return self._votes
+
+    def setText(self, newText):
+        self._text = newText
+    def setCorrect(self, correct):
+        self._correct = correct
+    def setPointValue(self, newPointValue):
+        self._pointValue = newPointValue
+    def incrementVotes(self):
+        self._votes += 1
+
