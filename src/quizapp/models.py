@@ -20,3 +20,6 @@ class Quiz(models.Model):
     def setQuizDescription(self, newDescription):
         self._quizDescription = newDescription
 
+    def __str__(self):
+        return self._quizName + ' - ' + self._owner.username
+
