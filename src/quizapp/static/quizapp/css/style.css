@@ -2,11 +2,18 @@ body{
 	background-image: URL("../images/background.jpg");
 	background-repeat: no-repeat;
 	background-size: 100%;
-	text-align: center;
+
 	text-shadow: 1px 1px 10px white;
 }
 
-p{
+header{
 	text-align: center;
+	font-size: 50px;
+	font-weight: bold;
+}
+
+p{
+	
 	font-size: 25px;
 }
+

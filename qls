@@ -1,0 +1,117 @@
+[33mcommit 1e86bd4f5e720b65175da062cea21d9578904714[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: nicgib1 <nicgib1@gmail.com>
+Date:   Fri Oct 12 16:30:24 2018 -0600
+
+    added UML diagram
+
+[33mcommit 843752793ebc2c00ce6ebbf714227c87e7a0a9af[m
+Merge: 3ffcfa3 02371c9
+Author: Brady Svedin <42820208+bjsvedin@users.noreply.github.com>
+Date:   Wed Oct 10 19:36:36 2018 -0600
+
+    Merge pull request #19 from usu-cs-3450/Login
+    
+    I have implimented a basic version of djangos authentication scheme. …
+
+[33mcommit 02371c934d6690d5e97cc219600d79c4441733e1[m[33m ([m[1;31morigin/Login[m[33m)[m
+Author: Brady Svedin <brady.svedin@aggiemail.usu.edu>
+Date:   Wed Oct 10 19:35:16 2018 -0600
+
+    I have implimented a basic version of djangos authentication scheme. You can create an account, sign in, which takes you to the profile page, and sign out. also added to the static folder, the style.css and background image.
+
+[33mcommit 3ffcfa3e54c015bfe3fc20555da128fb2b4cbfa8[m
+Merge: e1a80ce 79ff168
+Author: Brady Svedin <42820208+bjsvedin@users.noreply.github.com>
+Date:   Wed Oct 10 17:38:58 2018 -0600
+
+    Merge pull request #18 from usu-cs-3450/BasicSetup
+    
+    Basic setup
+
+[33mcommit 79ff168f93d8bda5cfd95dfe3e2b28422b774006[m[33m ([m[1;31morigin/BasicSetup[m[33m)[m
+Author: Brady Svedin <brady.svedin@aggiemail.usu.edu>
+Date:   Wed Oct 10 17:35:07 2018 -0600
+
+    Set up the first basic view, and set up project to use channels.
+
+[33mcommit 864d9d9553dbee4fa4d9dccc1c54e88e587e7932[m
+Author: Brady Svedin <brady.svedin@aggiemail.usu.edu>
+Date:   Wed Oct 10 17:34:25 2018 -0600
+
+    Set up the first basic view, and set up project to use channels.
+
+[33mcommit e1a80cee376d2ddf34c1337dc97a2b96ac744271[m
+Author: Ethan Watson <ethanswatson@aggiemail.usu.edu>
+Date:   Wed Oct 10 16:19:20 2018 -0600
+
+    Updated README
+
+[33mcommit 2f5202320911164190d2d618c190aa2f4e64bd39[m
+Merge: 64944d1 3f34dc8
+Author: Ethan Watson <ethanswatson@aggiemail.usu.edu>
+Date:   Wed Oct 10 16:13:16 2018 -0600
+
+    Merge branch 'master' of github.com:usu-cs-3450/squirtle-squad
+
+[33mcommit 64944d1937f546fdc636333f17214f8fdab07624[m
+Author: Ethan Watson <ethanswatson@aggiemail.usu.edu>
+Date:   Wed Oct 10 16:12:11 2018 -0600
+
+    Setup django project
+
+[33mcommit 3f34dc87ce82f0a6276fa7712d42e68bf80ad00f[m
+Author: Brady Svedin <brady.svedin@aggiemail.usu.edu>
+Date:   Wed Oct 10 16:04:53 2018 -0600
+
+    updated README to expain what needs to be installed to get project working.
+
+[33mcommit 57cd0fa26f7b53bce4e9f8268f71d8d1f6765c01[m
+Author: Brady Svedin <brady.svedin@aggiemail.usu.edu>
+Date:   Wed Oct 10 16:03:44 2018 -0600
+
+    updated README to expain what needs to be installed to get project working.
+
+[33mcommit 3c2a9ff2041891c3c2047e32a9c88a5392bf5093[m
+Merge: 4e5a5ed 5500a7b
+Author: nicgib1 <nicgib1@gmail.com>
+Date:   Mon Oct 8 16:49:13 2018 -0600
+
+    Merge branch 'master' of https://github.com/usu-cs-3450/squirtle-squad
+
+[33mcommit 4e5a5ed302c80d3a2b6c328a89f9cab032da3fda[m
+Author: nicgib1 <nicgib1@gmail.com>
+Date:   Mon Oct 8 16:48:16 2018 -0600
+
+    added coding standards
+
+[33mcommit 5500a7b2367f126738ca996fa5832fff22161593[m
+Author: Cory Kaye <42820188+CoryKaye@users.noreply.github.com>
+Date:   Mon Oct 8 16:18:10 2018 -0600
+
+    Update README.md
+
+[33mcommit 4f2e941ac5f1d1f716139b5e3910b507513792f0[m
+Author: Cory Kaye <42820188+CoryKaye@users.noreply.github.com>
+Date:   Mon Oct 8 16:13:52 2018 -0600
+
+    Update README.md
+    
+    Added Squirtle to a code-block
+
+[33mcommit 85abe667a4d747ec67f73de78c5361109c527c09[m
+Author: Cory Kaye <42820188+CoryKaye@users.noreply.github.com>
+Date:   Mon Oct 8 16:13:05 2018 -0600
+
+    Update README.md
+
+[33mcommit 9646071956908cde40b78aedce554424e42f28ce[m
+Author: nicgib1 <nicgib1@gmail.com>
+Date:   Mon Oct 8 16:11:24 2018 -0600
+
+    tried to fix README
+
+[33mcommit ffdec72cf2731f8f1359c1167547505076834b43[m
+Author: nicgib1 <nicgib1@gmail.com>
+Date:   Mon Oct 8 16:07:22 2018 -0600
+
+    added README

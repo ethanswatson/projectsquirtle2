@@ -7,7 +7,10 @@
         <link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/style.css' %}"/>
 </head>
 
-<header><a href="{% url 'quizapp:logout' %}"> Signout  </a></header>
+<header></header>
+<nav style = "text-align: right">
+    <a href="{% url 'quizapp:logout' %}"> Signout  </a>
+</nav>
 
 <body style = "text-align: center">
     <p >This is your profile!</p>
