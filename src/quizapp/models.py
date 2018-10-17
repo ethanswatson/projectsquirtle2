@@ -23,8 +23,19 @@ class Quiz(models.Model):
     def __str__(self):
         return self._quizName + ' - ' + self._owner.username
 
+class Question(models.Model):
+    _quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    _questionText = models.CharField(max_length=200)
+    
+    def getAnswers(self):
+        return self.answer_set.all()
+    def addAnswer(self, text, correct, pointValue):
+        answer = Answer()
+
+
 class Answer(models.Model):
-    _text = models.CharField(50)
+    _question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    _text = models.CharField(max_length=50)
     _correct = models.BooleanField()
     _pointValue = models.IntegerField()
     _votes = models.IntegerField()
