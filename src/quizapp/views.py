@@ -5,6 +5,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+
+from .forms import CreateQuizForm
 # Create your views here.
 
 def index(request):
@@ -39,4 +41,25 @@ def createAccount(request):
     
     return render(request, 'quizapp/createaccount.html', {'form': form})
 
-    
+def createQuiz(request):
+    user = request.user
+    if request.method == 'POST':
+        form = CreateQuizForm(request.POST)
+        if form.is_valid():
+            quizName = form.cleaned_data.get('quizName')
+            quizDes = form.cleaned_data.get('quizDescription')
+            user.quiz_set.create(_quizName = quizName, _quizDescription = quizDes)
+            return redirect(reverse('quizapp:profile'))
+    else:
+        form = CreateQuizForm()
+    username = user.username
+    return render(request, 'quizapp/createquiz.html', {'username': username, 'form': form})
+
+def deleteQuiz(request):
+    if request.method == 'POST':
+        quizID = int(request.POST.get('quizID'))
+        quiz = request.user.quiz_set.get(id = quizID)
+        quiz.delete()
+        return redirect(reverse('quizapp:profile'))
+    else:
+        return redirect(reverse('quizapp:profile'))

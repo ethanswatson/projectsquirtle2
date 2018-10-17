@@ -7,8 +7,10 @@ app_name = 'quizapp'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('createaccount/', views.createAccount, name='createaccount'),
     path('accounts/profile/', views.profile, name='profile'),
-    path('accounts/createaccount/', views.createAccount, name='createaccount'),
+    path('accounts/createQuiz/', views.createQuiz, name='createQuiz'),
+    path('accounts/deleteQuiz/', views.deleteQuiz, name='deleteQuiz'),
     path('accounts/', include('django.contrib.auth.urls')),
 ]
 
