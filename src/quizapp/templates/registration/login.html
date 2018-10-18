@@ -4,35 +4,39 @@
 <head>
     <title>Quiz App</title>
     {% load static %}
-        <link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/style.css' %}"/>
+        <link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/login.css' %}"/>
 </head>
             
 <body>
 
     <header>
-        Quiz App Login  
+        Quiz App 
     </header>
 
+    
 
-    <p>This is a test for loging in a user.</p>
-
-    {% if form.errors %}
-    <p>Your username and password didn't match. Please try again.</p>
-    {% endif %}
-
-    <form action = "", method='post', style = 'text-align: center;'>
+    <form action = "", method='post', style = 'text-align: center;' class = 'box'>
         {% csrf_token %}
         <!--These form objects are built into django, The login view looks for the username field and password field. which we pull from it's built in form objects.--> 
-        <p>{{ form.username.label_tag }}
-        {{ form.username }}</p>
+        <h2>Login</h2>
+        <p>
+            {{ form.username.label_tag }}<br>
+            {{ form.username }}<br>
+            <a href = #>Forgot your username?</a>
+        </p>
         
-        <p>{{ form.password.label_tag }}
-        {{ form.password }}</p>
+        <p>
+            {{ form.password.label_tag }}<br>
+            {{ form.password }}<br>
+            <a href = "{% url 'quizapp:password_reset' %}">Forgot your password?</a>
+        </p>
+
         <p>
             <button type = "submit">
                 Login
             </button>
         </p>
+        <p>Don't have and account? <a href = "{% url 'quizapp:createaccount' %}">Signup</a></p>
     </form>
 </body>
 

@@ -5,13 +5,34 @@
     <title>Quiz App</title>
     {% load static %}
         <link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/style.css' %}"/>
+        <script type="text/javascript" src="{% static 'quizapp/scripts/profile.js' %}"></script>
 </head>
 
-<header><a href="{% url 'quizapp:logout' %}"> Signout  </a></header>
+<header></header>
+<nav style = "text-align: right">
+    <a href="{% url 'quizapp:logout' %}"> Signout  </a>
+     <a href = "{% url 'quizapp:password_change' %}">Change Password</a>
+
+</nav>
 
 <body style = "text-align: center">
     <p >This is your profile!</p>
     <p >Thanks for logging in {{username}}!</p>
+
+
+    <section id = 'quizlist'>
+
+        {% if quizzes %}
+        {% for quiz in quizzes %}
+        <article>
+            <p>
+                {{quiz.name}}
+            </p>
+        </article> 
+        {% endfor %}
+        {% endif %}
+    </section>
+
 </body>
 
 </html>
