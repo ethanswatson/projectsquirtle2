@@ -17,7 +17,9 @@
 		</div>
 		<div class="flex-container">
 			<div class="flex-item">Join Quiz</div>
-			<div class="flex-item">Create Quiz</div>
+			{% if request.user.is_authenticated %}
+				<div class="flex-item">Create Quiz</div>
+			{% endif %}
 		</div>
 	</div>
 </body>
