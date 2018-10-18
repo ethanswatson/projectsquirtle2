@@ -5,6 +5,7 @@ class Quiz(models.Model):
     _owner = models.ForeignKey(User, on_delete=models.CASCADE)
     _quizName = models.CharField(max_length=20)
     _quizDescription = models.TextField(null=True, default=None)
+    _dateCreated = models.DateTimeField(auto_now_add=True)
 
     def getOwner(self):
         return self._owner
@@ -12,6 +13,10 @@ class Quiz(models.Model):
         return self._quizName
     def getQuizDescription(self):
         return self._quizDescription
+    def getDateCreated(self):
+        return self._dateCreated
+    def getQuestions(self):
+        return self.question_set.all()
 
     def setOwner(self, newOwner):
         self._owner = newOwner
