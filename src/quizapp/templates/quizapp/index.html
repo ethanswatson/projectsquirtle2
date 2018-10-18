@@ -8,14 +8,17 @@
 </head>
 
 <body style = "text-align: center">
-	<div class="header"> 
-		<img src="{% static 'quizapp/images/projectSquirtle.png' %}"/>
-		<a href="quizapp/accounts/profile/">LOGIN</a>
-	</div>
-    <p >This is our homepage! Thanks for visiting!</p>
-	<div class="indexWrapper">
-		<p>Join Quiz</p>
-		<p>Create Quiz</p>
+	<div class ="wrapper">
+		<div class="flex-container">
+			<div class="header"> 
+				<img src="{% static 'quizapp/images/projectSquirtle.png' %}"/>
+				<a href="quizapp/accounts/profile/">LOGIN</a>
+			</div>
+		</div>
+		<div class="flex-container">
+			<div class="flex-item">Join Quiz</div>
+			<div class="flex-item">Create Quiz</div>
+		</div>
 	</div>
 </body>
 
