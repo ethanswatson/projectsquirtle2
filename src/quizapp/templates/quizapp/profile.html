@@ -36,10 +36,13 @@
             <p style = 'font-size: 13px'>
                 {{quiz.getQuizDescription}}
             </p>
-            <form action = "{% url 'quizapp:deleteQuiz' %}", method = 'post'>
+            <form action = "{% url 'quizapp:deleteQuiz' %}", method = 'post' style = 'display: inline'>
                 {% csrf_token %}
                 <input type='hidden' value= {{quiz.id}} name='quizID'>
                 <button type = 'submit'>Delete Quiz</button>
+            </form>
+            <form action = "{% url 'quizapp:editQuiz' quiz.id %}" style = 'display: inline'>
+                <input type = 'submit' value = "Edit Quiz">
             </form>
         </article> 
         <hr>
