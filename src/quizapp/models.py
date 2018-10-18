@@ -27,10 +27,30 @@ class Question(models.Model):
     _quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     _questionText = models.CharField(max_length=200)
     
+    def getQuestionText(self):
+        return self._questionText
+    def setQuestionText(self, newText):
+        self._questionText = newText
     def getAnswers(self):
         return self.answer_set.all()
     def addAnswer(self, text, correct, pointValue):
-        answer = Answer()
+        answer = Answer(self, text, correct, pointValue)
+        answer.save()
+    def updateAnswer(self, answerToUpdate, newText=None, newCorrect=None, newPointValue=None):
+        # TODO: verify that answerToUpdate belongs to this question
+        if newText is None:
+            newText = answerToUpdate.getText()
+        if newCorrect is None:
+            newCorrect = answerToUpdate.isCorrect()
+        if newPointValue is None:
+            newPointValue = answerToUpdate.getPointValue()
+
+        answerToUpdate.update(_text=newText, _correct=newCorrect, _pointValue=newPointValue)
+
+    def delAnswer(self, answerToDelete):
+        # TODO: Verify that answerToDelete belongs to this question
+        answerToDelete.delete()
+
 
 
 class Answer(models.Model):
