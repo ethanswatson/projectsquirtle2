@@ -18,7 +18,8 @@ def index(request):
 def profile(request):
     user = request.user
     username = user.username
-    return render(request, 'quizapp/profile.html', {'username': username})
+    quizzes = user.quiz_set.all()
+    return render(request, 'quizapp/profile.html', {'username': username, 'quizzes': quizzes})
 
 
 
@@ -38,6 +39,4 @@ def createAccount(request):
     
     return render(request, 'quizapp/createaccount.html', {'form': form})
 
-def resetDone(request):
-    return render(request, 'registration/resetdone.html')
     
