@@ -48,6 +48,7 @@ class Answer(models.Model):
     _correct = models.BooleanField()
     _pointValue = models.IntegerField(default=0)
     _votes = models.IntegerField(default=0)
+    _voters = models.ManyToManyField(User)
 
     def getQuestion(self):
         return self._question
@@ -59,6 +60,8 @@ class Answer(models.Model):
         return self._pointValue
     def getVotes(self):
         return self._votes
+    def getVoters(self):
+        return self._voters.all()
 
     def setText(self, newText):
         self._text = newText
@@ -66,8 +69,9 @@ class Answer(models.Model):
         self._correct = correct
     def setPointValue(self, newPointValue):
         self._pointValue = newPointValue
-    def incrementVotes(self):
+    def vote(self, user):
         self._votes += 1
+        self._voters.add(user)
     
     def __str__(self):
         return self._text
