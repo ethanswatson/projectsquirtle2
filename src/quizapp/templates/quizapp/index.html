@@ -12,8 +12,20 @@
 </nav>
 
 <body style = "text-align: center">
-    <p >This is our homepage! Thanks for visiting!</p>
-
+	<div class ="wrapper">
+		<div class="flex-container">
+			<div class="header"> 
+				<img src="{% static 'quizapp/images/projectSquirtle.png' %}"/>
+				<a href="quizapp/accounts/profile/">LOGIN</a>
+			</div>
+		</div>
+		<div class="flex-container">
+			<div class="flex-item">Join Quiz</div>
+			{% if request.user.is_authenticated %}
+				<div class="flex-item">Create Quiz</div>
+			{% endif %}
+		</div>
+	</div>
 </body>
 
 </html>

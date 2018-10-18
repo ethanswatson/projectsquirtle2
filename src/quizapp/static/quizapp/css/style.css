@@ -1,5 +1,6 @@
 body{
-	background-image: URL("../images/background.jpg");
+
+	background-color: #54A8B2;
 	background-repeat: no-repeat;
 	background-size: 100%;
 
@@ -17,3 +18,64 @@ p{
 	font-size: 25px;
 }
 
+.header {
+    overflow: hidden;
+    background-color: #CA6610;
+    position: fixed; 
+	min-height:100px;
+    top: 0; 
+    width: 100%;
+
+}
+
+.header a {
+    float: right;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    margin: 30px 20px 30px 40px;
+	background: #10223B;
+    text-decoration: none;
+	border: 1px solid #4a6899;
+}
+
+.header a:hover{
+	background: #294277;
+}
+
+.header img {
+    margin: 20px 20px 30px 40px;
+}
+
+/* CSS FOR HOMEPAGE BUTTONS  */
+
+.wrapper{
+	display: flex;
+	flex-flow: row wrap;
+	margin: 10%; 
+}
+
+.flex-container{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	padding: 5px;
+	text-align: center;
+	width: 100%;
+}
+.flex-item{
+	background: #10223B;
+	padding: 50px;
+
+	line-height: 150px;
+ 	color: white;
+  	font-weight: bold;
+  	font-size: 3em;
+  	text-align: center;	
+
+}
+
+.flex-item:hover{
+	background: #294277;
+}
