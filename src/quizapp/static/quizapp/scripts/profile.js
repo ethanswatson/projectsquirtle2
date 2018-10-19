@@ -10,3 +10,4 @@ accountSocket.onclose = function(e) {
 
 accountSocket.onmessage = function(e) {
 }
+

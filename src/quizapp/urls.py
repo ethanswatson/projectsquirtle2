@@ -11,6 +11,7 @@ urlpatterns = [
     path('accounts/profile/', views.profile, name='profile'),
     path('accounts/createQuiz/', views.createQuiz, name='createQuiz'),
     path('accounts/deleteQuiz/', views.deleteQuiz, name='deleteQuiz'),
+    path('accounts/deleteQuestion/', views.deleteQuestion, name='deleteQuestion'),
     path('accounts/editQuiz/quiz-<int:quizID>', views.editQuiz, name = 'editQuiz'),
     path('accounts/', include('django.contrib.auth.urls')),
 ]
