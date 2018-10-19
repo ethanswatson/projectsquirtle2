@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang=en>
+    
+<head>
+    <title>Quiz App</title>
+    {% load static %}
+        <link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/login.css' %}"/>
+</head>
+<body style = "text-align: center"></body>
+
+    <header>
+        <p>
+            Create a Quiz
+        </p>
+    </header>
+
+    <nav style = "text-align: right">
+        <a href="{% url 'quizapp:logout' %}"> Signout  &nbsp;</a>
+        <a href = "{% url 'quizapp:profile' %}">{{username}} &nbsp;</a>
+
+    </nav>
+
+
+    <main class = 'box'>
+        <article>
+            <form action = "{% url 'quizapp:createQuiz' %}", method = 'post'>
+            <section>
+                    {% csrf_token %}
+                    <article>
+                        <p>
+                            {{form.quizName.label_tag}}<br>
+                            {{form.quizName}}
+                        </p>
+                        <p>
+                            {{form.quizDescription.label_tag}}
+                            {{form.quizDescription}}
+                        </p>
+                    </article>
+                    <article>
+                            <p>
+                                {{form.quizName.help_text}}
+                            </p>
+                            <p>
+                                {{form.quizDescription.help_text}}
+                            </p>
+                    </article>
+                   
+                    
+                </section>
+                <p><button type = "submit"> Create Quiz </button></p>
+            </form>
+        </article>
+    </main>
+
+</body>
+
+</html>
