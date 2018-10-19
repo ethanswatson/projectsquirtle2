@@ -21,12 +21,12 @@ class CreateQuizForm(forms.Form):
 class CreateAnswerForm(forms.Form):
 
     answerText = forms.CharField(
-        widget = forms.TextInput(),
-        label = "Question",
+        widget = forms.TextInput(attrs = {'size': '40'}),
+        label = "Answer",
         max_length = 50,
         help_text = "Must be less than 25 characters."
     )
-    correct = forms.BooleanField(
+    isCorrect = forms.BooleanField(
         widget = forms.CheckboxInput(),
         label = "Correct Answer",    
         required = False,
@@ -34,5 +34,4 @@ class CreateAnswerForm(forms.Form):
     pointValue = forms.IntegerField(
         initial=0,
         label = "Answer Value",
-        required = False,
     )

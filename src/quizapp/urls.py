@@ -14,7 +14,8 @@ urlpatterns = [
     path('accounts/deleteQuestion/', views.deleteQuestion, name='deleteQuestion'),
     path('accounts/deleteAnswer/', views.deleteAnswer, name='deleteAnswer'),
     path('accounts/editQuiz/quiz-<int:quizID>/', views.editQuiz, name = 'editQuiz'),
-    path('accounts/editQuestion/quiz-<int:quizID>/question-<int:questionID>', views.editQuestion, name = 'editQuestion'),
+    path('accounts/editQuestion/quiz-<int:quizID>/question-<int:questionID>/', views.editQuestion, name = 'editQuestion'),
+    path('accounts/editAnswer/quiz-<int:quizID>/question-<int:questionID>/answer-<int:answerID>/', views.editAnswer, name = 'editAnswer'),
     path('accounts/', include('django.contrib.auth.urls')),
 ]
 

@@ -126,7 +126,7 @@ def editQuestion(request, quizID, questionID):
             form = CreateAnswerForm(request.POST)
             if form.is_valid():
                 answerText = form.cleaned_data.get('answerText')
-                correct = form.cleaned_data.get('correct')
+                correct = form.cleaned_data.get('isCorrect')
                 points = form.cleaned_data.get('pointValue', 0)
                 question.answer_set.create(_text = answerText, _correct = correct, _pointValue = points)
         elif 'questionButton' in request.POST:
@@ -142,3 +142,23 @@ def editQuestion(request, quizID, questionID):
 
     answers = question.answer_set.all()
     return render(request, 'quizapp/editquestion.html', {'username': user.username,'quizID':quiz.id, 'question': question, 'answers': answers, 'form': form})
+
+@login_required
+def editAnswer(request, quizID, questionID, answerID):
+    user = request.user
+    quiz = user.quiz_set.get(id = quizID)
+    question = quiz.question_set.get(id = questionID)
+    answer = question.answer_set.get(id = answerID)
+    
+    if request.method == 'POST':
+        form = CreateAnswerForm(request.POST)
+        if form.is_valid():
+            answer.setText(form.cleaned_data.get('answerText'))
+            answer.setCorrect(form.cleaned_data.get('isCorrect'))
+            answer.setPointValue(form.cleaned_data.get('pointValue', 0))
+            answer.save()           
+        return redirect(reverse('quizapp:editQuestion', kwargs={'quizID':quiz.id, 'questionID': questionID}))
+    else:
+        form = CreateAnswerForm(initial = {'answerText': answer.getText(), 'isCorrect': answer.isCorrect() , 'pointValue': answer.getPointValue()})
+
+    return render(request, 'quizapp/editanswer.html', {'username': user.username,'quizID':quiz.id, 'questionID': question.id, 'answer': answer, 'form': form})
