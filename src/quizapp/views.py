@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
-from .forms import CreateQuizForm
+from .forms import CreateQuizForm, CreateAnswerForm
 from .models import Quiz    
 # Create your views here.
 
@@ -58,7 +58,19 @@ def deleteQuestion(request):
         quiz = request.user.quiz_set.get(id = quizID)
         question = quiz.question_set.get(id = questionID)
         question.delete()
-    return redirect(reverse('quizapp:editquiz', kwargs={'quizID':quizID}))
+    return redirect(reverse('quizapp:editQuiz', kwargs={'quizID':quiz.id}))
+
+@login_required
+def deleteAnswer(request):
+    if request.method == 'POST':
+        questionID = int(request.POST.get('questionID'))
+        quizID = int(request.POST.get('quizID'))
+        answerID = int(request.POST.get('answerID'))
+        quiz = request.user.quiz_set.get(id = quizID)
+        question = quiz.question_set.get(id = questionID)
+        answer = question.answer_set.get(id = answerID)
+        answer.delete()
+    return redirect(reverse('quizapp:editQuestion', kwargs={'quizID':quiz.id, 'questionID': questionID}))
 
 @login_required
 def createQuiz(request):
@@ -95,10 +107,38 @@ def editQuiz(request, quizID):
                 questionText = request.POST['questionText']
                 if not questionText.isspace():
                     quiz.question_set.create(_questionText = questionText)
-                    
+
         return redirect(reverse('quizapp:editQuiz', kwargs={'quizID':quiz.id}))
     else:
         form = CreateQuizForm(initial = {'quizName': quiz.getQuizName(), 'quizDescription': quiz.getQuizDescription()})
 
     questions = quiz.question_set.all()
     return render(request, 'quizapp/editquiz.html', {'username': user.username, 'quiz':quiz, 'questions': questions, 'form': form})
+
+@login_required
+def editQuestion(request, quizID, questionID):
+    user = request.user
+    quiz = user.quiz_set.get(id = quizID)
+    question = quiz.question_set.get(id = questionID)
+    
+    if request.method == 'POST':
+        if 'answerButton' in request.POST:
+            form = CreateAnswerForm(request.POST)
+            if form.is_valid():
+                answerText = form.cleaned_data.get('answerText')
+                correct = form.cleaned_data.get('correct')
+                points = form.cleaned_data.get('pointValue', 0)
+                question.answer_set.create(_text = answerText, _correct = correct, _pointValue = points)
+        elif 'questionButton' in request.POST:
+            if request.POST.get('questionText', False):
+                questionText = request.POST['questionText']
+                if not questionText.isspace():
+                    question.setQuestionText(questionText)
+                    question.save()
+                    
+        return redirect(reverse('quizapp:editQuestion', kwargs={'quizID':quiz.id, 'questionID': questionID}))
+    else:
+        form = CreateAnswerForm()
+
+    answers = question.answer_set.all()
+    return render(request, 'quizapp/editquestion.html', {'username': user.username,'quizID':quiz.id, 'question': question, 'answers': answers, 'form': form})

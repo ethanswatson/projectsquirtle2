@@ -12,7 +12,9 @@ urlpatterns = [
     path('accounts/createQuiz/', views.createQuiz, name='createQuiz'),
     path('accounts/deleteQuiz/', views.deleteQuiz, name='deleteQuiz'),
     path('accounts/deleteQuestion/', views.deleteQuestion, name='deleteQuestion'),
-    path('accounts/editQuiz/quiz-<int:quizID>', views.editQuiz, name = 'editQuiz'),
+    path('accounts/deleteAnswer/', views.deleteAnswer, name='deleteAnswer'),
+    path('accounts/editQuiz/quiz-<int:quizID>/', views.editQuiz, name = 'editQuiz'),
+    path('accounts/editQuestion/quiz-<int:quizID>/question-<int:questionID>', views.editQuestion, name = 'editQuestion'),
     path('accounts/', include('django.contrib.auth.urls')),
 ]
 
