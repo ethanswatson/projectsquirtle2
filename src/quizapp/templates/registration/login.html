@@ -8,36 +8,45 @@
 </head>
             
 <body>
-
     <header>
-        Quiz App 
+        <a style = 'visibility: hidden'>HOME</a>
+        <img  src="{% static 'quizapp/images/projectSquirtle.png' %}"/>
+        <a  href="{% url 'quizapp:index' %}">HOME</a>
     </header>
+            
+    <main>
+        <form action = "", method='post', style = 'text-align: center;' class = 'box'>
+            {% csrf_token %}
+                
+            <h2>Login</h2>
+            <p>
+                {{ form.username.label_tag }}<br>
+                {{ form.username }}<br>
+                <a href = #>Forgot your username?</a>
+            </p>
+                
+            <p>
+                {{ form.password.label_tag }}<br>
+                {{ form.password }}<br>
+                <a href = "{% url 'quizapp:password_reset' %}">Forgot your password?</a>
+            </p>
+                
+            <p>
+                <button type = "submit">
+                    Login
+                </button>
+            </p>
+            <p>
+                Don't have and account? 
+                <a href = "{% url 'quizapp:createAccount' %}">Signup</a>
+            </p>
+        </form>
+    </main>
 
-    
+    <footer>
+            <img  src="{% static 'quizapp/images/squirtle.png' %}"/>
+    </footer>
 
-    <form action = "", method='post', style = 'text-align: center;' class = 'box'>
-        {% csrf_token %}
-        <!--These form objects are built into django, The login view looks for the username field and password field. which we pull from it's built in form objects.--> 
-        <h2>Login</h2>
-        <p>
-            {{ form.username.label_tag }}<br>
-            {{ form.username }}<br>
-            <a href = #>Forgot your username?</a>
-        </p>
-        
-        <p>
-            {{ form.password.label_tag }}<br>
-            {{ form.password }}<br>
-            <a href = "{% url 'quizapp:password_reset' %}">Forgot your password?</a>
-        </p>
-
-        <p>
-            <button type = "submit">
-                Login
-            </button>
-        </p>
-        <p>Don't have and account? <a href = "{% url 'quizapp:createAccount' %}">Signup</a></p>
-    </form>
 </body>
 
 

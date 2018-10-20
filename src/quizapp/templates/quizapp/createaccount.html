@@ -10,7 +10,15 @@
 <body>
 
     <header>
-        Quiz App
+        <section>
+            <a style = 'visibility: hidden'>HOME</a>
+            <a style = 'visibility: hidden'>LOGIN</a>
+        </section>
+        <img  src="{% static 'quizapp/images/projectSquirtle.png' %}"/>
+        <section>
+            <a href = "{% url 'quizapp:index' %}">HOME</a>
+            <a href="{% url 'quizapp:login' %}">LOGIN</a>
+        </section>
     </header>
 
     <article class = "box">
@@ -59,6 +67,9 @@
             </p>
         </form>
     </article>
+    <footer>
+            <img  src="{% static 'quizapp/images/squirtle.png' %}"/>
+    </footer>
 </body>
 
 

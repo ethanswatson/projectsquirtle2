@@ -7,21 +7,34 @@
         <link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/style.css' %}"/>
 </head>
 
-<body style = "text-align: center">
-	<div class ="wrapper">
-		<div class="flex-container">
-			<div class="header"> 
-				<img src="{% static 'quizapp/images/projectSquirtle.png' %}"/>
-				<a href="accounts/profile/">LOGIN</a>
-			</div>
-		</div>
-		<div class="flex-container">
-			<div class="flex-item">Join Quiz</div>
-			{% if request.user.is_authenticated %}
-				<div class="flex-item">Create Quiz</div>
-			{% endif %}
-		</div>
-	</div>
+<body>
+
+	<header> 
+		<!--I have these duplicated and invisible so in flex i can have the image in the middle, and buttons on the side. You need symmetry to make it look like that.-->
+		{% if request.user.is_authenticated %}
+			<a style = 'visibility: hidden'>{{request.user.username}}</a>
+		{% else %}
+			<a style = 'visibility: hidden'>LOGIN</a>
+		{% endif %}
+		<img src="{% static 'quizapp/images/projectSquirtle.png' %}"/>
+		{% if request.user.is_authenticated %}
+			<a href="{% url 'quizapp:profile' %}">{{request.user.username}}</a>
+		{% else %}
+			<a href="{% url 'quizapp:login' %}">LOGIN</a>
+		{% endif %}
+	</header>
+		
+	<section>
+		<article >Join Quiz</article>
+		{% if request.user.is_authenticated %}
+			<article >Create Quiz</article>
+		{% endif %}
+	</section>
+
+    <footer>
+            <img  src="{% static 'quizapp/images/squirtle.png' %}"/>
+	</footer>
+	
 </body>
 
 </html>

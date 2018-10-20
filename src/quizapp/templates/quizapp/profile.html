@@ -4,27 +4,32 @@
 <head>
     <title>Quiz App</title>
     {% load static %}
-        <link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/style.css' %}"/>
+        <link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/login.css' %}"/>
         <script type="text/javascript" src="{% static 'quizapp/scripts/profile.js' %}"></script>
 </head>
-
-<header></header>
-<nav style = "text-align: right">
-    <a href="{% url 'quizapp:logout' %}"> Signout  </a>
-     <a href = "{% url 'quizapp:password_change' %}">Change Password</a>
-
-</nav>
-
 <body style = "text-align: center">
-    <p >This is your profile!</p>
-    <p >Thanks for logging in {{username}}!</p>
 
+    <header>
+        <section>
+            <!--I have these duplicated and invisible so in flex i can have the image in the middle, and buttons on the side. You need symmetry to make it look like that.-->
+            <a style = 'visibility: hidden'>{{username}}</a>
+            <a style = 'visibility: hidden'>Logout</a>
+        </section>
+            <img  src="{% static 'quizapp/images/projectSquirtle.png' %}"/>
+        <section>
+            <a href = "#">{{username}}</a>
+            <a href="{% url 'quizapp:logout' %}">Logout</a>
+        </section>
+    </header>
 
-    <section id = 'quizlist'>
-
+    <p>
         <form action = "{% url 'quizapp:createQuiz' %}" method = 'get'>
             <button type = "submit"> Create Quiz </button>
         </form>
+    </p>
+    <hr>
+    <section id = 'quizlist'>
+
 
         <hr>
         {% if quizzes %}
@@ -49,6 +54,10 @@
         {% endfor %}
         {% endif %}
     </section>
+
+    <footer>
+            <img  src="{% static 'quizapp/images/squirtle.png' %}"/>
+    </footer>
 
 </body>
 

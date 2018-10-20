@@ -1,34 +1,24 @@
 body{
-
-	background-color: #54A8B2;
+	justify-content: space-around;
+	background-color: rgb(119, 189, 250);
 	background-repeat: no-repeat;
 	background-size: 100%;
-
 	text-shadow: 1px 1px 10px white;
+	margin: 0px;
+	padding: 0px;
 }
+
 
 header{
-	text-align: center;
-	font-size: 50px;
-	font-weight: bold;
-}
-
-p{
-	
-	font-size: 25px;
-}
-
-.header {
-    overflow: hidden;
-    background-color: #CA6610;
-    position: fixed; 
-	min-height:100px;
+    background-color: #CA6610; 
     top: 0; 
-    width: 100%;
-
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
 }
 
-.header a {
+header a {
     float: right;
     display: block;
     color: #f2f2f2;
@@ -40,31 +30,34 @@ p{
 	border: 1px solid #4a6899;
 }
 
-.header a:hover{
+header a:hover{
 	background: #294277;
 }
 
-.header img {
-    margin: 20px 20px 30px 40px;
+header section{
+	display: flex;
+	justify-content: flex-end;
+}
+
+footer img{
+	position: fixed;
+	width: 200px;
+	height: 200px;
+	right: 0px;
+	bottom: 0px;
 }
 
 /* CSS FOR HOMEPAGE BUTTONS  */
 
-.wrapper{
-	display: flex;
-	flex-flow: row wrap;
-	margin: 10%; 
-}
-
-.flex-container{
+section{
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-around;
+	justify-content: space-evenly;
 	padding: 5px;
 	text-align: center;
 	width: 100%;
 }
-.flex-item{
+article{
 	background: #10223B;
 	padding: 50px;
 
@@ -73,9 +66,16 @@ p{
   	font-weight: bold;
   	font-size: 3em;
   	text-align: center;	
-
 }
 
-.flex-item:hover{
+article:hover{
 	background: #294277;
 }
+
+
+.wrapper{
+	display: flex;
+	flex-flow: row wrap;
+	margin: 10%; 
+}
+

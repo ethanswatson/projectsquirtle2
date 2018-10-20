@@ -4,26 +4,31 @@
 <head>
     <title>Quiz App</title>
     {% load static %}
-        <link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/style.css' %}"/>
+        <link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/login.css' %}"/>
 </head>
             
 <body>
 
     <header>
-       Quiz App
+        <section>
+            <a style = 'visibility: hidden'>HOME</a>
+            <a style = 'visibility: hidden'>LOGIN</a>
+        </section>
+        <img  src="{% static 'quizapp/images/projectSquirtle.png' %}"/>
+        <section>
+            <a href = "{% url 'quizapp:index' %}">HOME</a>
+            <a href="{% url 'quizapp:login' %}">LOGIN</a>
+        </section>
     </header>
 
     <main style = 'text-align: center'>
 
-        <p>This is a test for logging out a user. You successfully logged out!</p>
-        
-        <form action = "{% url 'quizapp:login' %}" method = 'get'>
-            <button type = "submit">
-                Log back in
-            </button>
-        </form>
-    </main>
+        <h2>You successfully logged out!</h2>
 
+    </main>
+    <footer>
+            <img  src="{% static 'quizapp/images/squirtle.png' %}"/>
+    </footer>
 </body>
 
 

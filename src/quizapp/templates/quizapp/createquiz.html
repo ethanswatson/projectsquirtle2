@@ -9,19 +9,19 @@
 <body style = "text-align: center"></body>
 
     <header>
-        <p>
-            Create a Quiz
-        </p>
+        <section>
+            <a style = 'visibility: hidden'> {{username}}</a>
+            <a style = 'visibility: hidden'>Logout</a>
+        </section>
+            <img  src="{% static 'quizapp/images/projectSquirtle.png' %}"/>
+        <section>
+            <a href = "{% url 'quizapp:profile' %}">{{username}}</a>
+            <a href="{% url 'quizapp:logout' %}">Logout</a>
+        </section>
     </header>
 
-    <nav style = "text-align: right">
-        <a href="{% url 'quizapp:logout' %}"> Signout  &nbsp;</a>
-        <a href = "{% url 'quizapp:profile' %}">{{username}} &nbsp;</a>
 
-    </nav>
-
-
-    <main class = 'box'>
+    <main class = 'boxcenter'>
         <article>
             <form action = "{% url 'quizapp:createQuiz' %}", method = 'post'>
             <section>
@@ -32,7 +32,7 @@
                             {{form.quizName}}
                         </p>
                         <p>
-                            {{form.quizDescription.label_tag}}
+                            {{form.quizDescription.label_tag}}<br>
                             {{form.quizDescription}}
                         </p>
                     </article>
@@ -51,7 +51,9 @@
             </form>
         </article>
     </main>
-
+    <footer>
+            <img  src="{% static 'quizapp/images/squirtle.png' %}"/>
+    </footer>
 </body>
 
 </html>

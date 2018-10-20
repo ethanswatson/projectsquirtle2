@@ -3,10 +3,14 @@ from django import forms
 
 class CreateQuizForm(forms.Form):
     quizName = forms.CharField(
-        widget = forms.TextInput(),
+        widget = forms.TextInput(
+            attrs = {
+                'size': '35',
+            }
+        ),
         label = "Quiz Name", 
         max_length = 20,
-        help_text = "Must be less than 25 characters.")
+        help_text = "Please enter you quizzes name.")
     quizDescription = forms.CharField(
         #widget=forms.TextInput(attrs={'size': '40'}),
         widget=forms.Textarea(
@@ -16,7 +20,7 @@ class CreateQuizForm(forms.Form):
                 'style': 'resize: none'
                 }),
         label = "Quiz Description", 
-        help_text = "Please decribe what this quiz is about. Must be less than 500 characters.")
+        help_text = "Please decribe what this quiz is about.")
 
 class CreateAnswerForm(forms.Form):
 
