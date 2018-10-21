@@ -1,5 +1,4 @@
-*
-pyc
+*.pyc
 .vscode/
 db.sqlite3
 .idea
