@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class Quiz(models.Model):
     _owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    _quizName = models.CharField(max_length=20)
+    _quizName = models.CharField(max_length=60)
     _quizDescription = models.TextField(null=True, default=None)
     _dateCreated = models.DateTimeField(auto_now_add=True)
 
