@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang=en>
+    
+<head>
+    <title>Quiz App</title>
+    {% load static %}
+        <link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/login.css' %}"/>
+</head>
+<body style = "text-align: center"></body>
+
+    <header>
+        <section>
+            <a style = 'visibility: hidden'> {{username}}</a>
+            <a style = 'visibility: hidden'>Logout</a>
+        </section>
+            <img  src="{% static 'quizapp/images/projectSquirtle.png' %}"/>
+        <section>
+            <a href = "{% url 'quizapp:profile' %}">{{username}}</a>
+            <a href="{% url 'quizapp:logout' %}">Logout</a>
+        </section>
+    </header>
+
+    <main >
+    
+        <article class = 'box', id = 'answerList'>
+                <p>    
+                    <article >
+                        <form action = "{% url 'quizapp:editQuestion' quizID questionID %}" style = 'display: inline' id = "editQuestion"> </form>
+                        <form id = 'answerForm' action = "{% url 'quizapp:editAnswer' quizID questionID answer.id %}", method ='post'>
+                            <section>
+                                {% csrf_token %}
+                                <article>
+                                    <p>
+                                        {{form.answerText.label_tag}}<br>
+                                        {{form.answerText}}
+                                        
+                                    </p>
+                                    <p>
+                                        {{form.isCorrect.label_tag}}
+                                        {{form.isCorrect}}
+                                    </p>
+                                    <p>
+                                        {{form.pointValue.label_tag}}
+                                        {{form.pointValue}}
+                                    </p>
+                                </article>
+                                <article>
+                                    <p>
+                                        {{form.answerText.help_text}}
+                                    </p>
+                                </article>
+                            
+                            </section>
+                            <article>
+                                <button type = "submit" name = 'answerButton'> Save</button>
+                                <input type = 'submit' value = "Cancel" form = 'editQuestion'>
+                            </article>
+                        </form>
+                    </article>
+                </p>
+                <hr>
+                
+        </article>
+                    
+
+
+    </main>
+    <footer>
+            <img  src="{% static 'quizapp/images/squirtle.png' %}"/>
+    </footer>
+</body>
+
+</html>
