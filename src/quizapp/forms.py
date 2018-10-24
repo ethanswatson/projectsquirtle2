@@ -9,7 +9,7 @@ class CreateQuizForm(forms.Form):
             }
         ),
         label = "Quiz Name", 
-        max_length = 20,
+        max_length = 60,
         help_text = "Please enter you quizzes name.")
     quizDescription = forms.CharField(
         #widget=forms.TextInput(attrs={'size': '40'}),
