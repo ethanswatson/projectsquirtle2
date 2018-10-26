@@ -45,8 +45,6 @@ class Question(models.Model):
     def __str__(self):
         return self._questionText
 
-
-
 class Answer(models.Model):
     _question = models.ForeignKey(Question, on_delete=models.CASCADE)
     _text = models.CharField(max_length=50)
