@@ -9,7 +9,7 @@
         {% endif %}
     </section>
     {% load static %}
-    <a href="{% url 'quizapp:index' %}"><img class="site-logo" src="{% static 'quizapp/images/projectSquirtle.png' %}"/></a>
+    <a href="{% url 'quizapp:index' %}"><img  src="{% static 'quizapp/images/projectSquirtle.png' %}"/></a>
     <section>
         {% if request.user.is_authenticated %}
         <a class="header-link" href="{% url 'quizapp:profile' %}">{{request.user.username}}</a>
