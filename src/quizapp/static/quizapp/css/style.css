@@ -18,6 +18,10 @@ header{
 	width: 100%;
 }
 
+.site-logo {
+	margin-top: 15px;
+}
+
 .header-link {
     float: right;
     display: block;
@@ -30,12 +34,12 @@ header{
 	border: 1px solid #4a6899;
 }
 
-.no-underline {
-	text-decoration: none;
-}
-
 .header-link:hover{
 	background: #294277;
+}
+
+.no-underline {
+	text-decoration: none;
 }
 
 header section{
