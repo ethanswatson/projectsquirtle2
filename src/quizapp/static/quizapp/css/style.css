@@ -30,6 +30,10 @@ header{
 	border: 1px solid #4a6899;
 }
 
+.no-underline {
+	text-decoration: none;
+}
+
 .header-link:hover{
 	background: #294277;
 }
