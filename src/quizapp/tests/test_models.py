@@ -54,10 +54,20 @@ class QuestionTestCase(TestCase):
         question = Question.objects.create(_quiz=quiz, _questionText='Question Text')
 
         # act
-        question.addAnswer(text="Hello", correct=False, pointValue=10)
+        question.addAnswer(text='Hello', correct=False, pointValue=10)
         answerSet = question.getAnswers()
 
         # assert
-        self.assertEqual(answerSet[0].getText(), "Hello")
+        self.assertEqual(answerSet[0].getText(), 'Hello')
         self.assertFalse(answerSet[0].isCorrect())
         self.assertEqual(answerSet[0].getPointValue(), 10)
+
+class AnswerTestCase(TestCase):
+    def testVoting(self):
+        # setup
+        user = User.objects.create(username='Voter', password='password')
+
+        # act
+
+        # assert
+
