@@ -9,18 +9,7 @@
 </head>
 <body style = "text-align: center">
 
-    <header>
-        <section>
-            <!--I have these duplicated and invisible so in flex i can have the image in the middle, and buttons on the side. You need symmetry to make it look like that.-->
-            <a style = 'visibility: hidden'>{{username}}</a>
-            <a style = 'visibility: hidden'>Logout</a>
-        </section>
-            <img  src="{% static 'quizapp/images/projectSquirtle.png' %}"/>
-        <section>
-            <a href = "#">{{username}}</a>
-            <a href="{% url 'quizapp:logout' %}">Logout</a>
-        </section>
-    </header>
+    {% include "./partials/header.html" %}
 
     <p>
         <form action = "{% url 'quizapp:createQuiz' %}" method = 'get'>

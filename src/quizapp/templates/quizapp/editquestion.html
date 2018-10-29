@@ -9,19 +9,9 @@
 </head>
 <body style = "text-align: center"></body>
 
-    <header>
-        <section>
-            <a style = 'visibility: hidden'> {{username}}</a>
-            <a style = 'visibility: hidden'>Logout</a>
-        </section>
-            <img  src="{% static 'quizapp/images/projectSquirtle.png' %}"/>
-        <section>
-            <a href = "{% url 'quizapp:profile' %}">{{username}}</a>
-            <a href="{% url 'quizapp:logout' %}">Logout</a>
-        </section>
-    </header>
+    {% include "./partials/header.html" %}
 
-    <main >
+    <main>
         <article class = 'box'>
             
             <form id = 'finish' action = "{% url 'quizapp:editQuiz' quizID %}", method = 'get' ></form>
