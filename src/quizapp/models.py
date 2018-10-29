@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+import random
+import string
 
 class Quiz(models.Model):
     _owner = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -79,3 +81,13 @@ class Answer(models.Model):
     def __str__(self):
         return self._text
 
+class Session(models.Model):
+    _quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    _sessionId = models.CharField(max_length=6, default='') 
+
+    def idGen(self, size=6, chars=string.ascii_uppercase + string.digits):
+        if self._sessionId is '':
+            self._sessionId = ''.join(random.choice(chars) for _ in range(size))
+            self.save()
+        return self._sessionId	
+	
