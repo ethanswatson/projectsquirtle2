@@ -4,15 +4,12 @@
 <head>
     <title>Quiz App</title>
     {% load static %}
-        <link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/login.css' %}"/>
+    <link rel="stylesheet" href="{% static 'quizapp/css/style.css' %}">
+    <link rel = 'stylesheet' href="{% static 'quizapp/css/login.css' %}"/>
 </head>
             
 <body>
-    <header>
-        <a style = 'visibility: hidden'>HOME</a>
-        <img  src="{% static 'quizapp/images/projectSquirtle.png' %}"/>
-        <a  href="{% url 'quizapp:index' %}">HOME</a>
-    </header>
+    {% include "quizapp/partials/header.html" %}
             
     <main>
         <form action = "", method='post', style = 'text-align: center;' class = 'box'>

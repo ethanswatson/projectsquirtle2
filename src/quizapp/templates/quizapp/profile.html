@@ -4,23 +4,13 @@
 <head>
     <title>Quiz App</title>
     {% load static %}
-        <link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/login.css' %}"/>
-        <script type="text/javascript" src="{% static 'quizapp/scripts/profile.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'quizapp/css/style.css' %}">
+    <link rel = 'stylesheets' href="{% static 'quizapp/css/login.css' %}"/>
+    <script type="text/javascript" src="{% static 'quizapp/scripts/profile.js' %}"></script>
 </head>
 <body style = "text-align: center">
 
-    <header>
-        <section>
-            <!--I have these duplicated and invisible so in flex i can have the image in the middle, and buttons on the side. You need symmetry to make it look like that.-->
-            <a style = 'visibility: hidden'>{{username}}</a>
-            <a style = 'visibility: hidden'>Logout</a>
-        </section>
-            <img  src="{% static 'quizapp/images/projectSquirtle.png' %}"/>
-        <section>
-            <a href = "#">{{username}}</a>
-            <a href="{% url 'quizapp:logout' %}">Logout</a>
-        </section>
-    </header>
+    {% include "quizapp/partials/header.html" %}
 
     <p>
         <form action = "{% url 'quizapp:createQuiz' %}" method = 'get'>

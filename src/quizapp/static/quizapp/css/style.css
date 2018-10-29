@@ -18,7 +18,7 @@ header{
 	width: 100%;
 }
 
-header a {
+.header-link {
     float: right;
     display: block;
     color: #f2f2f2;
@@ -30,7 +30,7 @@ header a {
 	border: 1px solid #4a6899;
 }
 
-header a:hover{
+.header-link:hover{
 	background: #294277;
 }
 
@@ -57,7 +57,7 @@ section{
 	text-align: center;
 	width: 100%;
 }
-article{
+.box-button{
 	background: #10223B;
 	padding: 50px;
 
@@ -68,7 +68,7 @@ article{
   	text-align: center;	
 }
 
-article:hover{
+.box-button:hover{
 	background: #294277;
 }
 

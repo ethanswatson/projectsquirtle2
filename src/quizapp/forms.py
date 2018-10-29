@@ -39,3 +39,10 @@ class CreateAnswerForm(forms.Form):
         initial=0,
         label = "Answer Value",
     )
+
+class JoinQuizForm(forms.Form):
+    sessionId = forms.CharField(
+        widget = forms.TextInput(attrs={'class': 'session-id', 'size': '10'}),
+        label = 'Enter a quiz ID to join a quiz:',
+        max_length = 6
+    )

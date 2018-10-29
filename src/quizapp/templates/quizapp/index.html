@@ -9,25 +9,12 @@
 
 <body>
 
-	<header> 
-		<!--I have these duplicated and invisible so in flex i can have the image in the middle, and buttons on the side. You need symmetry to make it look like that.-->
-		{% if request.user.is_authenticated %}
-			<a style = 'visibility: hidden'>{{request.user.username}}</a>
-		{% else %}
-			<a style = 'visibility: hidden'>LOGIN</a>
-		{% endif %}
-		<img src="{% static 'quizapp/images/projectSquirtle.png' %}"/>
-		{% if request.user.is_authenticated %}
-			<a href="{% url 'quizapp:profile' %}">{{request.user.username}}</a>
-		{% else %}
-			<a href="{% url 'quizapp:login' %}">LOGIN</a>
-		{% endif %}
-	</header>
+	{% include "quizapp/partials/header.html" %}
 		
 	<section>
-		<article >Join Quiz</article>
+		<a href="{% url 'quizapp:joinQuiz' %}"><article class="box-button">Join Quiz</article></a>
 		{% if request.user.is_authenticated %}
-			<article >Create Quiz</article>
+			<a href="{% url 'quizapp:createQuiz' %}"><article class="box-button">Create Quiz</article></a>
 		{% endif %}
 	</section>
 
