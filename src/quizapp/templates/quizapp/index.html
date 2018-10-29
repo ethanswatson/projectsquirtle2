@@ -12,9 +12,9 @@
 	{% include "./partials/header.html" %}
 		
 	<section>
-		<article >Join Quiz</article>
+		<a href="{% url 'quizapp:joinQuiz' %}"><article class="box-button">Join Quiz</article></a>
 		{% if request.user.is_authenticated %}
-			<article >Create Quiz</article>
+			<a href="{% url 'quizapp:createQuiz' %}"><article class="box-button">Create Quiz</article></a>
 		{% endif %}
 	</section>
 
