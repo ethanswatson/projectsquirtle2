@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
-from .forms import CreateQuizForm, CreateAnswerForm
+from .forms import CreateQuizForm, CreateAnswerForm, JoinQuizForm
 from .models import Quiz    
 # Create your views here.
 
@@ -14,7 +14,8 @@ def index(request):
     return render(request, 'quizapp/index.html')
 
 def joinQuiz(request):
-    return render(request, 'quizapp/joinquiz.html')
+    form = JoinQuizForm()
+    return render(request, 'quizapp/joinquiz.html', {'form': form})
 
 
 #Login View is handled by django, as well as logout, and password vies. you do need to create the html templates for each, but it handles the rest. Django authentication is described here https://docs.djangoproject.com/en/2.1/topics/auth/default/

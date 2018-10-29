@@ -4,8 +4,26 @@
     <title>Join Quiz</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'quizapp/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'quizapp/css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'quizapp/css/joinQuiz.css' %}">
 </head>
 <body>
-    {% include "./partials/header.html" %}
+    {% include "quizapp/partials/header.html" %}
+
+    <main class="boxcenter">
+        <section class="join-quiz-form">
+            <form action="url 'quizapp:joinQuiz'" method="POST">
+                {% csrf_token %}
+                <section class="session-id-section">
+                    {{ form }}
+                </section>
+                <input class="submit-btn" type="submit" value="Join">
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <img src="{% static 'quizapp/images/squirtle.png' %}"/>
+    </footer>
 </body>
 </html>
