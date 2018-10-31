@@ -1,6 +1,7 @@
 from django.test import TestCase
-from ..models import Quiz, Question, Answer
+from ..models import Quiz, Question, Answer, Session
 from django.contrib.auth.models import User
+import random
 
 class QuizTestCase(TestCase):
     # Tests getQuestions method when there are questions associated with the quiz
@@ -79,4 +80,23 @@ class AnswerTestCase(TestCase):
         # assert
         self.assertEqual(voteCount, 1)
         self.assertEqual(voterSet[0], voter)
+
+class SessionTestCase(TestCase):
+    def testIdGen(self):
+        # setup
+        owner = User.objects.create(username='test', password='password')
+        quiz = Quiz.objects.create(_owner=owner, _quizName='Test Quiz', _quizDescription='TestDescription')
+        question = Question.objects.create(_quiz=quiz, _questionText='Question Text')
+        answer1 = Answer.objects.create(_question=question, _text="Answer 1", _correct=True, _pointValue=10)
+        session = Session.objects.create(_quiz=quiz)
+        def mockGetRandomChar(self):
+            return 'A'
+        Session.getRandomChar = mockGetRandomChar
+
+        # act
+        idVal = session.idGen()
+
+        # assert
+        print(idVal)
+        self.assertEqual(idVal, "AAAAAA")
 
