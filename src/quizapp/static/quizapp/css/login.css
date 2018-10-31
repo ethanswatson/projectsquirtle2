@@ -14,7 +14,6 @@ article{
 }
 
 .boxpadded{
-	flex-grow: 1;
 	margin: 10px;
 	padding: 10px;
 	border-radius: 3px;
@@ -25,16 +24,6 @@ article{
 }
 
 .boxcenter{
-
-	margin: 1% 20% 1% 20%;
-	border-radius: 3px;
-	border-width: 1px;
-	border-style: solid;
-	border-color: darkblue;
-	background-color: #54A8B2;
-}
-
-.box{
 
 	margin: 1% 20% 1% 20%;
 	border-radius: 3px;

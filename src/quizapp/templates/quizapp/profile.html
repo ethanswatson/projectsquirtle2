@@ -19,12 +19,9 @@
     </p>
     <hr>
     <section id = 'quizlist'>
-
-
-        <hr>
         {% if quizzes %}
         {% for quiz in quizzes %}
-        <article>
+        <article class="boxpadded">
             <p>
                 {{quiz.getQuizName}}
             </p>
@@ -39,15 +36,16 @@
             <form action = "{% url 'quizapp:editQuiz' quiz.id %}" style = 'display: inline'>
                 <input type = 'submit' value = "Edit Quiz">
             </form>
+            <form action = "#" style = 'display: inline'>
+                    <input type = 'submit' value = "Start Quiz">
+                </form>
         </article> 
-        <hr>
+        
         {% endfor %}
         {% endif %}
     </section>
 
-    <footer>
-            <img  src="{% static 'quizapp/images/squirtle.png' %}"/>
-    </footer>
+    {% include "quizapp/partials/footer.html" %}
 
 </body>
 

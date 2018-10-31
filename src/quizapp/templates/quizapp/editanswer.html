@@ -12,7 +12,7 @@
     {% include "quizapp/partials/header.html" %}
 
     <main>
-        <article class = 'box', id = 'answerList'>
+        <article class = 'boxcenter', id = 'answerList'>
                 <p>    
                     <article >
                         <form action = "{% url 'quizapp:editQuestion' quizID questionID %}" style = 'display: inline' id = "editQuestion"> </form>
@@ -55,9 +55,7 @@
 
 
     </main>
-    <footer>
-            <img  src="{% static 'quizapp/images/squirtle.png' %}"/>
-    </footer>
+    {% include "quizapp/partials/footer.html" %}
 </body>
 
 </html>

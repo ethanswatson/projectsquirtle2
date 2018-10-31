@@ -10,16 +10,14 @@
             
 <body>
 
-    {% include ".quizapp/partials/header.html" %}
+    {% include "quizapp/partials/header.html" %}
 
     <main style = 'text-align: center'>
 
         <h2>You successfully logged out!</h2>
 
     </main>
-    <footer>
-            <img  src="{% static 'quizapp/images/squirtle.png' %}"/>
-    </footer>
+    {% include "quizapp/partials/footer.html" %}
 </body>
 
 

@@ -99,7 +99,7 @@ def editQuiz(request, quizID):
     quiz = user.quiz_set.get(id = quizID)
     
     if request.method == 'POST':
-        if 'quizButton' in request.POST:
+        if 'quizButton' in request.POST or 'finishButton' in request.POST:
             form = CreateQuizForm(request.POST)
             if form.is_valid():
                 quiz.setQuizName(form.cleaned_data.get('quizName'))
@@ -112,6 +112,8 @@ def editQuiz(request, quizID):
                 if not questionText.isspace():
                     quiz.question_set.create(_questionText = questionText)
 
+        if 'finishButton' in request.POST:
+            return redirect(reverse('quizapp:profile'))
         return redirect(reverse('quizapp:editQuiz', kwargs={'quizID':quiz.id}))
     else:
         form = CreateQuizForm(initial = {'quizName': quiz.getQuizName(), 'quizDescription': quiz.getQuizDescription()})
@@ -133,13 +135,15 @@ def editQuestion(request, quizID, questionID):
                 correct = form.cleaned_data.get('isCorrect')
                 points = form.cleaned_data.get('pointValue', 0)
                 question.answer_set.create(_text = answerText, _correct = correct, _pointValue = points)
-        elif 'questionButton' in request.POST:
+        elif 'questionButton' in request.POST or 'finishButton' in request.POST:
             if request.POST.get('questionText', False):
                 questionText = request.POST['questionText']
                 if not questionText.isspace():
                     question.setQuestionText(questionText)
                     question.save()
                     
+        if 'finishButton' in request.POST:
+            return redirect(reverse('quizapp:editQuiz', kwargs={'quizID': quiz.id}))
         return redirect(reverse('quizapp:editQuestion', kwargs={'quizID':quiz.id, 'questionID': questionID}))
     else:
         form = CreateAnswerForm()

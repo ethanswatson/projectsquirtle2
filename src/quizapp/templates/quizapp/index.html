@@ -17,11 +17,9 @@
 			<a class="no-underline" href="{% url 'quizapp:createQuiz' %}"><article class="box-button">Create Quiz</article></a>
 		{% endif %}
 	</section>
+    
+	{% include "quizapp/partials/footer.html" %}
 
-    <footer>
-            <img  src="{% static 'quizapp/images/squirtle.png' %}"/>
-	</footer>
-	
 </body>
 
 </html>
