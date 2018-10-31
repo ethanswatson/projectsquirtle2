@@ -87,11 +87,11 @@ class Session(models.Model):
 
     def idGen(self, size=6):
         if self._sessionId is '':
-            self._sessionId = ''.join(getRandomChar() for _ in range(size))
+            self._sessionId = ''.join(self.getRandomChar() for _ in range(size))
             self.save()
         return self._sessionId	
 
-    def getRandomChar():
+    def getRandomChar(self):
         chars = string.ascii_uppercase + string.digits
         return random.choice(chars)
 	
