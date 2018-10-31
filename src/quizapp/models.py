@@ -85,9 +85,13 @@ class Session(models.Model):
     _quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     _sessionId = models.CharField(max_length=6, default='') 
 
-    def idGen(self, size=6, chars=string.ascii_uppercase + string.digits):
+    def idGen(self, size=6):
         if self._sessionId is '':
-            self._sessionId = ''.join(random.choice(chars) for _ in range(size))
+            self._sessionId = ''.join(getRandomChar() for _ in range(size))
             self.save()
         return self._sessionId	
+
+    def getRandomChar():
+        chars = string.ascii_uppercase + string.digits
+        return random.choice(chars)
 	
