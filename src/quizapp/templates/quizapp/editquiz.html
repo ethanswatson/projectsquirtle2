@@ -13,10 +13,10 @@
     {% include "quizapp/partials/header.html" %}
     
     <main>
-            <article class = 'boxcenter'>
-                
-                <form id = 'finish' action = "{% url 'quizapp:profile' %}", method = 'get' ></form>
-                
+        <section>
+
+            <article class = "boxpadded">
+                                
                 <form id = 'save' action = "{% url 'quizapp:editQuiz' quiz.id %}", method = 'post'>
                     <section>
                         {% csrf_token %}
@@ -30,55 +30,47 @@
                                 {{form.quizDescription}}
                             </p>
                         </article>
-                        <article>
-                            <p>
-                                {{form.quizName.help_text}}
-                            </p>
-                            <p>
-                                {{form.quizDescription.help_text}}
-                            </p>
-                        </article>
-                        
-                        
                     </section>
                 </form>
                 <p>
                     <button type = 'submit' name = 'quizButton' form = 'save'>Save</button>
-                    <input type = 'submit' value = "Finish" form = 'finish'>
+                    <button type = 'submit' name = 'finishButton' form = 'save'>Finish</button>
                 </p>
             </article>
             
             
             
-            <article class = 'boxcenter', style = 'justify-content: flex-start', id = 'questionList' >    
+            <article class = "boxpadded", style = 'justify-content: flex-start; flex-grow: 4; overflow-y: scroll; height: 400px;', id = 'questionList' >    
                 <form style = 'margin: 10px', id = 'addForm'>
                     <button type = "button" onclick = addQuestion()> Create Question </button>
                 </form>
                 <form id = 'questionForm' action = "{% url 'quizapp:editQuiz' quiz.id %}", method ='post', style="display:none; padding: 10px">
                     {% csrf_token %}
-                    <label for = ' questionTextID' >Question</label>            
-                    <input type = 'text' id = 'questionTextID', name = 'questionText'>                  <button type = "submit" name = 'questionButton'> Submit</button>
+                    <label for = 'questionTextID' >Question</label>            
+                    <input type = 'text' id = 'questionTextID', name = 'questionText'>
+                    <button type = "submit" name = 'questionButton'> Submit</button>
                     <button type = "button" onclick = cancelAdd()>Cancel</button>
                 </form>
-                
+                            
                 {% if questions %}
                 {% for question in questions %}
-                    
-                <form action = "{% url 'quizapp:editQuestion' quiz.id question.id %}" style = 'display: none' id = {{question.id}}> </form>
-                <form action = "{% url 'quizapp:deleteQuestion' %}", method = 'post' style = 'margin: 10px'>
-                    
-                    {{question.getQuestionText}}
-                    {% csrf_token %}
-                    <input type='hidden' value= {{quiz.id}} name='quizID'>
-                    <input type='hidden' value= {{question.id}} name='questionID'>
-                    <button type = 'submit'>Delete Question</button>                                
-                    <input type = 'submit' value = "Edit Question" form = {{question.id}}>
-                    
-                </form>
-                {% endfor %}
+                <article style = "align-items: flex-end">
+                    <form action = "{% url 'quizapp:editQuestion' quiz.id question.id %}" style = 'display: none' id = {{question.id}}> </form>
+                    <form action = "{% url 'quizapp:deleteQuestion' %}", method = 'post' style = 'margin: 10px'>
+                            
+                        {{question.getQuestionText}}
+                        {% csrf_token %}
+                        <input type='hidden' value= {{quiz.id}} name='quizID'>
+                        <input type='hidden' value= {{question.id}} name='questionID'>
+                        <button type = 'submit'>Delete Question</button>                                
+                        <input type = 'submit' value = "Edit Question" form = {{question.id}}>                                    
+                    </form>
+                </article>
+                        {% endfor %}
                 {% endif %}
             </article>
-  
+                           
+        </section>
     </main>
     {% include "quizapp/partials/footer.html" %}
 </body>

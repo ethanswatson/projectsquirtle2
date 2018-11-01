@@ -14,9 +14,6 @@
 
     <main>
         <article class = 'box'>
-            
-            <form id = 'finish' action = "{% url 'quizapp:editQuiz' quizID %}", method = 'get' ></form>
-
             <form action = "{% url 'quizapp:editQuestion' quizID question.id %}", method = 'post' id = 'questionForm'>
                 <p>
                     {% csrf_token %}
@@ -24,30 +21,26 @@
                     <input type = 'text' id = 'questionTextID', name = 'questionText', value = "{{question.getQuestionText}}">        
                 </p>
             
-            <p>
-                <button type = 'submit' name = 'questionButton'>Save</button>
-                <input type = 'submit' value = "Finish" form = 'finish'>
-            </p>
+                <p>
+                    <button type = 'submit' name = 'questionButton'>Save</button>
+                    <button type = 'submit' name = "finishButton">Finish</button>
+                </p>
             </form>
         </article>
 
+        <section>
 
-
-        <article class = 'box', id = 'answerList'>
-
-                <p>    
-                    <form id = 'addForm'>
-                        <button type = "button" onclick = addAnswer()> Create Answer </button>
-                    </form>
-
-                    <article >
-                        <form id = 'answerForm' action = "{% url 'quizapp:editQuestion' quizID question.id %}", method ='post', style="display:none">
-                            <section>
-                                {% csrf_token %}
+            <article class = 'boxpadded',>
+               
+                <article >
+                    <form id = 'answerForm' action = "{% url 'quizapp:editQuestion' quizID question.id %}", method ='post'>
+                                
                                 <article>
                                     <p>
+                                        Create 
                                         {{form.answerText.label_tag}}<br>
-                                        {{form.answerText}}
+                                        {{form.answerText}}<br>
+                                        {{form.answerText.help_text}}
                                         
                                     </p>
                                     <p>
@@ -59,27 +52,30 @@
                                         {{form.pointValue}}
                                     </p>
                                 </article>
-                                <article>
-                                    <p>
-                                        {{form.answerText.help_text}}
-                                    </p>
-                                </article>
-                            
-                            </section>
+                                    
                             <article>
                                 <button type = "submit" name = 'answerButton'> Submit</button>
                                 <button type = "button" onclick = cancelAdd()>Cancel</button>
                             </article>
+                            {% csrf_token %}
                         </form>
                     </article>
-                </p>
-                <hr>
-                {% if answers %}
-                {% for answer in answers %}
-                <article>
+                
+            </article>
+
+
+
+        <article class = 'boxpadded', id = 'answerList' style = 'flex-grow:2; justify-content: flex-start'>
+
+            Answers
+            
+            {% if answers %}
+            {% for answer in answers %}
+            <article >
+                <article style = "align-items: flex-end">
                     <form action = "{% url 'quizapp:editAnswer' quizID question.id answer.id %}" method = 'get' id = {{answer.id}}></form>
 
-                    <form action = "{% url 'quizapp:deleteAnswer' %}", method = 'post' style = 'display: inline'>
+                    <form action = "{% url 'quizapp:deleteAnswer' %}", method = 'post' style = 'display: inline; margin: 10px'>
                         {{answer.getText}}
                         {% csrf_token %}
                         <input type='hidden' value= {{quizID}} name='quizID'>
@@ -87,13 +83,13 @@
                         <button type = 'submit'>Delete Answer</button>
                         <input type = 'submit' value = "Edit Answer" form = {{answer.id}}>
                     </form>
-                    <hr>
-                    
-                </article> 
-                {% endfor %}
-                {% endif %}
+                </article>
+            </article> 
+            {% endfor %}
+            {% endif %}
         </article>
                     
+        </section>
 
 
     </main>
