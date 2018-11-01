@@ -5,7 +5,7 @@
     <title>Quiz App</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'quizapp/css/style.css' %}">
-    <link rel = 'stylesheets' href="{% static 'quizapp/css/login.css' %}"/>
+    <link rel = "stylesheet" href="{% static 'quizapp/css/login.css' %}"/>
     <script type="text/javascript" src="{% static 'quizapp/scripts/profile.js' %}"></script>
 </head>
 <body style = "text-align: center">
@@ -19,30 +19,37 @@
     </p>
     <hr>
     <section id = 'quizlist'>
+
         {% if quizzes %}
         {% for quiz in quizzes %}
-        <article class="boxpadded">
+
+        <article class = 'boxpadded'>
+
             <p>
                 {{quiz.getQuizName}}
             </p>
+            
             <p style = 'font-size: 13px'>
                 {{quiz.getQuizDescription}}
             </p>
-            <form action = "{% url 'quizapp:deleteQuiz' %}", method = 'post' style = 'display: inline'>
-                {% csrf_token %}
-                <input type='hidden' value= {{quiz.id}} name='quizID'>
-                <button type = 'submit'>Delete Quiz</button>
-            </form>
-            <form action = "{% url 'quizapp:editQuiz' quiz.id %}" style = 'display: inline'>
-                <input type = 'submit' value = "Edit Quiz">
-            </form>
-            <form action = "#" style = 'display: inline'>
-                    <input type = 'submit' value = "Start Quiz">
+            <section>
+                <form action = "{% url 'quizapp:deleteQuiz' %}", method = 'post' style = 'display: inline'>
+                    {% csrf_token %}
+                    <input type='hidden' value= {{quiz.id}} name='quizID'>
+                    <button type = 'submit'>Delete Quiz</button>
                 </form>
+                <form action = "{% url 'quizapp:editQuiz' quiz.id %}" style = 'display: inline'>
+                    <input type = 'submit' value = "Edit Quiz">
+                </form>
+                <form action = "#" style = 'display: inline'>
+                    <input type = 'submit' value = "Start Quiz">
+                </form>                
+            </section>
         </article> 
         
         {% endfor %}
         {% endif %}
+
     </section>
 
     {% include "quizapp/partials/footer.html" %}

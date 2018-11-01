@@ -1,4 +1,4 @@
-section{
+article section{
 	display: flex;
 	flex-direction: row;
 	text-align: center;
@@ -9,11 +9,11 @@ article{
 	display: flex;
 	flex-direction: column;
 	text-align: center;
-	justify-content: space-evenly;
-	
+	justify-content: space-evenly;	
 }
 
 .boxpadded{
+	flex-grow: 1;
 	margin: 10px;
 	padding: 10px;
 	border-radius: 3px;
