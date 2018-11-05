@@ -6,6 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.utils.safestring import mark_safe
+from .models import Session
 import json
 
 from .forms import CreateQuizForm, CreateAnswerForm, JoinQuizForm
@@ -16,6 +17,14 @@ def index(request):
     return render(request, 'quizapp/index.html')
 
 def joinQuiz(request):
+    if request.method == 'POST':
+        form = JoinQuizForm(request.POST)
+        if form.is_valid():
+            sessionId = form.cleaned_data['sessionId']
+            if Session.objects.filter(_sessionId=sessionId).exists():
+                return redirect(reverse('quizapp:joinquiz/' + sessionId))
+            
+    
     form = JoinQuizForm()
     return render(request, 'quizapp/joinquiz.html', {'form': form})
 

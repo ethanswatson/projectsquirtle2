@@ -19,7 +19,7 @@ urlpatterns = [
     path('accounts/editQuestion/quiz-<int:quizID>/question-<int:questionID>/', views.editQuestion, name = 'editQuestion'),
     path('accounts/editAnswer/quiz-<int:quizID>/question-<int:questionID>/answer-<int:answerID>/', views.editAnswer, name = 'editAnswer'),
     path('accounts/', include('django.contrib.auth.urls')),
-    url('session/(?P<room_name>[^/]+)/$', views.roomMain, name='roomMain'),
+    url('hostquiz/(?P<room_name>[^/]+)/$', views.roomMain, name='roomMain'),
     url('joinquiz/(?P<room_name>[^/]+)/$', views.roomJoin, name="roomJoin"),
 ]
 
