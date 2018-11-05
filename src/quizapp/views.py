@@ -5,6 +5,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.utils.safestring import mark_safe
+import json
 
 from .forms import CreateQuizForm, CreateAnswerForm, JoinQuizForm
 from .models import Quiz    
