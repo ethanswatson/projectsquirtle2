@@ -20,7 +20,7 @@ urlpatterns = [
     path('accounts/editAnswer/quiz-<int:quizID>/question-<int:questionID>/answer-<int:answerID>/', views.editAnswer, name = 'editAnswer'),
     path('accounts/', include('django.contrib.auth.urls')),
     url('session/(?P<room_name>[^/]+)/$', views.roomMain, name='roomMain'),
-    url('join/(?P<room_name>[^/]+)/$', views.roomJoin, name="roomJoin"),
+    url('joinquiz/(?P<room_name>[^/]+)/$', views.roomJoin, name="roomJoin"),
 ]
 
 
