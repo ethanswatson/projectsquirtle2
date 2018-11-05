@@ -1,17 +1,23 @@
 <!-- chat/templates/quizapp/sessionjoin.html -->
 <!DOCTYPE html>
-<html>
+<html lang=en>
 <head>
 	<meta charset="utf-8"/>
-	<title>Joined Chat Room</title>
+	<title>Session Joined</title>
+	{% load static %}
+        <link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/style.css' %}"/>
 </head>
 <body>
+	{% include "quizapp/partials/header.html" %}
+
 	<textarea id="chat-log" cols="100" rows="20"></textarea><br/>
 
 	<input id="submit-a" type="button" value="Send A"/>
 	<input id="submit-b" type="button" value="Send B"/>
 	<input id="submit-c" type="button" value="Send C"/>
 	<input id="submit-d" type="button" value="Send D"/><br/>
+
+	{% include "quizapp/partials/footer.html" %}
 </body>
 <script>
 	var roomName = {{ room_name_json }};

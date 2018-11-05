@@ -1,11 +1,15 @@
 <!-- chat/templates/quizapp/sessionmain.html -->
 <!DOCTYPE html>
-<html>
+<html lang=en>
 <head>
 	<meta charset="utf-8"/>
-	<title>Chat Room</title>
+	<title>Session</title>
+	{% load static %}
+		<link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/style.css' %}"/>
 </head>
 <body>
+	{% include "quizapp/partials/header.html"  %}
+
 	<textarea id="chat-log" cols="100" rows="20"></textarea><br/>
 	<input id="chat-message-input" type="text" size="100"/><br/>
 	<input id="chat-message-submit" type="button" value="Send"/>
@@ -14,6 +18,8 @@
 	<p id="dispVoteB">Votes for B: </p>
 	<p id="dispVoteC">Votes for C: </p>
 	<p id="dispVoteD">Votes for D: </p>
+
+	{% include "quizapp/partials/footer.html" %}
 
 </body>
 <script>
