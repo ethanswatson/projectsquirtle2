@@ -42,9 +42,16 @@
                     <input type = 'submit' value = "Edit Quiz">
                 </form>
                 <form action = "#" style = 'display: inline'>
-                    <input type = 'submit' value = "Start Quiz">
+                    <input id="startQuizButton" type = 'submit' value = "Start Quiz">
                 </form>                
             </section>
+	    <script>
+		    document.querySelector('#startQuizButton').onclick = function (e){
+			    var roomName = "squirtle";
+			    var sessionRedirect = "http://127.0.0.1:8000/session/" + roomName + "/";
+			    window.open(sessionRedirect);
+		    }
+	    </script>
         </article> 
         
         {% endfor %}
