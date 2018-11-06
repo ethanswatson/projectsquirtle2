@@ -20,9 +20,9 @@ def joinQuiz(request):
     if request.method == 'POST':
         form = JoinQuizForm(request.POST)
         if form.is_valid():
-            sessionId = form.cleaned_data['sessionId']
+            sessionId = form.cleaned_data.get('sessionId')
             if Session.objects.filter(_sessionId=sessionId).exists():
-                return redirect(reverse('quizapp:joinquiz/' + sessionId))
+                return redirect(reverse('quizapp:roomJoin', kwargs={'room_name': sessionId}))
             
     
     form = JoinQuizForm()
@@ -192,3 +192,12 @@ def editAnswer(request, quizID, questionID, answerID):
         form = CreateAnswerForm(initial = {'answerText': answer.getText(), 'isCorrect': answer.isCorrect() , 'pointValue': answer.getPointValue()})
 
     return render(request, 'quizapp/editanswer.html', {'username': user.username,'quizID':quiz.id, 'questionID': question.id, 'answer': answer, 'form': form})
+
+
+@login_required
+def startQuiz(request, quizID):
+    user = request.user
+    quiz = user.quiz_set.get(id = quizID)
+    session = quiz.session_set.create()
+    sessionID = session.idGen()
+    return redirect(reverse('quizapp:roomMain', kwargs={'room_name': sessionID}))

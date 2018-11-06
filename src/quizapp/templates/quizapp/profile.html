@@ -23,14 +23,14 @@
         {% if quizzes %}
         {% for quiz in quizzes %}
 
-        <article class = 'boxpadded'>
+        <article class = 'quizpadded'>
 
             <p>
                 {{quiz.getQuizName}}
             </p>
             
             <p style = 'font-size: 13px'>
-                {{quiz.getQuizDescription}}
+                {{quiz.getQuizDescription|truncatechars:120 }}
             </p>
             <section>
                 <form action = "{% url 'quizapp:deleteQuiz' %}", method = 'post' style = 'display: inline'>
@@ -41,21 +41,10 @@
                 <form action = "{% url 'quizapp:editQuiz' quiz.id %}" style = 'display: inline'>
                     <input type = 'submit' value = "Edit Quiz">
                 </form>
-                <form action = "#" style = 'display: inline'>
-                    <input class="startQuizButton" type = 'submit' value = "Start Quiz">
+                <form action = "{% url 'quizapp:startQuiz' quiz.id %}" target="_blank" style = 'display: inline'>
+                    <input type = 'submit' value = "Start Quiz">
                 </form>                
             </section>
-	    <script>
-		    document.querySelectorAll('.startQuizButton').forEach(setupButton);
-            
-            function setupButton(button) {
-                button.onclick = function (e){
-                    var roomName = "squirtle";
-                    var sessionRedirect = "http://127.0.0.1:8000/hostquiz/" + roomName + "/";
-                    window.open(sessionRedirect);
-                }
-            }
-	    </script>
         </article> 
         
         {% endfor %}

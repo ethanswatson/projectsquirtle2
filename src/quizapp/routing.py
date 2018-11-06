@@ -6,7 +6,7 @@ from . import consumers
 
 websocket_urlpatterns = [
     path('ws/accounts/profile/', consumers.AccountConsumer),
-    url(r'^ws/quizapp/(?P<room_name>[^/]+)/$', consumers.ChatConsumer),
+    path('ws/quizapp/<room_name>/', consumers.ChatConsumer),
 ]
 
 
