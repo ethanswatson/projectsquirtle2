@@ -44,7 +44,7 @@ def teacherQuestion(request, sessionId, questionId):
     session = Session.objects.filter(_sessionId=sessionId)
     question = Question.objects.get(pk=questionId)
 
-    return render(request, 'quizapp/teacherquestion.html', {'session': session, 'question': question})
+    return render(request, 'quizapp/teacherquestion.html', {'sessionId': sessionId, 'question': question})
 
 #Login View is handled by django, as well as logout, and password vies. you do need to create the html templates for each, but it handles the rest. Django authentication is described here https://docs.djangoproject.com/en/2.1/topics/auth/default/
 

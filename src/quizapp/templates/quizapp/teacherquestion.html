@@ -10,13 +10,14 @@
    {% include "quizapp/partials/header.html" %}
 
     <main>
+        <p>Quiz ID - {{ sessionId }}</p>
         <section>
             <p class="question-text">{{ question.getQuestionText }}</p>
         </section>
         <section class="answer-section">
             {% for answer in question.getAnswers %}
                 <div class="answer-box">
-                    <p>{{ answer.getText }}</p>
+                    <p class="answer-option">{{ answer.getText }}</p>
                 </div>
             {% endfor %}
         </section>
