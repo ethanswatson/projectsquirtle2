@@ -22,6 +22,7 @@ urlpatterns = [
     path('startquiz/quiz-<int:quizID>/', views.startQuiz, name='startQuiz'),
     path('hostquiz/<room_name>/', views.roomMain, name='roomMain'),
     path('joinquiz/<room_name>/', views.roomJoin, name="roomJoin"),
+    path('hostquiz/<sessionId>/question/<int:questionId>/', views.teacherQuestion , name='teacherQuestion'),
 ]
 
 
