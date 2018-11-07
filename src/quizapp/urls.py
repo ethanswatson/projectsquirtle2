@@ -1,5 +1,6 @@
 
 from django.urls import path, include
+from django.conf.urls import url
 
 from . import views
 
@@ -18,6 +19,9 @@ urlpatterns = [
     path('accounts/editQuestion/quiz-<int:quizID>/question-<int:questionID>/', views.editQuestion, name = 'editQuestion'),
     path('accounts/editAnswer/quiz-<int:quizID>/question-<int:questionID>/answer-<int:answerID>/', views.editAnswer, name = 'editAnswer'),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('startquiz/quiz-<int:quizID>/', views.startQuiz, name='startQuiz'),
+    path('hostquiz/<room_name>/', views.roomMain, name='roomMain'),
+    path('joinquiz/<room_name>/', views.roomJoin, name="roomJoin"),
 ]
 
 

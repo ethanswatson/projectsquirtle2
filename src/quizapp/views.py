@@ -5,6 +5,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.utils.safestring import mark_safe
+from .models import Session
+import json
 
 from .forms import CreateQuizForm, CreateAnswerForm, JoinQuizForm
 from .models import Quiz    
@@ -14,9 +17,28 @@ def index(request):
     return render(request, 'quizapp/index.html')
 
 def joinQuiz(request):
+    if request.method == 'POST':
+        form = JoinQuizForm(request.POST)
+        if form.is_valid():
+            sessionId = form.cleaned_data.get('sessionId')
+            if Session.objects.filter(_sessionId=sessionId).exists():
+                return redirect(reverse('quizapp:roomJoin', kwargs={'room_name': sessionId}))
+            
+    
     form = JoinQuizForm()
     return render(request, 'quizapp/joinquiz.html', {'form': form})
 
+#WebSocket for teacher/student views
+
+def roomMain(request, room_name):
+    return render(request, 'quizapp/sessionmain.html', {
+            'room_name_json': mark_safe(json.dumps(room_name))
+        })
+
+def roomJoin(request, room_name):
+    return render(request, 'quizapp/sessionjoin.html', {
+            'room_name_json': mark_safe(json.dumps(room_name))
+        })
 
 #Login View is handled by django, as well as logout, and password vies. you do need to create the html templates for each, but it handles the rest. Django authentication is described here https://docs.djangoproject.com/en/2.1/topics/auth/default/
 
@@ -170,3 +192,12 @@ def editAnswer(request, quizID, questionID, answerID):
         form = CreateAnswerForm(initial = {'answerText': answer.getText(), 'isCorrect': answer.isCorrect() , 'pointValue': answer.getPointValue()})
 
     return render(request, 'quizapp/editanswer.html', {'username': user.username,'quizID':quiz.id, 'questionID': question.id, 'answer': answer, 'form': form})
+
+
+@login_required
+def startQuiz(request, quizID):
+    user = request.user
+    quiz = user.quiz_set.get(id = quizID)
+    session = quiz.session_set.create()
+    sessionID = session.idGen()
+    return redirect(reverse('quizapp:roomMain', kwargs={'room_name': sessionID}))

@@ -17,10 +17,16 @@
                 <section class="session-id-section">
                     {{ form }}
                 </section>
-                <input class="submit-btn" type="submit" value="Join">
+                <input id="submitButton" class="submit-btn" type="submit" value="Join">
             </form>
         </section>
     </main>
+
+    <script>
+	    document.querySelector('#submitButton').onclick = function (e){
+		    window.location.pathname = '/joinquiz/squirtle/';
+	    }
+    </script>
 
     {% include "quizapp/partials/footer.html" %}
 </body>
