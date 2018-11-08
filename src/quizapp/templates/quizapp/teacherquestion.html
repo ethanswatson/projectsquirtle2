@@ -9,19 +9,7 @@
 <body>
    {% include "quizapp/partials/header.html" %}
 
-    <main>
-        <p>Quiz ID - {{ sessionId }}</p>
-        <section>
-            <p class="question-text">{{ question.getQuestionText }}</p>
-        </section>
-        <section class="answer-section">
-            {% for answer in question.getAnswers %}
-                <div class="answer-box">
-                    <p class="answer-option">{{ answer.getText }}</p>
-                </div>
-            {% endfor %}
-        </section>
-    </main>
+    <main></main>
 
    {% include "quizapp/partials/footer.html" %}
    <script src="{% static 'quizapp/scripts/teacherquestion.js' %}"></script>
