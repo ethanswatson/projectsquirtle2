@@ -10,12 +10,8 @@
 <body>
 	{% include "quizapp/partials/header.html" %}
 
-	<textarea id="chat-log" cols="100" rows="20"></textarea><br/>
-
-	<input id="submit-a" type="button" value="Send A"/>
-	<input id="submit-b" type="button" value="Send B"/>
-	<input id="submit-c" type="button" value="Send C"/>
-	<input id="submit-d" type="button" value="Send D"/><br/>
+    {% load static %}
+	<img style="display:block; margin-left: auto; margin-right: auto; visibility: hidden;" src="{% static 'quizapp/images/giphy.gif' %}"/>
 
 	{% include "quizapp/partials/footer.html" %}
 </body>
