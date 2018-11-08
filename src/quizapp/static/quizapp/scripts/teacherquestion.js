@@ -1,29 +1,59 @@
 // Dummy data. Will be replaced with data from websockets
-let question = {
-    questionText: 'A Fake Question',
-    answers: [
+let quiz = {
+    quizName: 'Dummy Quiz',
+    questions: [
         {
-            text:'Option 1'
-        },
-        {
-            text: 'Option 2'
-        },
-        {
-            text: 'Option 3'
-        },
-        {
-            text: 'Option 4'
-        },
-        {
-            text: 'Option 5'
-        },
-        {
-            text: 'Option 6'
-        },
+            questionText: 'A Fake Question',
+            answers: [
+                {
+                    text:'Option 1'
+                },
+                {
+                    text: 'Option 2'
+                },
+                {
+                    text: 'Option 3'
+                },
+                {
+                    text: 'Option 4'
+                },
+                {
+                    text: 'Option 5'
+                },
+                {
+                    text: 'Option 6'
+                },
+            ]
+        }
     ]
 }
 
-renderQuestion(question);
+let users = ['user a', 'user b', 'user c', 'user d', 'user e', 'user f', 'user g', 'user h', 'user i', 'user j']
+
+renderLanding(quiz, users);
+
+function renderLanding(quiz, users) {
+    let main = document.querySelector('main');
+    let quizNameSection = document.createElement('section');
+    let quizName = document.createElement('p');
+    quizName.setAttribute('class', 'question-text');
+    quizName.textContent = quiz.quizName;
+    quizNameSection.appendChild(quizName);
+    let startButton = document.createElement('button');
+    startButton.textContent = 'Start Quiz';
+    quizNameSection.appendChild(startButton);
+    main.appendChild(quizNameSection);
+    let userSection = document.createElement('section');
+    userSection.setAttribute('class', 'user-section');
+    for (let i = 0; i < users.length; i++) {
+        let user = users[i];
+        let userText = document.createElement('p');
+        userText.setAttribute('class', 'user-name-text');
+        userText.textContent = user;
+        userSection.appendChild(userText);
+    }
+    main.appendChild(userSection);
+}
 
 function renderQuestion(question) {
     let main = document.querySelector('main');
