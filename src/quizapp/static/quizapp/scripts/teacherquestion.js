@@ -28,6 +28,7 @@ let questionTextSection = document.createElement('section');
 let questionText = document.createElement('p');
 questionText.setAttribute('class', 'question-text');
 questionText.textContent = question.questionText;
+questionTextSection.appendChild(questionText);
 main.appendChild(questionTextSection);
 let answerSection = document.createElement('section');
 answerSection.setAttribute('class', 'answer-section');
