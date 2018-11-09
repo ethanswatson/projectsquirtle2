@@ -80,6 +80,21 @@ section{
 	background: #294277;
 }
 
+.answer-button{
+	background: #10223B;
+	padding: 50px;
+	margin-top: 30px;
+	line-height: 150px;
+ 	color: white;
+  	font-size: 1em;
+  	text-align: center;	
+}
+
+.answer-button:hover{
+	background: #294277;
+}
+
+
 
 .wrapper{
 	display: flex;

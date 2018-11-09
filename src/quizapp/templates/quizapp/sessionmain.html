@@ -42,19 +42,20 @@
 		}
 		if (data['msg_type']=='1') {
 			var message = data['message'];
-			if (message == 'A') {
+			console.log(message);
+			if (message == '0') {
 				voteA +=1;
 				document.getElementById("dispVoteA").innerHTML = "Votes for A: " + voteA;
 			}
-			if (message == 'B') {
+			if (message == '1') {
 				voteB +=1;
 				document.getElementById("dispVoteB").innerHTML = "Votes for B: " + voteB;
 			}
-			if (message == 'C') {
+			if (message == '2') {
 				voteC +=1;
 				document.getElementById("dispVoteC").innerHTML = "Votes for C: " + voteC;
 			}
-			if (message == 'D') {
+			if (message == '3') {
 				voteD +=1;
 				document.getElementById("dispVoteD").innerHTML = "Votes for D: " + voteD;
 			}
