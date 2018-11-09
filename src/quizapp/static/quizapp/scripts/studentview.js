@@ -30,6 +30,7 @@ var setWaiting = function(){
     }
 
     var thankYouMessage = document.createElement('h2');
+    thankYouMessage.setAttribute('style', 'margin: 5%');
     thankYouMessage.textContent = "Thanks you answering! Please wait for the next question.";
     main.appendChild(thankYouMessage);
 
@@ -54,7 +55,7 @@ var setQuestionPage= function(data){
     article.setAttribute('style', 'justify-content: flex-start; ');
     
     var question = document.createElement('h2');
-    question.setAttribute('style', 'margin: 2%');
+    question.setAttribute('style', 'margin: 3%');
     question.textContent = message;
     
     article.appendChild(question);
