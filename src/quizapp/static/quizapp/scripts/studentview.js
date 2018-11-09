@@ -21,13 +21,17 @@ var connectToSocket = function(roomName){
 
 var setWaiting = function(){
 
-    document.querySelector('#waiting').style.visibility='visible';
+    document.querySelector('#waiting').style.display='block';
 
     var main = document.querySelector('#main');
 
     while (main.firstChild){
         main.removeChild(main.firstChild);
     }
+
+    var thankYouMessage = document.createElement('h2');
+    thankYouMessage.textContent = "Thanks you answering! Please wait for the next question.";
+    main.appendChild(thankYouMessage);
 
 }
 
@@ -36,7 +40,7 @@ var setQuestionPage= function(data){
     var message = data['message'];
     //document.querySelector('#chat-log').value += (message + '\n');
 
-    var image = document.querySelector('#waiting').style.visibility='hidden';
+    var image = document.querySelector('#waiting').style.display='none';
     
     var main = document.querySelector('#main');
 
