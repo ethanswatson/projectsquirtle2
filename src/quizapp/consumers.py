@@ -65,7 +65,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             if msg_type == '2':
                 roomName = message['roomName']
                 userName = message['userName']
-                if self.scope['session']['quiz'] != roomName:
+                if self.scope['session'].get('roomName', False) != roomName:
                     self.scope['session']['quiz'] = {'roomName': roomName, 'userName': userName}
                     self.scope['session'].save()
                 message = message['userName']
