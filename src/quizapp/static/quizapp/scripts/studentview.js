@@ -2,7 +2,7 @@
 var chatSocket;
 
 
-var setstart = function(username){
+var setStart = function(userName){
 
     document.querySelector('#waiting').style.display='block';
 
@@ -14,7 +14,7 @@ var setstart = function(username){
 
     var waitMessage = document.createElement('h2');
     waitMessage.setAttribute('style', 'margin: 5%');
-    waitMessage.textContent = "Please wait for the quiz to start. " + username;
+    waitMessage.textContent = "Please wait for the quiz to start. " + userName;
     main.appendChild(waitMessage);
 
 }
@@ -38,12 +38,15 @@ var connectToSocket = function(roomName){
     };
 }
 
-var sendusername = function(username){
+var sendusername = function(userName, roomName){
     chatSocket.send(JSON.stringify({
-        'message': username,
+        'message':  {
+                    'userName': userName,
+                    'roomName': roomName
+                    },             
         'msg_type': '2'
     }));
-    setstart(username);
+    setStart(userName);
 }
 
 
@@ -103,7 +106,7 @@ var setQuestionPage= function(data){
             return function () {
                 sendMessage(a);
             };
-        }(i);
+        }(answers[i]['id']);
 
 
         answerdiv.textContent = answers[i]['text'];

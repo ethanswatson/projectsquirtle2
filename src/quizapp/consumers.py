@@ -44,6 +44,32 @@ class ChatConsumer(AsyncWebsocketConsumer):
             message = text_data_json['message']
             msg_type = text_data_json['msg_type']
 
+            if msg_type == '0':
+                message = {'questionText': message,
+                            'answers':[
+                                {'text': 'answer1',
+                                'id': 0
+                                },
+                                {'text': 'answer2',
+                                'id': 1
+                                },
+                                {'text': 'answer3',
+                                'id': 2
+                                },
+                                {'text': 'answer4',
+                                'id': 3
+                                }
+                            ]}
+                message = json.dumps(message)
+
+            if msg_type == '2':
+                roomName = message['roomName']
+                userName = message['userName']
+                if self.scope['session']['quiz'] != roomName:
+                    self.scope['session']['quiz'] = {'roomName': roomName, 'userName': userName}
+                    self.scope['session'].save()
+                message = message['userName']
+
 
             # Send message to room group
             await self.channel_layer.group_send(

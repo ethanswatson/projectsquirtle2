@@ -36,9 +36,16 @@ def roomMain(request, room_name):
         })
 
 def roomJoin(request, room_name):
-    return render(request, 'quizapp/sessionjoin.html', {
-            'room_name_json': mark_safe(json.dumps(room_name))
-        })
+    if request.session.get('quiz', False):
+        data = request.session.get('quiz')
+        userName = data['userName']
+        roomName = data['roomName']
+        if roomName == room_name:
+            print('already joined')
+            return render(request, 'quizapp/sessionjoin.html', {'room_name_json': mark_safe(json.dumps(room_name)), 'joined': True, 'userName':userName})
+    
+    return render(request, 'quizapp/sessionjoin.html', {'room_name_json': mark_safe(json.dumps(room_name)), 'joined': False})
+
 
 #Login View is handled by django, as well as logout, and password vies. you do need to create the html templates for each, but it handles the rest. Django authentication is described here https://docs.djangoproject.com/en/2.1/topics/auth/default/
 
