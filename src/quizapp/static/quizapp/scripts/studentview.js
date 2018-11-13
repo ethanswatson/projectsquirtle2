@@ -1,6 +1,25 @@
 
 var chatSocket;
 
+
+var setstart = function(username){
+
+    document.querySelector('#waiting').style.display='block';
+
+    var main = document.querySelector('#main');
+
+    while (main.firstChild){
+        main.removeChild(main.firstChild);
+    }
+
+    var waitMessage = document.createElement('h2');
+    waitMessage.setAttribute('style', 'margin: 5%');
+    waitMessage.textContent = "Please wait for the quiz to start. " + username;
+    main.appendChild(waitMessage);
+
+}
+
+
 var connectToSocket = function(roomName){
 	chatSocket = new WebSocket(
 		'ws://' + window.location.host +
@@ -16,8 +35,18 @@ var connectToSocket = function(roomName){
 
 	chatSocket.onclose = function(e) {
         	console.error('Chat socket closed unexpectedly');
-	};
+    };
 }
+
+var sendusername = function(username){
+    chatSocket.send(JSON.stringify({
+        'message': username,
+        'msg_type': '2'
+    }));
+    setstart(username);
+}
+
+
 
 var setWaiting = function(){
 
@@ -38,7 +67,10 @@ var setWaiting = function(){
 
 var setQuestionPage= function(data){
 
-    var message = data['message'];
+    var message = JSON.parse(data['message']);
+    var questionText = message['questionText'];
+    var answers = message['answers'];
+
     //document.querySelector('#chat-log').value += (message + '\n');
 
     var image = document.querySelector('#waiting').style.display='none';
@@ -56,26 +88,27 @@ var setQuestionPage= function(data){
     
     var question = document.createElement('h2');
     question.setAttribute('style', 'margin: 3%');
-    question.textContent = message;
+    question.textContent = questionText;
     
     article.appendChild(question);
 
     var section = document.createElement('section');
-    for(i = 0; i < 4; i++){
-        var answer = document.createElement('div');
-        answer.setAttribute('class', 'answer-button');
-        answer.setAttribute('style', 'width: 40%; padding: 20px;');
+    for(i = 0; i < answers.length; i++){
+        var answerdiv = document.createElement('div');
+        answerdiv.setAttribute('class', 'answer-button');
+        answerdiv.setAttribute('style', 'width: 40%; padding: 20px;');
         //answer.setAttribute('onclick',"sendMessage(i)");
 
-        answer.onclick = function(a) {
+        answerdiv.onclick = function(a) {
             return function () {
                 sendMessage(a);
             };
         }(i);
 
 
-        answer.textContent = "Answer number " + i;
-        section.appendChild(answer);
+        answerdiv.textContent = answers[i]['text'];
+        //answerdiv.setAttribute('value', answer[i]['id'])
+        section.appendChild(answerdiv);
     }
     article.appendChild(section);
 

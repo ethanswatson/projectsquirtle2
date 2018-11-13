@@ -7,6 +7,7 @@
 	{% load staticfiles %}
 		<link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/style.css' %}"/>
 		<link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/login.css' %}"/>
+		<link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/joinQuiz.css' %}"/>
 		<script type="text/javascript" src="{% static 'quizapp/scripts/studentview.js' %}"></script>
 </head>
 <body>
@@ -14,14 +15,27 @@
 	{% include "quizapp/partials/header.html" %}
 
 	<main id = "main", style = 'text-align: center;'>
-		<h2 style = 'margin: 5%'>Please wait while the quiz starts.</h2>
+		<div class = 'boxcenter'>
+			<section class="join-quiz-form">
+				<article class="session-id-section" style = 'align-items: center;'>
+					<h2>Please enter a username.</h2>
+					<input type = 'text', id = 'username', class ='session-id', style = 'size: 10;'>
+					<input type = 'button', onclick = 'submitUsername()'value = "Submit" class="submit-btn", style = 'width: 150px;'>
+				</article>
+			</section>
+		</div>
 	</main>
 	
-	<img id ='waiting' style="display:block; margin-left: auto; margin-right: auto;" src="{% static 'quizapp/images/giphy.gif' %}"/>
+	<img id ='waiting' style="display:block; margin-left: auto; margin-right: auto; display: none;" src="{% static 'quizapp/images/giphy.gif' %}"/>
 	{% include "quizapp/partials/footer.html" %}
 </body>
 <script>
-	connectToSocket({{room_name_json}})
+	connectToSocket({{room_name_json}});
+	var submitUsername = function(){
+		var username = document.querySelector('#username').value
+		sendusername(username);
+	}
+	
 </script>
 </html>
 
