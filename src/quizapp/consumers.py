@@ -45,6 +45,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             msg_type = text_data_json['msg_type']
 
             if msg_type == '0':
+                #msg_type = '3'
+                
                 message = {'questionText': message,
                             'answers':[
                                 {'text': 'answer1',
@@ -60,7 +62,26 @@ class ChatConsumer(AsyncWebsocketConsumer):
                                 'id': 3
                                 }
                             ]}
+                
+                """
+                message = {'currentUserScore': 755,
+                            'users':[
+                                {'username': 'user1',
+                                'score': 1450
+                                },
+                                {'username': 'user2',
+                                'score': 1350
+                                },
+                                {'username': 'user3',
+                                'score': 1120
+                                },
+                                {'username': 'user4',
+                                'score': 955
+                                }
+                            ]}
+                """
                 message = json.dumps(message)
+                
 
             if msg_type == '2':
                 roomName = message['roomName']

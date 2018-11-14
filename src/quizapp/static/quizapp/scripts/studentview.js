@@ -20,17 +20,51 @@ var setStart = function(userName){
 }
 
 
+var setResults = function(data){
+    var message = JSON.parse(data['message']);
+    var currentUserScore = message['currentUserScore'];
+    var users = message['users'];
+
+    document.querySelector('#waiting').style.display='none';
+
+    var main = document.querySelector('#main');
+
+    while (main.firstChild){
+        main.removeChild(main.firstChild);
+    }
+
+    var top = document.createElement('p');
+    top.textContent = "Final Results";
+
+    main.appendChild(top);
+
+    for(i = 0; i < users.length; i++){
+        var userScore = document.createElement('p');
+        userScore.textContent = users[i]['username'] + ": " + users[i]['score'];
+        main.appendChild(userScore);
+    }
+
+    var currentUser = document.createElement('p');
+        currentUser.textContent = "Your score was: " + currentUserScore;
+        main.appendChild(currentUser);
+
+
+}
+
 var connectToSocket = function(roomName){
 	chatSocket = new WebSocket(
 		'ws://' + window.location.host +
 		'/ws/quizapp/' + roomName + '/');
 
 	chatSocket.onmessage = function(e) {
-        	var data = JSON.parse(e.data);
+            var data = JSON.parse(e.data);
+            var msg_type = data['msg_type'];
 
-		if (data['msg_type']=='0') {
+		if (msg_type == '0') {
             setQuestionPage(data);
-		}
+		}else if(msg_type == '3'){
+            setResults(data);
+        }
 	};
 
 	chatSocket.onclose = function(e) {
