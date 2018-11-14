@@ -45,7 +45,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             msg_type = text_data_json['msg_type']
 
             if msg_type == '0':
-                #msg_type = '3'
                 
                 message = {'questionText': message,
                             'answers':[
@@ -64,6 +63,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                             ]}
                 
                 """
+                msg_type = '3'
                 message = {'currentUserScore': 755,
                             'users':[
                                 {'username': 'user1',
@@ -79,6 +79,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
                                 'score': 955
                                 }
                             ]}
+                """
+                """
+                msg_type = '4'
+                message = { 
+                    "answerCorrect": "true",
+                    "answerPointValue": 10,
+                    "userTotalScore": 100
+                }
                 """
                 message = json.dumps(message)
                 

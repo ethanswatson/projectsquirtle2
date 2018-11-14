@@ -51,6 +51,45 @@ var setResults = function(data){
 
 }
 
+
+var setAnswerResult = function(data){
+    var message = JSON.parse(data['message']);
+    var answerCorrect = message['answerCorrect'];
+    var answerPointValue = message['answerPointValue'];
+    var userTotalScore = message['userTotalScore'];
+
+    document.querySelector('#waiting').style.display='none';
+
+    var main = document.querySelector('#main');
+
+    while (main.firstChild){
+        main.removeChild(main.firstChild);
+    }
+
+    var correct = document.createElement('p');
+    var points = document.createElement('p');
+    var total = document.createElement('p');
+
+
+    correct.textContent = answerCorrect;
+    points.textContent = "Earned Points: " + answerPointValue;
+    total.textContent = "Total Points: " + userTotalScore;
+
+    main.appendChild(correct);
+    main.appendChild(points);
+    main.appendChild(total);
+
+
+    /*
+    "msgAnswerResult": {
+        "answerCorrect": "true",
+        "answerPointValue": 10,
+        "userTotalScore": 100
+    }
+    */
+}
+
+
 var connectToSocket = function(roomName){
 	chatSocket = new WebSocket(
 		'ws://' + window.location.host +
@@ -64,6 +103,8 @@ var connectToSocket = function(roomName){
             setQuestionPage(data);
 		}else if(msg_type == '3'){
             setResults(data);
+        }else if(msg_type == '4'){
+            setAnswerResult(data);
         }
 	};
 
