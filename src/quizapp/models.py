@@ -84,6 +84,7 @@ class Answer(models.Model):
 class Session(models.Model):
     _quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     _sessionId = models.CharField(max_length=6, default='') 
+    _hostChannelName = models.CharField(max_length=255)
 
     def idGen(self, size=6):
         if self._sessionId is '':
@@ -94,6 +95,13 @@ class Session(models.Model):
     def getRandomChar(self):
         chars = string.ascii_uppercase + string.digits
         return random.choice(chars)
+
+    def getHostName(self):
+        return self._hostChannelName
+
+    def setHostName(self, newName):
+        self._hostChannelName = newName
+        return
 
     def getSessionId(self):
         return self._sessionId

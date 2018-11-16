@@ -31,7 +31,6 @@
 	<img id ='waiting' style="display:block; margin-left: auto; margin-right: auto; display: none;" src="{% static 'quizapp/images/giphy.gif' %}"/>
 	{% if joined %}
 		<script>
-			console.log('{{userName}}');
 			setStart('{{userName}}');
 		</script>
 	{% endif %}

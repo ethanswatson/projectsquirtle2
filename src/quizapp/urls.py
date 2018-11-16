@@ -1,4 +1,4 @@
-
+from django.views.generic import RedirectView
 from django.urls import path, include
 from django.conf.urls import url
 
@@ -22,17 +22,6 @@ urlpatterns = [
     path('startquiz/quiz-<int:quizID>/', views.startQuiz, name='startQuiz'),
     path('hostquiz/<room_name>/', views.roomMain, name='roomMain'),
     path('joinquiz/<room_name>/', views.roomJoin, name="roomJoin"),
+    path('favicon.ico', RedirectView.as_view(url='/static/quizapp/images/favicon.png')),
     path('hostquiz/room/question/', views.teacherQuestion , name='teacherQuestion'),
 ]
-
-
-
-#path('accounts/', include('django.contrib.auth.urls')), includes everything down below
-    #accounts/login/ [name='login']
-    #accounts/logout/ [name='logout']
-    #accounts/password_change/ [name='password_change']
-    #accounts/password_change/done/ [name='password_change_done']
-    #accounts/password_reset/ [name='password_reset']
-    #accounts/password_reset/done/ [name='password_reset_done']
-    #accounts/reset/<uidb64>/<token>/ [name='password_reset_confirm']
-    #accounts/reset/done/ [name='password_reset_complete']

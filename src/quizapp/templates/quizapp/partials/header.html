@@ -1,4 +1,6 @@
 <header> 
+    {% load static %}
+    <link rel="shortcut icon" type="image/png" href="{% static 'quizapp/images/favicon.png' %}"/>
     <!--I have these duplicated and invisible so in flex i can have the image in the middle, and buttons on the side. You need symmetry to make it look like that.-->
     <section>
         {% if request.user.is_authenticated %}
@@ -8,7 +10,6 @@
         <a class="header-link" style = 'visibility: hidden'>LOGIN</a>
         {% endif %}
     </section>
-    {% load static %}
     <a href="{% url 'quizapp:index' %}"><img  src="{% static 'quizapp/images/projectSquirtle.png' %}"/></a>
     <section>
         {% if request.user.is_authenticated %}
