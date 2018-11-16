@@ -1,4 +1,4 @@
-
+from django.views.generic import RedirectView
 from django.urls import path, include
 from django.conf.urls import url
 
@@ -22,6 +22,7 @@ urlpatterns = [
     path('startquiz/quiz-<int:quizID>/', views.startQuiz, name='startQuiz'),
     path('hostquiz/<room_name>/', views.roomMain, name='roomMain'),
     path('joinquiz/<room_name>/', views.roomJoin, name="roomJoin"),
+    path('favicon.ico', RedirectView.as_view(url='/static/quizapp/images/favicon.png')),
 ]
 
 

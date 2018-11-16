@@ -41,7 +41,6 @@ var sendusername = function(user_name, roomName){
 }
 
 
-
 var setWaiting = function(){
 
     document.querySelector('#waiting').style.display='block';
@@ -64,8 +63,6 @@ var setQuestionPage= function(data){
     var message = JSON.parse(data['message']);
     var questionText = message['questionText'];
     var answers = message['answers'];
-
-    //document.querySelector('#chat-log').value += (message + '\n');
 
     var image = document.querySelector('#waiting').style.display='none';
     
@@ -91,17 +88,13 @@ var setQuestionPage= function(data){
         var answerdiv = document.createElement('div');
         answerdiv.setAttribute('class', 'answer-button');
         answerdiv.setAttribute('style', 'width: 40%; padding: 20px;');
-        //answer.setAttribute('onclick',"sendMessage(i)");
-
         answerdiv.onclick = function(a) {
             return function () {
                 sendMessage(a);
             };
         }(answers[i]['id']);
 
-
         answerdiv.textContent = answers[i]['text'];
-        //answerdiv.setAttribute('value', answer[i]['id'])
         section.appendChild(answerdiv);
     }
     article.appendChild(section);
@@ -174,8 +167,6 @@ var setAnswerResult = function(data){
     var answerCorrect = message['answerCorrect'];
     var answerPointValue = message['answerPointValue'];
     var userTotalScore = message['userTotalScore'];
-
-    //document.querySelector('#waiting').style.display='none';
 
     var main = document.querySelector('#main');
 
