@@ -1,0 +1,50 @@
+.answer-section {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.answer-box{
+	flex: 1 0 35%;
+	margin: 10px 20px;
+	padding: 5px;
+	border-radius: 3px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: darkblue;
+	background-color: #54A8B2;
+}
+
+.question-text {
+    font-size: 35px;
+}
+
+.quiz-name-text {
+	font-size: 35px;
+	margin-bottom: 5px;
+}
+
+.user-section {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.quiz-name-section {
+	display: flex;
+	flex-direction: column;
+}
+
+.start-quiz-btn {
+	width: 100px;
+	align-self: center;
+}
+
+.user-name-text {
+	font-size: 24px;
+	margin: 15px 70px;
+}
+
+.session-id-text {
+	font-size: 26px;
+}

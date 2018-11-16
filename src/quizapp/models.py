@@ -94,4 +94,7 @@ class Session(models.Model):
     def getRandomChar(self):
         chars = string.ascii_uppercase + string.digits
         return random.choice(chars)
+
+    def getSessionId(self):
+        return self._sessionId
 	
