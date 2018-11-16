@@ -32,10 +32,10 @@ class HostConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_send(
             self.clientGroupName,
             {
-                #'type': 'questionMessage',
-                'type': 'finalResultsMessage',
+                'type': 'questionMessage',
+                #'type': 'finalResultsMessage',
                 #'type': 'answerMessage',
-                'message': message
+                'message': message['message']
             }
         )
         
@@ -64,6 +64,10 @@ class HostConsumer(AsyncWebsocketConsumer):
             'message': {'userName': userName },
             'msgType': 'msgJoin'
         }))
+
+
+
+
 
 
 
@@ -133,7 +137,7 @@ class ClientConsumer(AsyncWebsocketConsumer):
     # Receive questionMessage from group
     async def questionMessage(self, question):
 
-        message = {'questionText': question['message'],
+        message = {'questionText': question,
                     'answers':[
                         {'text': 'answer1',
                         'id': 0
