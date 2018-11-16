@@ -18,3 +18,24 @@
 .question-text {
     font-size: 35px;
 }
+
+.user-section {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.quiz-name-section {
+	display: flex;
+	flex-direction: column;
+}
+
+.start-quiz-btn {
+	width: 100px;
+	align-self: center;
+}
+
+.user-name-text {
+	font-size: 24px;
+	margin: 15px 70px;
+}

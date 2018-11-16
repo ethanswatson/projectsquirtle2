@@ -36,17 +36,19 @@ let quiz = {
 
 let users = ['user a', 'user b', 'user c', 'user d', 'user e', 'user f', 'user g', 'user h', 'user i', 'user j']
 
-// renderLanding(quiz, users);
-renderQuestion(quiz.questions[0]);
+renderLanding(quiz, users);
+// renderQuestion(quiz.questions[0]);
 
 function renderLanding(quiz, users) {
     let main = document.querySelector('main');
     let quizNameSection = document.createElement('section');
+    quizNameSection.setAttribute('class', 'quiz-name-section');
     let quizName = document.createElement('p');
     quizName.setAttribute('class', 'question-text');
     quizName.textContent = quiz.quizName;
     quizNameSection.appendChild(quizName);
     let startButton = document.createElement('button');
+    startButton.setAttribute('class', 'start-quiz-btn');
     startButton.textContent = 'Start Quiz';
     quizNameSection.appendChild(startButton);
     main.appendChild(quizNameSection);
