@@ -39,6 +39,15 @@ let users = ['user a', 'user b', 'user c', 'user d', 'user e', 'user f', 'user g
 renderLanding(quiz, users);
 // renderQuestion(quiz.questions[0]);
 
+function landingAddUser(username) {
+    let userSection = document.querySelector('.user-section');
+    let userText = document.createElement('p');
+    userText.setAttribute('class', 'user-name-text');
+    userText.textContent = username;
+    userSection.appendChild(userText);
+    
+}
+
 function renderLanding(quiz, users) {
     let main = document.querySelector('main');
     let quizNameSection = document.createElement('section');
@@ -54,14 +63,11 @@ function renderLanding(quiz, users) {
     main.appendChild(quizNameSection);
     let userSection = document.createElement('section');
     userSection.setAttribute('class', 'user-section');
-    for (let i = 0; i < users.length; i++) {
-        let user = users[i];
-        let userText = document.createElement('p');
-        userText.setAttribute('class', 'user-name-text');
-        userText.textContent = user;
-        userSection.appendChild(userText);
-    }
     main.appendChild(userSection);
+    for (let i = 0; i < users.length; i++) {
+        let username = users[i];
+        landingAddUser(username);
+    }
 }
 
 function renderQuestion(question) {
