@@ -103,4 +103,6 @@ class Session(models.Model):
         self._hostChannelName = newName
         return
 
+    def getSessionId(self):
+        return self._sessionId
 	
