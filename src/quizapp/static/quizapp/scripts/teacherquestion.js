@@ -6,21 +6,27 @@ let quiz = {
             questionText: 'A Fake Question',
             answers: [
                 {
+                    id: 1,
                     text:'Option 1'
                 },
                 {
+                    id: 2,
                     text: 'Option 2'
                 },
                 {
+                    id: 3,
                     text: 'Option 3'
                 },
                 {
+                    id: 4,
                     text: 'Option 4'
                 },
                 {
+                    id: 5,
                     text: 'Option 5'
                 },
                 {
+                    id: 6,
                     text: 'Option 6'
                 },
             ]
@@ -30,7 +36,8 @@ let quiz = {
 
 let users = ['user a', 'user b', 'user c', 'user d', 'user e', 'user f', 'user g', 'user h', 'user i', 'user j']
 
-renderLanding(quiz, users);
+// renderLanding(quiz, users);
+renderQuestion(quiz.questions[0]);
 
 function renderLanding(quiz, users) {
     let main = document.querySelector('main');
