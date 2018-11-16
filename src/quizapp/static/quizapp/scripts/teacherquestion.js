@@ -34,6 +34,8 @@ let quiz = {
     ]
 }
 
+let sessionId = 'AERTYF';
+
 let users = ['user a', 'user b', 'user c', 'user d', 'user e', 'user f', 'user g', 'user h', 'user i', 'user j']
 
 renderLanding(quiz, users);
@@ -53,9 +55,13 @@ function renderLanding(quiz, users) {
     let quizNameSection = document.createElement('section');
     quizNameSection.setAttribute('class', 'quiz-name-section');
     let quizName = document.createElement('p');
-    quizName.setAttribute('class', 'question-text');
+    quizName.setAttribute('class', 'quiz-name-text');
     quizName.textContent = quiz.quizName;
     quizNameSection.appendChild(quizName);
+    let sessionIdText = document.createElement('p');
+    sessionIdText.setAttribute('class', 'session-id-text');
+    sessionIdText.textContent = 'Session ID: ' + sessionId;
+    quizNameSection.appendChild(sessionIdText);
     let startButton = document.createElement('button');
     startButton.setAttribute('class', 'start-quiz-btn');
     startButton.textContent = 'Start Quiz';
