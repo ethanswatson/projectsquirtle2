@@ -31,39 +31,35 @@
 
 	var chatSocket = new WebSocket(
 		'ws://' + window.location.host +
-		'/ws/quizapp/' + roomName + '/');
+		'/ws/quizapp/host/' + roomName + '/');
 
 	chatSocket.onmessage = function(e) {
-        	var data = JSON.parse(e.data);
-
-		if (data['msg_type']=='0') {
-			var message = data['message'];
-			document.querySelector('#chat-log').value += ('sent: ' + message + '\n');
-		}
-		if (data['msg_type']=='1') {
-			var message = data['message'];
-			console.log(message);
-			if (message == '0') {
+		var data = JSON.parse(e.data);
+		
+		var message = data['message'];
+		
+		if (data['msgType']=='msgVote') {
+			var answerID = message['answerID'];
+			if (answerID == '0') {
 				voteA +=1;
 				document.getElementById("dispVoteA").innerHTML = "Votes for A: " + voteA;
 			}
-			if (message == '1') {
+			if (answerID == '1') {
 				voteB +=1;
 				document.getElementById("dispVoteB").innerHTML = "Votes for B: " + voteB;
 			}
-			if (message == '2') {
+			if (answerID == '2') {
 				voteC +=1;
 				document.getElementById("dispVoteC").innerHTML = "Votes for C: " + voteC;
 			}
-			if (message == '3') {
+			if (answerID == '3') {
 				voteD +=1;
 				document.getElementById("dispVoteD").innerHTML = "Votes for D: " + voteD;
 			}
 		}
 
-		if (data['msg_type']=='2') {
-			var altMessage = data['message'];
-			document.querySelector('#chat-log').value += (altMessage + '\n');
+		if (data['msgType']=='msgJoin') {
+			document.querySelector('#chat-log').value += message['userName'] + ' has joined the quiz\n';
 		};
 	};
 
@@ -83,7 +79,7 @@
         	var message = messageInputDom.value;
         	chatSocket.send(JSON.stringify({
         		'message': message,
-			'msg_type': '0'
+			'msgType': 'msgQuestion'
 		}));
 
 		messageInputDom.value = '';
