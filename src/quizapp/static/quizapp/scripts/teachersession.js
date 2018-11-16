@@ -52,9 +52,8 @@ var connectToSocket = function (roomName) {
 
 
     document.querySelector('#questionInputSubmit').onclick = function(e) {
-   	    var messageInputDom = document.querySelector('#questionInputSubmit');
+   	    var messageInputDom = document.querySelector('#questionInput');
         var message = messageInputDom.value;
-        console.log("pressed send");
 	    chatSocket.send(JSON.stringify({
     		'message': message,
 		    'msgType': 'msgQuestion'
