@@ -25,8 +25,8 @@ class HostConsumer(AsyncWebsocketConsumer):
         
     async def receive(self, text_data):
         message = json.loads(text_data)
-        print(message)
         msgType = message['msgType']
+        question = message['message']
 
         if msgType == 'msgQuestion':
             await self.channel_layer.group_send(
@@ -35,7 +35,7 @@ class HostConsumer(AsyncWebsocketConsumer):
                 'type': 'questionMessage',
                 #'type': 'finalResultsMessage',
                 #'type': 'answerMessage',
-                'message': message['message']
+                'message': question
             }
         )
         
@@ -43,7 +43,6 @@ class HostConsumer(AsyncWebsocketConsumer):
             pass
 
     async def voteMessage(self, data):
-        print(data)
         userID = data['message']['userID']
         answerID = data['message']['answerID']
 
@@ -57,7 +56,6 @@ class HostConsumer(AsyncWebsocketConsumer):
         }))
 
     async def joinMessage(self, data):
-        print(data)
         userName = data['message']['userName']
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
@@ -137,7 +135,7 @@ class ClientConsumer(AsyncWebsocketConsumer):
     # Receive questionMessage from group
     async def questionMessage(self, question):
 
-        message = {'questionText': question,
+        message = {'questionText': question['message'],
                     'answers':[
                         {'text': 'answer1',
                         'id': 0
