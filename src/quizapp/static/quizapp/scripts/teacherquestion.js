@@ -38,8 +38,8 @@ let sessionId = 'AERTYF';
 
 let users = ['user a', 'user b', 'user c', 'user d', 'user e', 'user f', 'user g', 'user h', 'user i', 'user j']
 
-renderLanding(quiz, users);
-// renderQuestion(quiz.questions[0]);
+// renderLanding(quiz, users);
+renderQuestion(quiz.questions[0]);
 
 function landingAddUser(username) {
     let userSection = document.querySelector('.user-section');
