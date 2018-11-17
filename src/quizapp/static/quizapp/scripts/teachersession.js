@@ -1,7 +1,4 @@
-var voteA = 0;
-var voteB = 0;
-var voteC = 0;
-var voteD = 0;
+var votes = 0;
 var chatSocket;
 
 var connectToSocket = function (roomName) {
@@ -12,28 +9,19 @@ var connectToSocket = function (roomName) {
     chatSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);
         var message = data['message'];
-        if (data['msgType']=='msgJoin') {
-            
+        var msgType = data['msgType']
+        if (msgType=='msgJoin') {
             document.querySelector('#log').value += message['userName'] + " has join the quiz\n";
-        }
-        if (data['msgType']=='msgVote') {
-            answerID = message['answerID']
-            if (answerID == '0') {
-                voteA +=1;
-                document.getElementById("dispVoteA").innerHTML = "Votes for A: " + voteA;
+        }else if(msgType=='msgVote') {
+                votes++;
+                document.getElementById("votes").innerHTML = "Votes: " + votes;
+        }else if(msgType== 'msgNext'){
+            document.querySelector('#log').value += message['questionText'] + '\n';
+            answers = message['answers'];
+            for(i = 0; i < answers.length; i++){
+                document.querySelector('#log').value += answers[i]['text'] + ", ";
             }
-            if (answerID == '1') {
-                voteB +=1;
-                document.getElementById("dispVoteB").innerHTML = "Votes for B: " + voteB;
-            }
-            if (answerID == '2') {
-                voteC +=1;
-                document.getElementById("dispVoteC").innerHTML = "Votes for C: " + voteC;
-            }
-            if (answerID == '3') {
-                voteD +=1;
-                document.getElementById("dispVoteD").innerHTML = "Votes for D: " + voteD;
-            }
+            document.querySelector('#log').value += "\n";
         }
     };
         
@@ -56,7 +44,7 @@ var connectToSocket = function (roomName) {
         var message = messageInputDom.value;
 	    chatSocket.send(JSON.stringify({
     		'message': message,
-		    'msgType': 'msgQuestion'
+		    'msgType': 'msgNext'
 	    }));
 
 	    messageInputDom.value = '';

@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
+
 import random
 import string
 
@@ -85,6 +87,22 @@ class Session(models.Model):
     _quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     _sessionId = models.CharField(max_length=6, default='') 
     _hostChannelName = models.CharField(max_length=255)
+    _questionCounter = models.IntegerField(default = 0)
+
+
+    def nextQuestion(self):
+        numberOfQuestions = self._quiz.question_set.count()
+        if self._questionCounter < numberOfQuestions:
+            try:
+                nextQ = self._quiz.question_set.order_by('id')[self._questionCounter]
+            except IndexError:
+                print("Something Went Wrong, I Couldn't Get That Question.")
+                return -1
+            self._questionCounter += 1
+            #self.save()
+            return nextQ
+        return False
+
 
     def idGen(self, size=6):
         if self._sessionId is '':

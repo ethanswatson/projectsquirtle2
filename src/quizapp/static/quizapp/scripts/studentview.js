@@ -59,10 +59,7 @@ var setWaiting = function(){
 }
 
 var setQuestionPage= function(data){
-    console.log(data);
-
-    var message = JSON.parse(data['message']);
-    console.log(message);
+    var message = data['message'];
     var questionText = message['questionText'];
     var answers = message['answers'];
 
