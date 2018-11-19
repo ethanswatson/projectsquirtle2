@@ -90,6 +90,7 @@ class Session(models.Model):
     _hostChannelName = models.CharField(max_length=255)
     _questionCounter = models.IntegerField(default = 0)
     _currentVotes = models.IntegerField(default = 0)
+    
 
 
     def nextQuestion(self):
