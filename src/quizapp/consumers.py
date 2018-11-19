@@ -37,7 +37,6 @@ class HostConsumer(AsyncWebsocketConsumer):
         message = json.loads(text_data)
         msgType = message['msgType']
         
-
         if msgType == 'msgQuestion':
             question = message['message']
             await self.channel_layer.group_send(
@@ -51,44 +50,27 @@ class HostConsumer(AsyncWebsocketConsumer):
         )
         
         if msgType == 'msgNext':
-            nextQuestion = await self.getNextQuestion()
-            if nextQuestion != False:
-                self.currentVotes = 0
-                question = {
-                            'questionText': nextQuestion.getQuestionText(),
-                            'answers': []
-                            }
-
-                for answer in nextQuestion.getAnswers():
-                    question['answers'] += [{'id': answer.id,
-                        'text': answer.getText()}]
-
-                # Send message to WebSocket
-                await self.send(
-                    text_data = json.dumps(
-                        {
-                            'message': question,
-                            'msgType': 'msgNext'
-                        }
-                    )
-                )
-
-                await self.channel_layer.group_send(
-                    self.clientGroupName,
-                    {
-                        'type': 'questionMessage',
-                        'message': question
-                    })
+            self.nextQuestionMessage()
+            
         
         if msgType == 'msgUpdate':
-            updatedQuestion = message['message']
-            updatedQuestion = await self.updateQuestion(updatedQuestion)
+            self.updateQuestionMessage(message['message'])
+            
+
+        if msgType == 'msgAdd':
+            newQuestion = message['message']
+            newQuestion = await self.addQuestion(newQuestion)
+
+    async def deleteQuestionMessage(self):
+        nextQuestion = await self.session.deleteQuestion()
+        if nextQuestion != False or nextQuestion != -1:
             self.currentVotes = 0
-            question = {'questionText': updatedQuestion.getQuestionText(),
-               'answers': []
+            question = {
+                'questionText': nextQuestion.getQuestionText(),
+                'answers': []
             }
 
-            for answer in updatedQuestion.getAnswers():
+            for answer in nextQuestion.getAnswers():
                 question['answers'] += [
                     {
                         'id': answer.id,
@@ -99,9 +81,9 @@ class HostConsumer(AsyncWebsocketConsumer):
             # Send message to WebSocket
             await self.send(
                 text_data = json.dumps(
-                    {
-                        'message': question,    
-                        'msgType': 'msgNext'
+                {
+                    'message': question,
+                    'msgType': 'msgNext'
                     }
                 )
             )
@@ -114,11 +96,78 @@ class HostConsumer(AsyncWebsocketConsumer):
                 }
             )
 
+    @database_sync_to_async
+    def deleteQuestion():
+        self.session.deleteQuestion()
 
-        if msgType == 'msgAdd':
-            newQuestion = message['message']
-            newQuestion = await self.addQuestion(newQuestion)
 
+    async def nextQuestionMessage(self):
+        nextQuestion = await self.getNextQuestion()
+        if nextQuestion != False or nextQuestion != -1:
+            self.currentVotes = 0
+            question = {
+                'questionText': nextQuestion.getQuestionText(),
+                'answers': []
+            }
+
+            for answer in nextQuestion.getAnswers():
+                question['answers'] += [
+                    {
+                        'id': answer.id,
+                        'text': answer.getText()
+                    }
+                ]
+
+            # Send message to WebSocket
+            await self.send(
+                text_data = json.dumps(
+                {
+                    'message': question,
+                    'msgType': 'msgNext'
+                    }
+                )
+            )
+
+            await self.channel_layer.group_send(
+                self.clientGroupName,
+                {
+                    'type': 'questionMessage',
+                    'message': question
+                }
+            )
+
+    async def updateQuestionMessage(self, updatedQuestion):
+        updatedQuestion = await self.updateQuestion(updatedQuestion)
+        self.currentVotes = 0
+        question = {'questionText': updatedQuestion.getQuestionText(),
+           'answers': []
+        }
+
+        for answer in updatedQuestion.getAnswers():
+            question['answers'] += [
+                {
+                    'id': answer.id,
+                    'text': answer.getText()
+                }
+            ]
+
+        # Send message to WebSocket
+        await self.send(
+            text_data = json.dumps(
+                {
+                    'message': question,    
+                    'msgType': 'msgNext'
+                }
+            )
+        )
+
+        await self.channel_layer.group_send(
+            self.clientGroupName,
+            {
+                'type': 'questionMessage',
+                'message': question
+            }
+        )
 
     @database_sync_to_async
     def addQuestion(newQuestion):

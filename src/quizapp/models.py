@@ -125,6 +125,21 @@ class Session(models.Model):
             question.addAnswer(answer['answerText'], answer['correct'], answer['points'])
         question.save()
 
+    def deleteQuestion(self):
+        question = self._quiz.question_set.order_by('id')[self._questionCounter]
+        question.delete()
+        numberOfQuestions = self._quiz.question_set.count()
+        if self._questionCounter < numberOfQuestions:
+            try:
+                nextQ = self._quiz.question_set.order_by('id')[self._questionCounter]
+            except IndexError:
+                print("Something Went Wrong, I Couldn't Get That Question.")
+                return -1
+            self._currentVotes = 0
+            #self.save()
+            return nextQ
+        return False
+
     def increaseVotes(self):
         self._currentVotes += 1
         self.save()
