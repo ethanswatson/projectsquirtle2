@@ -14,7 +14,7 @@ var connectToSocket = function (roomName) {
             document.querySelector('#log').value += message['userName'] + " has join the quiz\n";
         }else if(msgType=='msgVote') {
                 votes++;
-                document.getElementById("votes").innerHTML = "Votes: " + votes;
+                document.getElementById("votes").innerHTML = "Votes: " + message;
         }else if(msgType== 'msgNext'){
             document.querySelector('#log').value += message['questionText'] + '\n';
             answers = message['answers'];

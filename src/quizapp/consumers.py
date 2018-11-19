@@ -27,6 +27,7 @@ class HostConsumer(AsyncWebsocketConsumer):
     def setHostName(self, name, sessionID):
         self.session = Session.objects.get(_sessionId = sessionID)
         self.session.setHostName(name)
+        self.currentVotes = self.session.getVotes()
         self.session.save()
 
     async def disconnect(self, close_code):
@@ -52,19 +53,25 @@ class HostConsumer(AsyncWebsocketConsumer):
         if msgType == 'msgNext':
             nextQuestion = await self.getNextQuestion()
             if nextQuestion != False:
-                question = {'questionText': nextQuestion.getQuestionText(),
-                        'answers': []
-                    }
+                self.currentVotes = 0
+                question = {
+                            'questionText': nextQuestion.getQuestionText(),
+                            'answers': []
+                            }
 
                 for answer in nextQuestion.getAnswers():
                     question['answers'] += [{'id': answer.id,
                         'text': answer.getText()}]
 
                 # Send message to WebSocket
-                await self.send(text_data = json.dumps({
-                    'message': question,
-                    'msgType': 'msgNext'
-                }))
+                await self.send(
+                    text_data = json.dumps(
+                        {
+                            'message': question,
+                            'msgType': 'msgNext'
+                        }
+                    )
+                )
 
                 await self.channel_layer.group_send(
                     self.clientGroupName,
@@ -72,6 +79,56 @@ class HostConsumer(AsyncWebsocketConsumer):
                         'type': 'questionMessage',
                         'message': question
                     })
+        
+        if msgType == 'msgUpdate':
+            updatedQuestion = message['message']
+            updatedQuestion = await self.updateQuestion(updatedQuestion)
+            self.currentVotes = 0
+            question = {'questionText': updatedQuestion.getQuestionText(),
+               'answers': []
+            }
+
+            for answer in updatedQuestion.getAnswers():
+                question['answers'] += [
+                    {
+                        'id': answer.id,
+                        'text': answer.getText()
+                    }
+                ]
+
+            # Send message to WebSocket
+            await self.send(
+                text_data = json.dumps(
+                    {
+                        'message': question,    
+                        'msgType': 'msgNext'
+                    }
+                )
+            )
+
+            await self.channel_layer.group_send(
+                self.clientGroupName,
+                {
+                    'type': 'questionMessage',
+                    'message': question
+                }
+            )
+
+
+        if msgType == 'msgAdd':
+            newQuestion = message['message']
+            newQuestion = await self.addQuestion(newQuestion)
+
+
+    @database_sync_to_async
+    def addQuestion(newQuestion):
+        self.session.addQuestion(newQuestion)
+
+
+    @database_sync_to_async
+    def updateQuestion(updatedQuestion):
+        return self.session.updateQuestion(updatedQuestion)
+
 
     @database_sync_to_async
     def getNextQuestion(self):
@@ -80,13 +137,13 @@ class HostConsumer(AsyncWebsocketConsumer):
     async def voteMessage(self, data):
         userID = data['message']['userID']
         answerID = data['message']['answerID']
+        self.currentVotes += 1
+        self.session.increaseVotes()
+        votes = self.currentVotes
 
         # Send message to WebSocket
         await self.send(text_data = json.dumps({
-            'message': {
-                'userID': userID,
-                'answerID': answerID
-            },
+            'message': votes,
             'msgType': 'msgVote'
         }))
 
@@ -169,8 +226,6 @@ class ClientConsumer(AsyncWebsocketConsumer):
 
     # Receive questionMessage from group
     async def questionMessage(self, question):
-
-
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
