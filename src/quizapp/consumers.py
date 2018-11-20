@@ -23,54 +23,46 @@ class HostConsumer(AsyncWebsocketConsumer):
 
         await self.accept()
 
-    @database_sync_to_async
-    def setHostName(self, name, sessionID):
-        self.session = Session.objects.get(_sessionId = sessionID)
-        self.session.setHostName(name)
-        self.currentVotes = self.session.getVotes()
-        self.session.save()
-
-    async def disconnect(self, close_code):
-        pass
-        
     async def receive(self, text_data):
         message = json.loads(text_data)
         msgType = message['msgType']
         
-        if msgType == 'msgQuestion':
-            question = message['message']
-            await self.channel_layer.group_send(
-            self.clientGroupName,
-            {
-                'type': 'questionMessage',
-                #'type': 'finalResultsMessage',
-                #'type': 'answerMessage',
-                'message': question
-            }
-        )
-        
-        if msgType == 'msgNext':
-            await self.nextQuestionMessage()
+        if  msgType == 'msgNext':
+            state = self.session.getSessionState()
+            if state == 'question':
+                await self.results()
+            elif  state == 'results':
+                await self.nextQuestion()
             
-        
-        if msgType == 'msgUpdate':
-            await self.updateQuestionMessage(message['message'])
+        elif msgType == 'msgUpdate':
+            await self.sendQuestionUpdate(message['message'])
             
-
-        if msgType == 'msgAdd':
+        elif msgType == 'msgAdd':
             newQuestion = message['message']
             newQuestion = await self.addQuestion(newQuestion)
+        
+        elif msgType == 'msgEdit':
+            await self.sendCurrentQuestionFull()
 
-    async def nextQuestionMessage(self):
-        nextQuestion = await self.getNextQuestion()
-        if nextQuestion != False and nextQuestion != -1:
+        elif msgType == 'msgRequestCurrent':
+            await self.sendCurrentQuestion()
+
+        elif msgType == 'msgDelete':
+            await self.deleteQuestionMessage()
+        
+        elif msgType == 'msgSkip':
+            await self.skipQuestion()
+
+    async def sendCurrentQuestion(self):
+        currentQuestion = await self.getCurrentQuestion()
+        if currentQuestion != False or currentQuestion != -1:
             self.currentVotes = 0
             question = {
-                'questionText': nextQuestion.getQuestionText(),
+                'questionText': currentQuestion.getQuestionText(),
                 'answers': []
             }
 
-            for answer in nextQuestion.getAnswers():
+            for answer in currentQuestion.getAnswers():
                 question['answers'] += [
                     {
                         'id': answer.id,
@@ -88,6 +80,7 @@ class HostConsumer(AsyncWebsocketConsumer):
                 )
             )
 
+            # Send message to client channel group
             await self.channel_layer.group_send(
                 self.clientGroupName,
                 {
@@ -96,20 +89,23 @@ class HostConsumer(AsyncWebsocketConsumer):
                 }
             )
 
-    async def deleteQuestionMessage(self):
-        nextQuestion = await self.session.deleteQuestion()
-        if nextQuestion != False or nextQuestion != -1:
-            self.currentVotes = 0
+            await self.setSessionState('question')
+
+    async def sendCurrentQuestionFull(self):
+        currentQuestion = await self.getCurrentQuestion()
+        if currentQuestion != False and currentQuestion != -1:
             question = {
-                'questionText': nextQuestion.getQuestionText(),
+                'questionText': currentQuestion.getQuestionText(),
                 'answers': []
             }
 
-            for answer in nextQuestion.getAnswers():
+            for answer in currentQuestion.getAnswers():
                 question['answers'] += [
                     {
                         'id': answer.id,
-                        'text': answer.getText()
+                        'text': answer.getText(),
+                        'correct': answer.isCorrect(),
+                        'points': answer.getPointValue()
                     }
                 ]
 
@@ -123,33 +119,19 @@ class HostConsumer(AsyncWebsocketConsumer):
                 )
             )
 
-            await self.channel_layer.group_send(
-                self.clientGroupName,
+    async def results(self):
+        users = await self.getResults()
+        isEnd = await self.checkForEnd()
+        results = {
+                'users': [],
+                'quizEnd': isEnd
+            }
+
+        for user in users:
+            results['users'] += [
                 {
-                    'type': 'questionMessage',
-                    'message': question
-                }
-            )
-
-    @database_sync_to_async
-    def deleteQuestion():
-        self.session.deleteQuestion()
-
-
-    
-
-    async def updateQuestionMessage(self, updatedQuestion):
-        updatedQuestion = await self.updateQuestion(updatedQuestion)
-        self.currentVotes = 0
-        question = {'questionText': updatedQuestion.getQuestionText(),
-           'answers': []
-        }
-
-        for answer in updatedQuestion.getAnswers():
-            question['answers'] += [
-                {
-                    'id': answer.id,
-                    'text': answer.getText()
+                    'userID': user.getUserID(),
+                    'points': user.getPoints()
                 }
             ]
 
@@ -157,39 +139,38 @@ class HostConsumer(AsyncWebsocketConsumer):
         await self.send(
             text_data = json.dumps(
                 {
-                    'message': question,    
+                    'message': results,
                     'msgType': 'msgNext'
                 }
             )
         )
+        if not isEnd:
+            await self.setSessionState('results')
+        else:
+            await self.setSessionState('end')
 
-        await self.channel_layer.group_send(
-            self.clientGroupName,
-            {
-                'type': 'questionMessage',
-                'message': question
-            }
-        )
+        
+    async def nextQuestion(self):
+        await self.advanceQuestion()
+        await self.sendCurrentQuestion()
+    
+    async def skipQuestion(self):
+        await self.skipQuestionDatabase()
+        await self.sendCurrentQuestion()
 
-    @database_sync_to_async
-    def addQuestion(newQuestion):
-        self.session.addQuestion(newQuestion)
-
-
-    @database_sync_to_async
-    def updateQuestion(updatedQuestion):
-        return self.session.updateQuestion(updatedQuestion)
-
-
-    @database_sync_to_async
-    def getNextQuestion(self):
-        return self.session.nextQuestion()
-
+    async def deleteQuestionMessage(self):
+        await self.deleteQuestion()
+        await self.sendCurrentQuestion()
+        
+    async def sendQuestionUpdate(self, updatedQuestion):
+        await self.updateQuestion(updatedQuestion)
+        await self.sendCurrentQuestion()
+        
     async def voteMessage(self, data):
         userID = data['message']['userID']
         answerID = data['message']['answerID']
         self.currentVotes += 1
-        self.session.increaseVotes()
+        self.session.increaseVotes(userID, answerID)
         votes = self.currentVotes
 
         # Send message to WebSocket
@@ -206,12 +187,54 @@ class HostConsumer(AsyncWebsocketConsumer):
             'msgType': 'msgJoin'
         }))
 
+    async def disconnect(self, close_code):
+        pass
 
+    @database_sync_to_async
+    def getResults(self):
+        return self.session.getResults()
 
+    @database_sync_to_async
+    def checkForEnd(self):
+        return self.session.checkForEnd()
 
+    @database_sync_to_async
+    def setHostName(self, name, sessionID):
+        self.session = Session.objects.get(_sessionId = sessionID)
+        self.session.setHostName(name)
+        self.currentVotes = self.session.getVotes()
+        self.session.save()
+    
+    @database_sync_to_async
+    def addQuestion(self, newQuestion):
+        self.session.addQuestion(newQuestion)
 
+    @database_sync_to_async
+    def updateQuestion(self, updatedQuestion):
+        self.session.updateQuestion(updatedQuestion)
 
+    @database_sync_to_async
+    def advanceQuestion(self):
+        self.session.advanceQuestion()
 
+    @database_sync_to_async
+    def skipQuestionDatabase(self):
+        self.session.skipQuestion()
+
+    @database_sync_to_async
+    def getCurrentQuestion(self):
+        return self.session.getCurrentQuestion()
+
+    @database_sync_to_async
+    def deleteQuestion(self):
+        self.session.deleteQuestion()
+
+    @database_sync_to_async
+    def setSessionState(self, newState):
+        self.session.setSessionState(newState)
+        
+
+   
 
 class ClientConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -249,30 +272,44 @@ class ClientConsumer(AsyncWebsocketConsumer):
         msgType = data['msgType']
 
         if msgType == 'msgVote':
-            userID = message['userID']
-            answerID = message['answerID']
-               
-            await self.channel_layer.send(self.hostChannel, {
-                "type": "voteMessage",
-                "message": {
-                    'userID': userID,
-                    'answerID': answerID
-                    },
-            })
+            await self.vote(message)
 
         if msgType == 'msgJoin':
-            roomName = message['roomName']
-            userName = message['userName']
-            if self.scope['session'].get('roomName', False) != roomName:
-                self.scope['session']['quiz'] = {'roomName': roomName, 'userName': userName}
-                self.scope['session'].save()
+            await self.join(message)
             
-            await self.channel_layer.send(self.hostChannel, {
-                "type": "joinMessage",
-                "message": {
-                    'userName': userName,
+
+    async def vote(self, message):
+        userID = message['userID']
+        answerID = message['answerID']
+               
+        await self.channel_layer.send(self.hostChannel, 
+            {
+                "type": "voteMessage",
+                "message": 
+                {
+                    'userID': userID,
+                    'answerID': answerID
+                },
+            }
+        )
+        
+    async def join(self, message):
+        roomName = message['roomName']
+        userName = message['userName']
+        if self.scope['session'].get('roomName', False) != roomName:
+            self.scope['session']['quiz'] = {'roomName': roomName, 'userName': userName}
+            self.scope['session'].save()
+            
+            await self.channel_layer.send(
+                self.hostChannel, 
+                {
+                    "type": "joinMessage",
+                    "message": 
+                    {
+                        'userName': userName,
                     },
-            })
+                }
+            )
 
 
     # Receive questionMessage from group
@@ -283,6 +320,7 @@ class ClientConsumer(AsyncWebsocketConsumer):
             'message': question['message'],
             'msgType': 'msgQuestion'
         }))
+
 
     # Receive fianlResultsMessage from group
     async def finalResultsMessage(self, data):
