@@ -3,8 +3,6 @@ var chatSocket;
 
 var userName;
 
-var userID = 1;
-
 var connectToSocket = function(roomName){
 	chatSocket = new WebSocket(
 		'ws://' + window.location.host +
@@ -20,12 +18,22 @@ var connectToSocket = function(roomName){
             setResults(data);
         }else if(msgType == 'msgAnswerResult'){
             setAnswerResult(data);
+        }else if(msgType == 'msgUserName'){
+            wasAccepted(data)
         }
 	};
 
 	chatSocket.onclose = function(e) {
         	console.error('Chat socket closed unexpectedly');
     };
+}
+
+var wasAccepted = function(data){
+    if(data['message'] == 'Accepted'){
+        setStart(userName);
+    }else if(data['message'] == 'Taken'){
+        window.alert("That username is already taken. Please choose another username.");
+    }
 }
 
 var sendusername = function(user_name, roomName){
@@ -37,7 +45,6 @@ var sendusername = function(user_name, roomName){
                     }),             
         'msgType': 'msgJoin'
     }));
-    setStart(userName);
 }
 
 
@@ -101,10 +108,12 @@ var setQuestionPage= function(data){
 }
 
 var sendMessage = function(answerID){
+    console.log(answerID);
+    console.log(userName);
    
     message = JSON.stringify({
             'answerID': answerID,
-            'userID': userID
+            'userID': userName
         })
     chatSocket.send(JSON.stringify({
         'message': message,

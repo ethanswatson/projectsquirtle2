@@ -24,8 +24,10 @@ class HostConsumer(AsyncWebsocketConsumer):
         if  msgType == 'msgNext':
             state = self.session.getSessionState()
             if state == 'question':
+                await self.answerResults()
+            elif state == 'answerResults':
                 await self.results()
-            elif  state == 'results':
+            elif state == 'results' or state == 'start':
                 await self.nextQuestion()
             
         elif msgType == 'msgUpdate':
@@ -49,7 +51,7 @@ class HostConsumer(AsyncWebsocketConsumer):
 
     async def sendCurrentQuestion(self):
         currentQuestion = await self.getCurrentQuestion()
-        if currentQuestion != False or currentQuestion != -1:
+        if currentQuestion != False and currentQuestion != -1:
             self.currentVotes = 0
             question = {
                 'questionText': currentQuestion.getQuestionText(),
@@ -65,7 +67,7 @@ class HostConsumer(AsyncWebsocketConsumer):
                 ]
 
             # Send message to WebSocket
-            await self.sendToSelf(question, 'msgNext')
+            await self.sendToSelf(question, 'msgQuestion')
 
             # Send message to client channel group
             await self.sendToClients(question, 'questionMessage')
@@ -91,12 +93,14 @@ class HostConsumer(AsyncWebsocketConsumer):
                 ]
 
             # Send message to WebSocket
-            await self.sendToSelf(question, 'msgNext')
+            await self.sendToSelf(question, 'msgEdit')
+
+            await self.setSessionState('edit')
 
 
-    async def answerResults():
+    async def answerResults(self):
         question = await self.getCurrentQuestion()
-        msgType = 'msgAnswerResult'
+        msgType = 'msgAnswerResults'
         message = {
             'questionText': question.getQuestionText(),
             'votes': []
@@ -110,12 +114,12 @@ class HostConsumer(AsyncWebsocketConsumer):
                 }
             ]
         # Send message to WebSocket
-        await self.sendToSelf(question, 'msgNext')
+        await self.sendToSelf(message, msgType)
        
         # Send message to client channel group
         await self.sendToClients(message, msgType)
 
-        await self.setSessionState('question')
+        await self.setSessionState('answerResults')
 
     async def results(self):
         users = await self.getResults()
@@ -134,7 +138,7 @@ class HostConsumer(AsyncWebsocketConsumer):
             ]
 
         # Send message to WebSocket
-        await self.sendToSelf(results, 'msgNext')
+        await self.sendToSelf(results, 'msgResults')
         
         if not isEnd:
             await self.setSessionState('results')
@@ -249,8 +253,10 @@ class HostConsumer(AsyncWebsocketConsumer):
    
 
 class ClientConsumer(AsyncWebsocketConsumer):
+
     async def connect(self):
         self.sessionID = self.scope['url_route']['kwargs']['sessionID']
+        self.session = Session.objects.get(_sessionId = self.sessionID)
         self.clientGroupName = 'quiz%s' % self.sessionID
 
         #Join room group
@@ -290,10 +296,29 @@ class ClientConsumer(AsyncWebsocketConsumer):
         userID = message['userID']
         answerID = message['answerID']
         message = {
-            'userID': userId, 
+            'userID': userID, 
             'answerID': answerID
             }
         await self.sendToHost(message, 'voteMessage')
+
+    async def join(self, message):
+        roomName = message['roomName']
+        userName = message['userName']
+        if self.scope['session'].get('roomName', False) != roomName:
+            userExists = self.session.userExists(userName)
+            if not userExists:
+                self.user = self.session.addUser(userName, self.channel_name)
+                self.scope['session']['quiz'] = {'roomName': roomName, 'userName': userName}
+                self.scope['session'].save()
+                message = {'userName': userName}
+                await self.sendToHost(message, 'joinMessage')
+                await self.sendToSelf('Accepted', 'msgUserName')
+            else:
+                await self.sendToSelf('Taken', 'msgUserName')
+        else:
+            self.user = self.session.getUser(userName)
+            self.user.setChannelName(self.channel_name)
+            await self.sendToSelf('Accepted', 'msgUserName')
 
     async def sendToHost(self, message, msgType):
         await self.channel_layer.send(
@@ -313,17 +338,6 @@ class ClientConsumer(AsyncWebsocketConsumer):
                 }
             )
         )
-
-        
-    async def join(self, message):
-        roomName = message['roomName']
-        userName = message['userName']
-        if self.scope['session'].get('roomName', False) != roomName:
-            self.scope['session']['quiz'] = {'roomName': roomName, 'userName': userName}
-            self.scope['session'].save()
-            message = {'username': userName}
-            await self.sendToHost(message, 'joinMessage')
-
 
     # Receive questionMessage from group
     async def questionMessage(self, question):
@@ -359,7 +373,7 @@ class ClientConsumer(AsyncWebsocketConsumer):
         await self.sendToSelf(results, 'msgResults')
 
     # Receive answerMessage from group
-    async def answerMessage(self, data):
+    async def msgAnswerResults(self, data):
     
         message = { 
             "answerCorrect": "true",
@@ -369,7 +383,7 @@ class ClientConsumer(AsyncWebsocketConsumer):
         message = json.dumps(message)  
 
         # Send message to WebSocket
-        await self.sendToSelf(message, 'magAnswerResult')
+        await self.sendToSelf(message, 'msgAnswerResult')
 
     async def hostnameMessage(self, data):
         self.hostChannel = data['message']

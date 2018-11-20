@@ -51,7 +51,7 @@ class Session(models.Model):
     _hostChannelName = models.CharField(max_length=255)
     _questionCounter = models.IntegerField(default = -1)
     _currentVotes = models.IntegerField(default = 0)
-    _sessionState = models.TextField(max_length= 20)
+    _sessionState = models.TextField(max_length= 20, default = 'start')
 
     def getCurrentQuestion(self):
         numberOfQuestions = self._quiz.question_set.count()
@@ -102,19 +102,32 @@ class Session(models.Model):
     def advanceQuestion(self):
         self._questionCounter += 1
         self._currentVotes = 0
-        #self.save()
 
     def skipQuestion(self):
         self._questionCounter += 1
         self._currentVotes = 0
-        #self.save()
 
     def increaseVotes(self, userID, answerID):
         answer = Answer.objects.get(id = answerID)
-        user = AnonymousUser.objects.get(_userID = userID)
+        user = self.anonymoususer_set.get(_userID = userID)
         answer.vote(user)
         self._currentVotes += 1
         self.save()
+
+    def userExists(self, userID):
+        try:
+            self.anonymoususer_set.get(_userID=userID)
+            return True
+        except AnonymousUser.DoesNotExist:
+            False
+
+    def addUser(self, userID, channelName):
+        user = AnonymousUser.objects.create(_session = self, _userID = userID, _userChannelName = channelName)
+        user.save()
+        return user
+    
+    def getUser(self, userID):
+        return self.anonymoususer_set.get(_userID = userID)
 
     def getResults(self):
         return self.anonymoususer_set.order_by('_points')[0:5]
@@ -157,6 +170,7 @@ class AnonymousUser(models.Model):
     _session = models.ForeignKey(Session, on_delete=models.CASCADE)
     _userID = models.TextField(max_length = 50, default = '')
     _points = models.IntegerField(default = 0)
+    _userChannelName = models.CharField(max_length=255)
 
     def getUserID(self):
         return self._userID
@@ -166,6 +180,9 @@ class AnonymousUser(models.Model):
 
     def setPoints(self, newPoints):
         self._points += newPoints
+
+    def setChannelName(self, newChannelName):
+        self._userChannelName = newChannelName
 
 
 
