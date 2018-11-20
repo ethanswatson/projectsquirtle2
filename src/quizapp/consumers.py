@@ -13,13 +13,7 @@ class HostConsumer(AsyncWebsocketConsumer):
         await self.setHostName(self.channel_name, self.sessionID)
         self.clientGroupName = 'quiz%s' % self.sessionID
 
-        await self.channel_layer.group_send(
-            self.clientGroupName,
-            {
-                'type': 'hostnameMessage',
-                'message': self.channel_name
-            }
-        )
+        await self.sendToClients(self.channel_name, 'hostnameMessage')
 
         await self.accept()
 
@@ -71,23 +65,10 @@ class HostConsumer(AsyncWebsocketConsumer):
                 ]
 
             # Send message to WebSocket
-            await self.send(
-                text_data = json.dumps(
-                {
-                    'message': question,
-                    'msgType': 'msgNext'
-                    }
-                )
-            )
+            await self.sendToSelf(question, 'msgNext')
 
             # Send message to client channel group
-            await self.channel_layer.group_send(
-                self.clientGroupName,
-                {
-                    'type': 'questionMessage',
-                    'message': question
-                }
-            )
+            await self.sendToClients(question, 'questionMessage')
 
             await self.setSessionState('question')
 
@@ -110,14 +91,31 @@ class HostConsumer(AsyncWebsocketConsumer):
                 ]
 
             # Send message to WebSocket
-            await self.send(
-                text_data = json.dumps(
+            await self.sendToSelf(question, 'msgNext')
+
+
+    async def answerResults():
+        question = await self.getCurrentQuestion()
+        msgType = 'msgAnswerResult'
+        message = {
+            'questionText': question.getQuestionText(),
+            'votes': []
+
+        }
+        for answer in question.getAnswers():
+            message['votes'] += [
                 {
-                    'message': question,
-                    'msgType': 'msgNext'
-                    }
-                )
-            )
+                    'answerText': answer.getText(),
+                    'votes': answer.getVotes()
+                }
+            ]
+        # Send message to WebSocket
+        await self.sendToSelf(question, 'msgNext')
+       
+        # Send message to client channel group
+        await self.sendToClients(message, msgType)
+
+        await self.setSessionState('question')
 
     async def results(self):
         users = await self.getResults()
@@ -136,14 +134,8 @@ class HostConsumer(AsyncWebsocketConsumer):
             ]
 
         # Send message to WebSocket
-        await self.send(
-            text_data = json.dumps(
-                {
-                    'message': results,
-                    'msgType': 'msgNext'
-                }
-            )
-        )
+        await self.sendToSelf(results, 'msgNext')
+        
         if not isEnd:
             await self.setSessionState('results')
         else:
@@ -165,7 +157,27 @@ class HostConsumer(AsyncWebsocketConsumer):
     async def sendQuestionUpdate(self, updatedQuestion):
         await self.updateQuestion(updatedQuestion)
         await self.sendCurrentQuestion()
-        
+
+    async def sendToClients(self, message, msgType):
+        await self.channel_layer.group_send(
+            self.clientGroupName,
+            {
+                'type': msgType,
+                'message': message
+            }
+        )
+
+    async def sendToSelf(self, message, msgType):
+
+        await self.send(
+            text_data = json.dumps(
+            {
+                'message': message,
+                'msgType': msgType
+                }
+            )
+        )
+
     async def voteMessage(self, data):
         userID = data['message']['userID']
         answerID = data['message']['answerID']
@@ -252,10 +264,6 @@ class ClientConsumer(AsyncWebsocketConsumer):
 
         await self.accept()
 
-    @database_sync_to_async
-    def getHostName(self, sessionID):
-        return Session.objects.get(_sessionId = sessionID).getHostName()
-
     async def disconnect(self, close_code):
         # Leave room group
         await self.channel_layer.group_discard(
@@ -281,17 +289,31 @@ class ClientConsumer(AsyncWebsocketConsumer):
     async def vote(self, message):
         userID = message['userID']
         answerID = message['answerID']
-               
-        await self.channel_layer.send(self.hostChannel, 
+        message = {
+            'userID': userId, 
+            'answerID': answerID
+            }
+        await self.sendToHost(message, 'voteMessage')
+
+    async def sendToHost(self, message, msgType):
+        await self.channel_layer.send(
+            self.hostChannel, 
             {
-                "type": "voteMessage",
-                "message": 
-                {
-                    'userID': userID,
-                    'answerID': answerID
-                },
+                "type": msgType,
+                "message": message
             }
         )
+
+    async def sendToSelf(self, message, msgType):
+        await self.send(
+            text_data=json.dumps(
+                {
+                    'message': message,
+                    'msgType': msgType
+                }
+            )
+        )
+
         
     async def join(self, message):
         roomName = message['roomName']
@@ -299,27 +321,14 @@ class ClientConsumer(AsyncWebsocketConsumer):
         if self.scope['session'].get('roomName', False) != roomName:
             self.scope['session']['quiz'] = {'roomName': roomName, 'userName': userName}
             self.scope['session'].save()
-            
-            await self.channel_layer.send(
-                self.hostChannel, 
-                {
-                    "type": "joinMessage",
-                    "message": 
-                    {
-                        'userName': userName,
-                    },
-                }
-            )
+            message = {'username': userName}
+            await self.sendToHost(message, 'joinMessage')
 
 
     # Receive questionMessage from group
     async def questionMessage(self, question):
-
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'message': question['message'],
-            'msgType': 'msgQuestion'
-        }))
+        await self.sendToSelf(question['message'], 'msgQuestion')
 
 
     # Receive fianlResultsMessage from group
@@ -347,10 +356,7 @@ class ClientConsumer(AsyncWebsocketConsumer):
         #results['currentUserScore'] = currentUserScore
 
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'message': results,
-            'msgType': 'msgResults'
-        }))
+        await self.sendToSelf(results, 'msgResults')
 
     # Receive answerMessage from group
     async def answerMessage(self, data):
@@ -363,10 +369,11 @@ class ClientConsumer(AsyncWebsocketConsumer):
         message = json.dumps(message)  
 
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'message': message,
-            'msgType': 'msgAnswerResult'
-        }))  
+        await self.sendToSelf(message, 'magAnswerResult')
 
     async def hostnameMessage(self, data):
         self.hostChannel = data['message']
+
+    @database_sync_to_async
+    def getHostName(self, sessionID):
+        return Session.objects.get(_sessionId = sessionID).getHostName()
