@@ -108,8 +108,6 @@ var setQuestionPage= function(data){
 }
 
 var sendMessage = function(answerID){
-    console.log(answerID);
-    console.log(userName);
    
     message = JSON.stringify({
             'answerID': answerID,
@@ -144,6 +142,7 @@ var setResults = function(data){
     var message = JSON.parse(data['message']);
     var currentUserScore = message['currentUserScore'];
     var users = message['users'];
+    console.log(users);
 
     document.querySelector('#waiting').style.display='none';
 
@@ -160,7 +159,7 @@ var setResults = function(data){
 
     for(i = 0; i < users.length; i++){
         var userScore = document.createElement('p');
-        userScore.textContent = users[i]['username'] + ": " + users[i]['score'];
+        userScore.textContent = users[i]['userID'] + ": " + users[i]['points'];
         main.appendChild(userScore);
     }
 

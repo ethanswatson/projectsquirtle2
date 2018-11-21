@@ -132,10 +132,10 @@ class Session(models.Model):
         return self.anonymoususer_set.get(_userID = userID)
 
     def getResults(self):
-        return self.anonymoususer_set.order_by('_points')[0:5]
+        return self.anonymoususer_set.order_by('-_points')[:5]
 
     def checkForEnd(self):
-        return self._questionCounter == self._quiz.question_set.count()
+        return self._questionCounter == self._quiz.question_set.count() - 1 or self._questionCounter >= self._quiz.question_set.count()
     
     def getVotes(self):
         return self._currentVotes

@@ -123,6 +123,7 @@ class HostConsumer(AsyncWebsocketConsumer):
 
     async def results(self):
         users = await self.getResults()
+        print(users)
         isEnd = await self.checkForEnd()
         results = {
                 'users': [],
@@ -140,7 +141,7 @@ class HostConsumer(AsyncWebsocketConsumer):
         # Send message to WebSocket
         await self.sendToSelf(results, 'msgResults')
 
-        await self.sendToClients('', 'msgResults')
+        await self.sendToClients(results, 'msgResults')
         
         if not isEnd:
             await self.setSessionState('results')
@@ -349,27 +350,10 @@ class ClientConsumer(AsyncWebsocketConsumer):
 
     # Receive fianlResultsMessage from group
     async def msgResults(self, data):
-       
-        results = {'currentUserScore': 755,
-                   'users':[
-                       {'username': 'user1',
-                        'score': 1450
-                        },
-                        {'username': 'user2',
-                        'score': 1350
-                        },
-                        {'username': 'user3',
-                        'score': 1120
-                        },
-                        {'username': 'user4',
-                        'score': 955
-                        }
-        ]}             
-        results = json.dumps(results)   
+        results = data['message']
+        results['currentUserScore'] = self.session.getUser(self.userName).getPoints()
+        results = json.dumps(results)    
         
-        #results = json.loads(data)
-        #currentUserScore = self.score
-        #results['currentUserScore'] = currentUserScore
 
         # Send message to WebSocket
         await self.sendToSelf(results, 'msgResults')
