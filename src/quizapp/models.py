@@ -111,6 +111,8 @@ class Session(models.Model):
         answer = Answer.objects.get(id = answerID)
         user = self.anonymoususer_set.get(_userID = userID)
         answer.vote(user)
+        user.setPoints(answer.getPointValue())
+        user.setPreviousCorrect(answer.isCorrect())
         self._currentVotes += 1
         self.save()
 
@@ -170,6 +172,8 @@ class AnonymousUser(models.Model):
     _session = models.ForeignKey(Session, on_delete=models.CASCADE)
     _userID = models.TextField(max_length = 50, default = '')
     _points = models.IntegerField(default = 0)
+    _previousPoints = models.IntegerField(default = 0)
+    _previousCorrect = models.BooleanField(default = False)
     _userChannelName = models.CharField(max_length=255)
 
     def getUserID(self):
@@ -177,12 +181,26 @@ class AnonymousUser(models.Model):
 
     def getPoints(self):
         return self._points
+    
+    def getPreviousPoints(self):
+        return self._previousPoints
 
-    def setPoints(self, newPoints):
-        self._points += newPoints
+    def getPreviousCorrect(self):
+        return self._previousCorrect
 
     def setChannelName(self, newChannelName):
         self._userChannelName = newChannelName
+        self.save()
+
+    def setPoints(self, newPoints):
+        self._points += newPoints
+        self._previousPoints = newPoints
+        self.save()
+
+    def setPreviousCorrect(self, correct):
+        self._previousCorrect = correct
+        self.save()
+
 
 
 
@@ -242,6 +260,7 @@ class Answer(models.Model):
     def vote(self, user):
         self._votes += 1
         self._voters.add(user)
+        self.save()
     
     def __str__(self):
         return self._text

@@ -117,7 +117,7 @@ class HostConsumer(AsyncWebsocketConsumer):
         await self.sendToSelf(message, msgType)
        
         # Send message to client channel group
-        await self.sendToClients(message, msgType)
+        await self.sendToClients('', msgType)
 
         await self.setSessionState('answerResults')
 
@@ -139,6 +139,8 @@ class HostConsumer(AsyncWebsocketConsumer):
 
         # Send message to WebSocket
         await self.sendToSelf(results, 'msgResults')
+
+        await self.sendToClients('', 'msgResults')
         
         if not isEnd:
             await self.setSessionState('results')
@@ -304,10 +306,11 @@ class ClientConsumer(AsyncWebsocketConsumer):
     async def join(self, message):
         roomName = message['roomName']
         userName = message['userName']
+        self.userName = userName
         if self.scope['session'].get('roomName', False) != roomName:
             userExists = self.session.userExists(userName)
             if not userExists:
-                self.user = self.session.addUser(userName, self.channel_name)
+                self.session.addUser(userName, self.channel_name)
                 self.scope['session']['quiz'] = {'roomName': roomName, 'userName': userName}
                 self.scope['session'].save()
                 message = {'userName': userName}
@@ -316,7 +319,6 @@ class ClientConsumer(AsyncWebsocketConsumer):
             else:
                 await self.sendToSelf('Taken', 'msgUserName')
         else:
-            self.user = self.session.getUser(userName)
             self.user.setChannelName(self.channel_name)
             await self.sendToSelf('Accepted', 'msgUserName')
 
@@ -346,7 +348,7 @@ class ClientConsumer(AsyncWebsocketConsumer):
 
 
     # Receive fianlResultsMessage from group
-    async def finalResultsMessage(self, data):
+    async def msgResults(self, data):
        
         results = {'currentUserScore': 755,
                    'users':[
@@ -374,11 +376,12 @@ class ClientConsumer(AsyncWebsocketConsumer):
 
     # Receive answerMessage from group
     async def msgAnswerResults(self, data):
+        user = self.session.getUser(self.userName)
     
         message = { 
-            "answerCorrect": "true",
-            "answerPointValue": 10,
-            "userTotalScore": 100
+            "answerCorrect": user.getPreviousCorrect(),
+            "answerPointValue": user.getPreviousPoints(),
+            "userTotalScore": user.getPoints()
         }
         message = json.dumps(message)  
 
