@@ -34,12 +34,14 @@ let quiz = {
     ]
 }
 
-let sessionId = 'AERTYF';
-
 let users = ['user a', 'user b', 'user c', 'user d', 'user e', 'user f', 'user g', 'user h', 'user i', 'user j']
 
-// renderLanding(quiz, users);
-renderQuestion(quiz.questions[0]);
+let sessionId;
+
+function clearPage() {
+    let main = document.querySelector('main');
+    main.innerHTML = '';
+}
 
 function landingAddUser(username) {
     let userSection = document.querySelector('.user-section');
@@ -50,7 +52,15 @@ function landingAddUser(username) {
     
 }
 
+function startQuiz() {
+    chatSocket.send(JSON.stringify({
+        'message': 'hi',
+        'msgType': 'msgNext'
+    }));
+}
+
 function renderLanding(quiz, users) {
+    clearPage();
     let main = document.querySelector('main');
     let quizNameSection = document.createElement('section');
     quizNameSection.setAttribute('class', 'quiz-name-section');
@@ -65,6 +75,7 @@ function renderLanding(quiz, users) {
     let startButton = document.createElement('button');
     startButton.setAttribute('class', 'start-quiz-btn');
     startButton.textContent = 'Start Quiz';
+    startButton.onclick = startQuiz;
     quizNameSection.appendChild(startButton);
     main.appendChild(quizNameSection);
     let userSection = document.createElement('section');
@@ -77,6 +88,7 @@ function renderLanding(quiz, users) {
 }
 
 function renderQuestion(question) {
+    clearPage();
     let main = document.querySelector('main');
     let questionTextSection = document.createElement('section');
     let questionText = document.createElement('p');

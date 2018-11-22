@@ -7,11 +7,16 @@
     <title>Question</title>
 </head>
 <body>
-   {% include "quizapp/partials/header.html" %}
+    {% include "quizapp/partials/header.html" %}
 
-    <main></main>
+     <main></main>
 
-   {% include "quizapp/partials/footer.html" %}
-   <script src="{% static 'quizapp/scripts/teacherquestion.js' %}"></script>
+    {% include "quizapp/partials/footer.html" %}
+    <script src="{% static 'quizapp/scripts/teachersession.js' %}"></script>
+    <script src="{% static 'quizapp/scripts/teacherquestion.js' %}"></script>
+    <script>
+        sessionId = '{{ roomName }}';
+        renderLanding(quiz,users);
+    </script>
 </body>
 </html>
