@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
 import random
+import json
 import string
 
 class Quiz(models.Model):
@@ -88,6 +89,8 @@ class Session(models.Model):
     _sessionId = models.CharField(max_length=6, default='') 
     _hostChannelName = models.CharField(max_length=255)
     _questionCounter = models.IntegerField(default = 0)
+    _currentVotes = models.IntegerField(default = 0)
+    
 
 
     def nextQuestion(self):
@@ -99,9 +102,51 @@ class Session(models.Model):
                 print("Something Went Wrong, I Couldn't Get That Question.")
                 return -1
             self._questionCounter += 1
+            self._currentVotes = 0
             #self.save()
             return nextQ
         return False
+
+    def updateQuestion(self, updatedQuestion):
+        updatedQuestion = json.loads(updatedQuestion)
+        question = self._quiz.question_set.get(id = updatedQuestion['id'])
+        question.answer_set.all().delete()
+        question.setText(updatedQuestion['questionText'])
+        for answer in updatedQuestion['answers']:
+            question.addAnswer(answer['answerText'], answer['correct'], answer['points'])
+        _currentVotes = 0
+        question.save()
+        self.save()
+        return question
+    
+    def addQuestion(self, newQuestion):
+        newQuestion = json.loads(newQuestion)
+        question = self._quiz.question_set.create(_questionText = newQuestion['questionText'])
+        for answer in newQuestion['answers']:
+            question.addAnswer(answer['answerText'], answer['correct'], answer['points'])
+        question.save()
+
+    def deleteQuestion(self):
+        question = self._quiz.question_set.order_by('id')[self._questionCounter]
+        question.delete()
+        numberOfQuestions = self._quiz.question_set.count()
+        if self._questionCounter < numberOfQuestions:
+            try:
+                nextQ = self._quiz.question_set.order_by('id')[self._questionCounter]
+            except IndexError:
+                print("Something Went Wrong, I Couldn't Get That Question.")
+                return -1
+            self._currentVotes = 0
+            #self.save()
+            return nextQ
+        return False
+
+    def increaseVotes(self):
+        self._currentVotes += 1
+        self.save()
+    
+    def getVotes(self):
+        return self._currentVotes
 
 
     def idGen(self, size=6):
