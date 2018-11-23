@@ -1,42 +1,67 @@
 // Dummy data. Will be replaced with data from websockets
-let quiz = {
-    quizName: 'Dummy Quiz',
-    questions: [
-        {
-            questionText: 'A Fake Question',
-            answers: [
-                {
-                    id: 1,
-                    text:'Option 1'
-                },
-                {
-                    id: 2,
-                    text: 'Option 2'
-                },
-                {
-                    id: 3,
-                    text: 'Option 3'
-                },
-                {
-                    id: 4,
-                    text: 'Option 4'
-                },
-                {
-                    id: 5,
-                    text: 'Option 5'
-                },
-                {
-                    id: 6,
-                    text: 'Option 6'
-                },
-            ]
-        }
-    ]
-}
+// let quiz = {
+//     quizName: 'Dummy Quiz',
+//     questions: [
+//         {
+//             questionText: 'A Fake Question',
+//             answers: [
+//                 {
+//                     id: 1,
+//                     text:'Option 1'
+//                 },
+//                 {
+//                     id: 2,
+//                     text: 'Option 2'
+//                 },
+//                 {
+//                     id: 3,
+//                     text: 'Option 3'
+//                 },
+//                 {
+//                     id: 4,
+//                     text: 'Option 4'
+//                 },
+//                 {
+//                     id: 5,
+//                     text: 'Option 5'
+//                 },
+//                 {
+//                     id: 6,
+//                     text: 'Option 6'
+//                 },
+//             ]
+//         }
+//     ]
+// }
 
-let users = ['user a', 'user b', 'user c', 'user d', 'user e', 'user f', 'user g', 'user h', 'user i', 'user j']
+// let users = ['user a', 'user b', 'user c', 'user d', 'user e', 'user f', 'user g', 'user h', 'user i', 'user j']
 
 let sessionId;
+
+let chatSocket;
+
+let connectToSocket = function (roomName) {
+    chatSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/quizapp/host/' + roomName + '/');
+
+    chatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['message'];
+        var msgType = data['msgType'];
+        if (msgType=='msgJoin') {
+            landingAddUser(message['userName']);
+        } else if(msgType=='msgVote') {
+            
+        } else if(msgType == 'msgNext') {
+            renderQuestion(message);
+        }
+    };
+        
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+};
 
 function clearPage() {
     let main = document.querySelector('main');
@@ -52,21 +77,21 @@ function landingAddUser(username) {
     
 }
 
-function startQuiz() {
+function requestNextQuestion() {
     chatSocket.send(JSON.stringify({
-        'message': 'hi',
+        'message': '',
         'msgType': 'msgNext'
     }));
 }
 
-function renderLanding(quiz, users) {
+function renderLanding(quizNameText) {
     clearPage();
     let main = document.querySelector('main');
     let quizNameSection = document.createElement('section');
     quizNameSection.setAttribute('class', 'quiz-name-section');
     let quizName = document.createElement('p');
     quizName.setAttribute('class', 'quiz-name-text');
-    quizName.textContent = quiz.quizName;
+    quizName.textContent = quizNameText;
     quizNameSection.appendChild(quizName);
     let sessionIdText = document.createElement('p');
     sessionIdText.setAttribute('class', 'session-id-text');
@@ -75,7 +100,7 @@ function renderLanding(quiz, users) {
     let startButton = document.createElement('button');
     startButton.setAttribute('class', 'start-quiz-btn');
     startButton.textContent = 'Start Quiz';
-    startButton.onclick = startQuiz;
+    startButton.onclick = requestNextQuestion;
     quizNameSection.appendChild(startButton);
     main.appendChild(quizNameSection);
     let userSection = document.createElement('section');

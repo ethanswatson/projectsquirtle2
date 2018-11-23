@@ -12,11 +12,11 @@
      <main></main>
 
     {% include "quizapp/partials/footer.html" %}
-    <script src="{% static 'quizapp/scripts/teachersession.js' %}"></script>
-    <script src="{% static 'quizapp/scripts/teacherquestion.js' %}"></script>
+    <script src="{% static 'quizapp/scripts/teacherview.js' %}"></script>
     <script>
-        sessionId = '{{ roomName }}';
-        renderLanding(quiz,users);
+        connectToSocket({{ room_name_json }});
+        sessionId = {{ room_name_json }};
+        renderLanding('name placeholder');
     </script>
 </body>
 </html>

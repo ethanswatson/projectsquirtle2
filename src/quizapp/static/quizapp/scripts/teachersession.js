@@ -42,6 +42,5 @@ var connectToSocket = function (roomName) {
 	    }));
 
 	    messageInputDom.value = '';
-};
-
+    };
 };
