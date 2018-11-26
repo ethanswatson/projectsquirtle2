@@ -59,7 +59,7 @@ let connectToSocket = function (roomName) {
         } else if(msgType=='msgVote') {
             console.log(message['answerID']); //Testing to see if answerID comes through
             incrementVote(message['answerID']-1); //database values start at 1 instead of 0
-        } else if(msgType == 'msgNext') {
+        } else if(msgType == 'msgQuestion') {
             curMessage = message;
             renderQuestion(message);
         }
