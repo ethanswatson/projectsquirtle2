@@ -57,8 +57,8 @@ let connectToSocket = function (roomName) {
         if (msgType=='msgJoin') {
             landingAddUser(message['userName']);
         } else if(msgType=='msgVote') {
-            console.log(message['answerID']);
-            incrementVote(message['answerID']);
+            console.log(message['answerID']); //Testing to see if answerID comes through
+            incrementVote(message['answerID']-1); //database values start at 1 instead of 0
         } else if(msgType == 'msgNext') {
             curMessage = message;
             renderQuestion(message);
@@ -176,6 +176,7 @@ function renderQueResults(question) {
         answerSection.appendChild(answerBox);
     }
     main.appendChild(answerSection);
+    createNext('question');
 }
 
 function createNext( generateNext ) {
@@ -199,6 +200,7 @@ function createNext( generateNext ) {
         }
         else {
             //Next Question
+            requestNextQuestion();
         }
     }
 }
