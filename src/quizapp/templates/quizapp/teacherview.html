@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'quizapp/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'quizapp/css/question.css' %}">
+    <title>Question</title>
+</head>
+<body>
+    {% include "quizapp/partials/header.html" %}
+
+     <main></main>
+
+    {% include "quizapp/partials/footer.html" %}
+    <script src="{% static 'quizapp/scripts/teacherview.js' %}"></script>
+    <script>
+        connectToSocket({{ room_name_json }});
+        renderLanding('{{ quizName }}');
+    </script>
+</body>
+</html>

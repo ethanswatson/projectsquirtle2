@@ -9,7 +9,7 @@ var connectToSocket = function (roomName) {
     chatSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);
         var message = data['message'];
-        var msgType = data['msgType']
+        var msgType = data['msgType'];
         if (msgType=='msgJoin') {
             document.querySelector('#log').value += message['userName'] + " has join the quiz\n";
         }else if(msgType=='msgVote') {

@@ -7,7 +7,6 @@ import json
 import string
 
 class Quiz(models.Model):
-
     _owner = models.ForeignKey(User, on_delete=models.CASCADE)
     _quizName = models.CharField(max_length=60)
     _quizDescription = models.TextField(null=True, default=None)
@@ -41,10 +40,6 @@ class Quiz(models.Model):
         return self._quizName + ' - ' + self._owner.username
 
 
-
-
-
-
 class Session(models.Model):
     _quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     _sessionId = models.CharField(max_length=6, default='') 
@@ -53,6 +48,9 @@ class Session(models.Model):
     _currentVotes = models.IntegerField(default = 0)
     _sessionState = models.TextField(max_length= 20, default = 'start')
 
+    def getQuiz(self):
+        return self._quiz
+	
     def getCurrentQuestion(self):
         numberOfQuestions = self._quiz.question_set.count()
         if self._questionCounter < numberOfQuestions:

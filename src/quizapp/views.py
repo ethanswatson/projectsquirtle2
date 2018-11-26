@@ -30,7 +30,7 @@ def joinQuiz(request):
 
 #WebSocket for teacher/student views
 
-def roomMain(request, room_name):
+def roomTest(request, room_name):
     return render(request, 'quizapp/sessionmain.html', {
             'room_name_json': mark_safe(json.dumps(room_name))
         })
@@ -46,8 +46,10 @@ def roomJoin(request, room_name):
     return render(request, 'quizapp/sessionjoin.html', {'room_name_json': mark_safe(json.dumps(room_name)), 'joined': False, 'userName': False})
 
 
-def teacherQuestion(request):
-    return render(request, 'quizapp/teacherquestion.html')
+def teacherView(request, room_name):
+    session = Session.objects.get(_sessionId=room_name)
+    quizName = session.getQuiz().getQuizName()
+    return render(request, 'quizapp/teacherview.html', {'quizName': quizName, 'room_name_json': mark_safe(json.dumps(room_name))})
 
 #Login View is handled by django, as well as logout, and password vies. you do need to create the html templates for each, but it handles the rest. Django authentication is described here https://docs.djangoproject.com/en/2.1/topics/auth/default/
 
