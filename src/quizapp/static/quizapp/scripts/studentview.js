@@ -3,7 +3,10 @@ var chatSocket;
 
 var userName;
 
-var connectToSocket = function(roomName){
+var roomName
+
+var connectToSocket = function(newRoomName){
+    roomName = newRoomName
 	chatSocket = new WebSocket(
 		'ws://' + window.location.host +
 		'/ws/quizapp/client/' + roomName + '/');
@@ -19,7 +22,10 @@ var connectToSocket = function(roomName){
         }else if(msgType == 'msgAnswerResult'){
             setAnswerResult(data);
         }else if(msgType == 'msgUserName'){
-            wasAccepted(data)
+            wasAccepted(data);
+        }else if(msgType == 'msgRequestUserName'){
+            console.log('username requested');
+            requestUserName();
         }
 	};
 
@@ -28,25 +34,71 @@ var connectToSocket = function(roomName){
     };
 }
 
+var requestUserName = function(){
+    console.log('username requested');
+ 
+    document.querySelector('#waiting').style.display='none';
+
+    var main = document.querySelector('#main');
+
+    while (main.firstChild){
+        main.removeChild(main.firstChild);
+    }
+
+    var div = document.createElement('div');
+    div.setAttribute('class', 'boxcenter');
+
+    var section = document.createElement('section');
+    section.setAttribute('class','join-quiz-form');
+
+    var article = document.createElement('article');
+    article.setAttribute('class','session-id-section');
+    article.setAttribute('style', 'align-items: center');
+
+    var h2 = document.createElement('h2');
+    h2.textContent = 'Please enter a username.';
+
+    var text = document.createElement('input');
+    text.setAttribute('type', 'test');
+    text.setAttribute('id', 'userName');
+    text.setAttribute('class', 'session-id');
+    text.setAttribute('style','size: 10;');
+
+    var button = document.createElement('input');
+    button.setAttribute('type','button');
+    button.setAttribute('value', 'Submit');
+    button.setAttribute('class', 'submit-btn');
+    button.setAttribute('style','width: 150px;');
+    button.setAttribute('onclick', 'sendusername()');
+
+    main.appendChild(div);
+    div.appendChild(section);
+    section.appendChild(article);
+    article.appendChild(h2);
+    article.appendChild(text);
+    article.appendChild(button);
+
+}
+
 var wasAccepted = function(data){
-    if(data['message'] == 'Accepted'){
+    if(data['message']['accepted'] == true){
+        userName = data['message']['userName'];
         setStart(userName);
-    }else if(data['message'] == 'Taken'){
+    }else if(data['message']['accepted'] == false){
         window.alert("That username is already taken. Please choose another username.");
     }
 }
 
-var sendusername = function(user_name, roomName){
-    userName = user_name;
+var sendusername = function(){
+    var newUserName = document.querySelector('#userName').value
     chatSocket.send(JSON.stringify({
         'message':  JSON.stringify({
-                    'userName': userName,
+                    'userName': newUserName,
                     'roomName': roomName
                     }),             
         'msgType': 'msgJoin'
     }));
 }
-
 
 var setWaiting = function(){
 

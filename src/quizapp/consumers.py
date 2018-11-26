@@ -123,7 +123,6 @@ class HostConsumer(AsyncWebsocketConsumer):
 
     async def results(self):
         users = await self.getResults()
-        print(users)
         isEnd = await self.checkForEnd()
         results = {
                 'users': [],
@@ -261,6 +260,7 @@ class ClientConsumer(AsyncWebsocketConsumer):
         self.sessionID = self.scope['url_route']['kwargs']['sessionID']
         self.session = Session.objects.get(_sessionId = self.sessionID)
         self.clientGroupName = 'quiz%s' % self.sessionID
+        
 
         #Join room group
         await self.channel_layer.group_add(
@@ -272,6 +272,18 @@ class ClientConsumer(AsyncWebsocketConsumer):
         self.hostChannel = await self.getHostName(self.sessionID)
 
         await self.accept()
+
+        if self.scope['session'].get('quiz', False) != False:
+            if self.scope['session']['quiz']['roomName'] == self.sessionID:
+                self.userName = self.scope['session']['quiz'].get('userName')
+                self.user = self.session.getUser(self.userName)
+                self.user.setChannelName(self.channel_name)
+                await self.sendToSelf({'accepted': True, 'userName': self.userName}, 'msgUserName')
+            else:
+                await self.sendToSelf('', 'msgRequestUserName')
+        else:
+            await self.sendToSelf('', 'msgRequestUserName')
+            
 
     async def disconnect(self, close_code):
         # Leave room group
@@ -307,21 +319,17 @@ class ClientConsumer(AsyncWebsocketConsumer):
     async def join(self, message):
         roomName = message['roomName']
         userName = message['userName']
-        self.userName = userName
-        if self.scope['session'].get('roomName', False) != roomName:
-            userExists = self.session.userExists(userName)
-            if not userExists:
-                self.session.addUser(userName, self.channel_name)
-                self.scope['session']['quiz'] = {'roomName': roomName, 'userName': userName}
-                self.scope['session'].save()
-                message = {'userName': userName}
-                await self.sendToHost(message, 'joinMessage')
-                await self.sendToSelf('Accepted', 'msgUserName')
-            else:
-                await self.sendToSelf('Taken', 'msgUserName')
+        userExists = self.session.userExists(userName)
+        if not userExists:
+            self.userName = userName
+            self.session.addUser(userName, self.channel_name)
+            self.scope['session']['quiz'] = {'roomName': roomName, 'userName': userName}
+            self.scope['session'].save()
+            message = {'userName': userName}
+            await self.sendToHost(message, 'joinMessage')
+            await self.sendToSelf({'accepted': True, 'userName': userName}, 'msgUserName')
         else:
-            self.user.setChannelName(self.channel_name)
-            await self.sendToSelf('Accepted', 'msgUserName')
+            await self.sendToSelf({'accepted': False}, 'msgUserName')
 
     async def sendToHost(self, message, msgType):
         await self.channel_layer.send(
