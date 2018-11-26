@@ -11,11 +11,23 @@ var connectToSocket = function (roomName) {
         var message = data['message'];
         var msgType = data['msgType'];
         if (msgType=='msgJoin') {
-            landingAddUser(message['userName']);
-        } else if(msgType=='msgVote') {
-            
-        } else if(msgType == 'msgNext') {
-            renderQuestion(message);
+            document.querySelector('#log').value += message['userName'] + " has join the quiz\n";
+        }else if(msgType=='msgVote') {
+                votes++;
+                document.getElementById("votes").innerHTML = "Votes: " + message;
+        }else if(msgType== 'msgNext'){
+            document.querySelector('#log').value += message['questionText'] + '\n';
+            answers = message['answers'];
+            for(i = 0; i < answers.length; i++){
+                document.querySelector('#log').value += answers[i]['text'] + ", ";
+            }
+            document.querySelector('#log').value += "\n";
+        }else if(msgType == 'msgResults'){
+            console.log(message)
+            document.querySelector('#log').value += message + "\n";
+        }else if(msgType == 'msgAnswerResults'){
+            console.log(message)
+            document.querySelector('#log').value += message + "\n";
         }
     };
         
@@ -42,5 +54,6 @@ var connectToSocket = function (roomName) {
 	    }));
 
 	    messageInputDom.value = '';
-    };
+};
+
 };
