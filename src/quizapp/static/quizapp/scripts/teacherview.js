@@ -45,6 +45,7 @@ let voteData;
 let curMessage;
 
 let connectToSocket = function (roomName) {
+    sessionId = roomName;
     chatSocket = new WebSocket(
         'ws://' + window.location.host +
         '/ws/quizapp/host/' + roomName + '/');
@@ -92,6 +93,7 @@ function requestNextQuestion() {
 
 function renderLanding(quizNameText) {
     clearPage();
+    document.title = quizNameText;
     let main = document.querySelector('main');
     let quizNameSection = document.createElement('section');
     quizNameSection.setAttribute('class', 'quiz-name-section');
@@ -120,6 +122,7 @@ function renderLanding(quizNameText) {
 
 function renderQuestion(question) {
     clearPage();
+    document.title = 'Question';
     let main = document.querySelector('main');
     let questionTextSection = document.createElement('section');
     let questionText = document.createElement('p');
@@ -150,6 +153,7 @@ function renderQuestion(question) {
 
 function renderQueResults(question) {
     clearPage();
+    document.title = 'Question Results';
     let main = document.querySelector('main');
     let questionTextSection = document.createElement('section');
     let questionText = document.createElement('p');

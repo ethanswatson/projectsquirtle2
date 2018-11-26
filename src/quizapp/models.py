@@ -168,4 +168,7 @@ class Session(models.Model):
 
     def getSessionId(self):
         return self._sessionId
+
+    def getQuiz(self):
+        return self._quiz
 	

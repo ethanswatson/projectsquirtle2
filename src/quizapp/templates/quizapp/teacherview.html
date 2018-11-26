@@ -15,8 +15,7 @@
     <script src="{% static 'quizapp/scripts/teacherview.js' %}"></script>
     <script>
         connectToSocket({{ room_name_json }});
-        sessionId = {{ room_name_json }};
-        renderLanding('name placeholder');
+        renderLanding('{{ quizName }}');
     </script>
 </body>
 </html>
