@@ -41,10 +41,9 @@ def roomJoin(request, room_name):
         userName = data['userName']
         roomName = data['roomName']
         if roomName == room_name:
-            print('already joined')
             return render(request, 'quizapp/sessionjoin.html', {'room_name_json': mark_safe(json.dumps(room_name)), 'joined': True, 'userName':userName})
     
-    return render(request, 'quizapp/sessionjoin.html', {'room_name_json': mark_safe(json.dumps(room_name)), 'joined': False})
+    return render(request, 'quizapp/sessionjoin.html', {'room_name_json': mark_safe(json.dumps(room_name)), 'joined': False, 'userName': False})
 
 
 def teacherQuestion(request):

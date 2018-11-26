@@ -22,6 +22,12 @@ var connectToSocket = function (roomName) {
                 document.querySelector('#log').value += answers[i]['text'] + ", ";
             }
             document.querySelector('#log').value += "\n";
+        }else if(msgType == 'msgResults'){
+            console.log(message)
+            document.querySelector('#log').value += message + "\n";
+        }else if(msgType == 'msgAnswerResults'){
+            console.log(message)
+            document.querySelector('#log').value += message + "\n";
         }
     };
         
