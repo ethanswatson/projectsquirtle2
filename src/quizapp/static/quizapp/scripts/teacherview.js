@@ -40,6 +40,10 @@ let sessionId;
 
 let chatSocket;
 
+let voteData;
+
+let curMessage;
+
 let connectToSocket = function (roomName) {
     chatSocket = new WebSocket(
         'ws://' + window.location.host +
@@ -52,8 +56,10 @@ let connectToSocket = function (roomName) {
         if (msgType=='msgJoin') {
             landingAddUser(message['userName']);
         } else if(msgType=='msgVote') {
-            
+            console.log(message['answerID']);
+            incrementVote(message['answerID']);
         } else if(msgType == 'msgNext') {
+            curMessage = message;
             renderQuestion(message);
         }
     };
@@ -124,7 +130,9 @@ function renderQuestion(question) {
     let answerSection = document.createElement('section');
     answerSection.setAttribute('class', 'answer-section');
     let labels = ['A','B','C','D','E','F'];
+    let newData = [];
     for (let i = 0; i < question.answers.length && i < labels.length; i++) {
+        newData.push(0);
         let answer = question.answers[i];
         let label = labels[i];
         let answerBox = document.createElement('div');
@@ -135,5 +143,62 @@ function renderQuestion(question) {
         answerBox.appendChild(answerText);
         answerSection.appendChild(answerBox);
     }
+    voteData = newData;
     main.appendChild(answerSection);
+    createNext('results');
+}
+
+function renderQueResults(question) {
+    clearPage();
+    let main = document.querySelector('main');
+    let questionTextSection = document.createElement('section');
+    let questionText = document.createElement('p');
+    questionText.setAttribute('class', 'question-text');
+    questionText.textContent = question.questionText;
+    questionTextSection.appendChild(questionText);
+    main.appendChild(questionTextSection);
+    let answerSection = document.createElement('section');
+    answerSection.setAttribute('class', 'answer-section');
+    let labels = ['A','B','C','D','E','F'];
+    for (let i = 0; i < question.answers.length && i < labels.length; i++) {
+        let answer = question.answers[i];
+        let label = labels[i];
+        let answerBox = document.createElement('div');
+        answerBox.setAttribute('class', 'answer-box');
+        answerBox.setAttribute('value', label);
+        let answerText = document.createElement('p');
+        answerText.textContent = label + ': ' + answer.text + ': ' + voteData[i];
+        answerBox.appendChild(answerText);
+        answerSection.appendChild(answerBox);
+    }
+    main.appendChild(answerSection);
+}
+
+function createNext( generateNext ) {
+    let main = document.querySelector('main');
+    let nextSection = document.createElement('section');
+    nextSection.setAttribute('class', 'answer-section');
+
+    let nextBox = document.createElement('div');
+    nextBox.setAttribute('class', 'answer-button');
+    nextBox.setAttribute('style', 'width: 10%; padding: 20px;');
+    let nextText = document.createElement('p');
+    nextText.textContent = "Next";
+    nextBox.appendChild(nextText);
+    nextSection.appendChild(nextBox);
+    main.appendChild(nextSection);
+
+    nextBox.onclick = function () {
+        if (generateNext == 'results') {
+            console.log("Function entered");
+            renderQueResults(curMessage);
+        }
+        else {
+            //Next Question
+        }
+    }
+}
+
+function incrementVote( voteID ) {
+    voteData[voteID] += 1;
 }
