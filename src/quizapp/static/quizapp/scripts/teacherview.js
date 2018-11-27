@@ -147,6 +147,11 @@ function renderQuestion(question) {
         answerSection.appendChild(answerBox);
     }
     voteData = newData;
+    let modifyButton = document.createElement('button');
+	modifyButton.textContent = 'Modify Quiz';
+	modifyButton.onclick = modifyQuiz;
+	//modifyButton.onclick = modifyQuiz(question);
+	main.appendChild(modifyButton);
     main.appendChild(answerSection);
     createNext('results');
 }
@@ -177,6 +182,25 @@ function renderQueResults(question) {
     }
     main.appendChild(answerSection);
     createNext('question');
+}
+
+function modifyQuiz(question){
+    clearPage();
+	document.title = 'Modify Quiz';
+	let main = document.querySelector('main');
+	
+	let cancelButton = document.createElement('button');
+	cancelButton.textContent = 'Cancel';
+	cancelButton.onClick = renderQuestion;
+	let addNextButton = document.createElement('button');
+	addNextButton.textContent = 'Add Next Question';
+	let addLastButton = document.createElement('button');
+	addLastButton.textContent = 'Add Last Question';
+	main.appendChild(cancelButton);
+	main.appendChild(addNextButton);
+	main.appendChild(addLastButton);
+
+	let  = document.createElement('button');
 }
 
 function createNext( generateNext ) {
