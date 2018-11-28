@@ -164,6 +164,8 @@ class Session(models.Model):
     def setSessionState(self, newState):
         self._sessionState = newState
 
+    def getUsers(self):
+        return self.anonymoususer_set.all()
 
 
 class AnonymousUser(models.Model):

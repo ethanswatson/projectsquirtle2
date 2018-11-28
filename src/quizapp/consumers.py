@@ -14,9 +14,11 @@ class HostConsumer(AsyncWebsocketConsumer):
         await self.setHostName(self.channel_name, self.sessionID)
         self.clientGroupName = 'quiz%s' % self.sessionID
 
+        await self.accept()
+
         await self.sendToClients(self.channel_name, 'hostnameMessage')
 
-        await self.accept()
+        #await self.getPage()
 
     async def receive(self, text_data):
         message = json.loads(text_data)
@@ -70,8 +72,6 @@ class HostConsumer(AsyncWebsocketConsumer):
        
             # Send message to WebSocket
             await self.sendToSelf(question, 'msgEdit')
-
-            await self.setSessionState('edit')
 
 
     async def answerResults(self):
@@ -162,6 +162,26 @@ class HostConsumer(AsyncWebsocketConsumer):
                 'msgType': 'msgJoin'
             }))
 
+    async def getPage(self):
+        state = self.session.getSessionState()
+        if state == 'start':
+            users = await self.getUsers()
+            message = []
+            for user in users:
+                message += [user.getUserID()]
+            self.sendToSelf(message, 'msgStart')
+        elif state == 'question':
+            currentQuestion = await self.getCurrentQuestion()
+            if currentQuestion != False:
+                await self.sendToSelf(currentQuestion, 'msgQuestion')
+        elif state == 'results' or state == 'end':
+            results = await self.getResults()
+            await self.sendToSelf(results, 'msgResults')
+        elif state == 'answerResults':
+            message = await self.getAnswerResults()
+            await self.sendToSelf(message, 'msgAnswerResults')
+
+
     async def requestCurrentPage(self, message):
         clientName = message['message']
         state = self.session.getSessionState()
@@ -197,7 +217,6 @@ class HostConsumer(AsyncWebsocketConsumer):
 
     async def getAnswerResults(self):
         question = await self.getQuestionObject()
-        msgType = 'msgAnswerResults'
         message = {
             'questionText': question.getQuestionText(),
             'votes': []
@@ -314,6 +333,10 @@ class HostConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def getSessionState(self):
         return self.session.getSessionState()
+
+    @database_sync_to_async
+    def getUsers(self):
+        return self.session.getUsers()
         
 
    
