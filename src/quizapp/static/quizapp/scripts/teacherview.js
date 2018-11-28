@@ -124,6 +124,14 @@ function renderQuestion(question) {
     clearPage();
     document.title = 'Question';
     let main = document.querySelector('main');
+
+    let modifyButton = document.createElement('button');
+	modifyButton.textContent = 'Modify Quiz';
+	modifyButton.style.margin = '10px';
+	modifyButton.style.padding = '10px';
+	modifyButton.onclick = function(){modifyQuiz(question, 'question')};
+	main.appendChild(modifyButton);
+
     let questionTextSection = document.createElement('section');
     let questionText = document.createElement('p');
     questionText.setAttribute('class', 'question-text');
@@ -147,10 +155,6 @@ function renderQuestion(question) {
         answerSection.appendChild(answerBox);
     }
     voteData = newData;
-    let modifyButton = document.createElement('button');
-	modifyButton.textContent = 'Modify Quiz';
-	modifyButton.onclick = function(){modifyQuiz(question, 'question')};
-	main.appendChild(modifyButton);
     main.appendChild(answerSection);
     createNext('results');
 }
@@ -159,6 +163,14 @@ function renderQueResults(question) {
     clearPage();
     document.title = 'Question Results';
     let main = document.querySelector('main');
+
+    let modifyButton = document.createElement('button');
+	modifyButton.textContent = 'Modify Quiz';
+	modifyButton.style.margin = '10px';
+	modifyButton.style.padding = '10px';
+	modifyButton.onclick = function(){modifyQuiz(question, 'results')};
+	main.appendChild(modifyButton);
+
     let questionTextSection = document.createElement('section');
     let questionText = document.createElement('p');
     questionText.setAttribute('class', 'question-text');
@@ -179,11 +191,6 @@ function renderQueResults(question) {
         answerBox.appendChild(answerText);
         answerSection.appendChild(answerBox);
     }
-    let modifyButton = document.createElement('button');
-	modifyButton.textContent = 'Modify Quiz';
-	modifyButton.onclick = function(){modifyQuiz(question, 'results')};
-	main.appendChild(modifyButton);
-    main.appendChild(answerSection);
     main.appendChild(answerSection);
     createNext('question');
 }
