@@ -149,8 +149,7 @@ function renderQuestion(question) {
     voteData = newData;
     let modifyButton = document.createElement('button');
 	modifyButton.textContent = 'Modify Quiz';
-	modifyButton.onclick = modifyQuiz;
-	//modifyButton.onclick = modifyQuiz(question);
+	modifyButton.onclick = function(){modifyQuiz(question, 'question')};
 	main.appendChild(modifyButton);
     main.appendChild(answerSection);
     createNext('results');
@@ -180,22 +179,47 @@ function renderQueResults(question) {
         answerBox.appendChild(answerText);
         answerSection.appendChild(answerBox);
     }
+    let modifyButton = document.createElement('button');
+	modifyButton.textContent = 'Modify Quiz';
+	modifyButton.onclick = function(){modifyQuiz(question, 'results')};
+	main.appendChild(modifyButton);
+    main.appendChild(answerSection);
     main.appendChild(answerSection);
     createNext('question');
 }
 
-function modifyQuiz(question){
+function modifyQuiz(question, page){
     clearPage();
 	document.title = 'Modify Quiz';
 	let main = document.querySelector('main');
 	
 	let cancelButton = document.createElement('button');
 	cancelButton.textContent = 'Cancel';
-	cancelButton.onClick = renderQuestion;
+	cancelButton.onclick = function(){ 
+		if(page === 'question'){
+			renderQuestion(question);
+		}else if(page === 'results'){
+			renderQueResults(question);			
+		}
+	};
 	let addNextButton = document.createElement('button');
 	addNextButton.textContent = 'Add Next Question';
+	addNextButton.onclick = function(){ 
+		if(page === 'question'){
+			renderQuestion(question);
+		}else if(page === 'results'){
+			renderQueResults(question);			
+		}
+	};
 	let addLastButton = document.createElement('button');
 	addLastButton.textContent = 'Add Last Question';
+	addLastButton.onclick = function(){ 
+		if(page === 'question'){
+			renderQuestion(question);
+		}else if(page === 'results'){
+			renderQueResults(question);			
+		}
+	};
     let buttonSection = document.createElement('section');
 	buttonSection.appendChild(cancelButton);
 	buttonSection.appendChild(addNextButton);
@@ -216,7 +240,6 @@ function modifyQuiz(question){
 	questionNameLabel.textContent = 'Question: ';
 	let questionName = document.createElement('input');
 	questionName.setAttribute('type', 'text');
-	//questionName.setAttribute('class', 'input-size');
 	questionName.setAttribute('id', 'id_questionName');
 	questionWrapper.appendChild(questionNameLabel);
 	questionWrapper.appendChild(questionName);
@@ -248,8 +271,6 @@ function modifyQuiz(question){
 	let addAnswerButton = document.createElement('button');
 	addAnswerButton.textContent = 'Add Answer';
 
-	//questionNameSection.appendChild(questionNameLabel);
-	//questionNameSection.appendChild(questionName);
 	questionNameSection.appendChild(questionWrapper);
 	answerWrapper.appendChild(createAnswertxt);
 	answerWrapper.appendChild(answerText);
