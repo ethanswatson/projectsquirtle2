@@ -209,30 +209,37 @@ function modifyQuiz(question){
 
     let questionNameSection = document.createElement('section');
 	questionNameSection.setAttribute('class', 'modify-box');
-
+	
+	let questionWrapper = document.createElement('p');
 	let questionNameLabel = document.createElement('label');
 	questionNameLabel.setAttribute('for', 'id_questionName');
 	questionNameLabel.textContent = 'Question: ';
 	let questionName = document.createElement('input');
 	questionName.setAttribute('type', 'text');
+	//questionName.setAttribute('class', 'input-size');
 	questionName.setAttribute('id', 'id_questionName');
+	questionWrapper.appendChild(questionNameLabel);
+	questionWrapper.appendChild(questionName);
 
+	let answerWrapper = document.createElement('p');
 	let createAnswertxt = document.createElement('label');
-	createAnswertxt.textContent = 'Create Answer';
+	createAnswertxt.textContent = 'Create Answer: ';
 	createAnswertxt.setAttribute('for', 'id_answerText');
 	let answerText = document.createElement('input');
 	answerText.setAttribute('type', 'text');
 	answerText.setAttribute('id', 'id_answerText');
 	
+	let correctWrapper = document.createElement('p');
 	let isCorrectLabel = document.createElement('label');
-	isCorrectLabel.textContent = 'Correct Answer:';
+	isCorrectLabel.textContent = 'Correct Answer: ';
 	isCorrectLabel.setAttribute('for', 'id_isCorrect');
 	let isCorrect = document.createElement('input');
 	isCorrect.setAttribute('type', 'checkbox');
 	isCorrect.setAttribute('id', 'id_isCorrect');
 
+	let valueWrapper = document.createElement('p');
 	let valueLabel = document.createElement('label');
-	valueLabel.textContent = 'Answer Value:';
+	valueLabel.textContent = 'Answer Value: ';
 	valueLabel.setAttribute('for', 'id_value');
 	let value = document.createElement('input');
 	value.setAttribute('type', 'number');
@@ -241,14 +248,18 @@ function modifyQuiz(question){
 	let addAnswerButton = document.createElement('button');
 	addAnswerButton.textContent = 'Add Answer';
 
-	questionNameSection.appendChild(questionNameLabel);
-	questionNameSection.appendChild(questionName);
-	editSection.appendChild(createAnswertxt);
-	editSection.appendChild(answerText);
-	editSection.appendChild(isCorrectLabel);
-	editSection.appendChild(isCorrect);
-	editSection.appendChild(valueLabel);
-	editSection.appendChild(value);
+	//questionNameSection.appendChild(questionNameLabel);
+	//questionNameSection.appendChild(questionName);
+	questionNameSection.appendChild(questionWrapper);
+	answerWrapper.appendChild(createAnswertxt);
+	answerWrapper.appendChild(answerText);
+	editSection.appendChild(answerWrapper);
+	correctWrapper.appendChild(isCorrectLabel);
+	correctWrapper.appendChild(isCorrect);
+	editSection.appendChild(correctWrapper);
+	valueWrapper.appendChild(valueLabel);
+	valueWrapper.appendChild(value);
+	editSection.appendChild(valueWrapper);
 	editSection.appendChild(addAnswerButton);
 
 	outerSection.appendChild(questionNameSection);
