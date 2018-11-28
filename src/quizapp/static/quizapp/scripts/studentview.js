@@ -26,6 +26,8 @@ var connectToSocket = function(newRoomName){
         }else if(msgType == 'msgRequestUserName'){
             console.log('username requested');
             requestUserName();
+        }else if (msgType == 'msgStart'){
+            setStart(userName);
         }
 	};
 
@@ -83,7 +85,6 @@ var requestUserName = function(){
 var wasAccepted = function(data){
     if(data['message']['accepted'] == true){
         userName = data['message']['userName'];
-        setStart(userName);
     }else if(data['message']['accepted'] == false){
         window.alert("That username is already taken. Please choose another username.");
     }
