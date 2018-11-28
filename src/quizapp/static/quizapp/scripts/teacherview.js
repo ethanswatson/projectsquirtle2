@@ -196,9 +196,64 @@ function modifyQuiz(question){
 	addNextButton.textContent = 'Add Next Question';
 	let addLastButton = document.createElement('button');
 	addLastButton.textContent = 'Add Last Question';
-	main.appendChild(cancelButton);
-	main.appendChild(addNextButton);
-	main.appendChild(addLastButton);
+    let buttonSection = document.createElement('section');
+	buttonSection.appendChild(cancelButton);
+	buttonSection.appendChild(addNextButton);
+	buttonSection.appendChild(addLastButton);
+	main.appendChild(buttonSection);
+	
+    let outerSection = document.createElement('section');
+
+    let editSection = document.createElement('section');
+	editSection.setAttribute('class', 'modify-box');
+
+    let questionNameSection = document.createElement('section');
+	questionNameSection.setAttribute('class', 'modify-box');
+
+	let questionNameLabel = document.createElement('label');
+	questionNameLabel.setAttribute('for', 'id_questionName');
+	questionNameLabel.textContent = 'Question: ';
+	let questionName = document.createElement('input');
+	questionName.setAttribute('type', 'text');
+	questionName.setAttribute('id', 'id_questionName');
+
+	let createAnswertxt = document.createElement('label');
+	createAnswertxt.textContent = 'Create Answer';
+	createAnswertxt.setAttribute('for', 'id_answerText');
+	let answerText = document.createElement('input');
+	answerText.setAttribute('type', 'text');
+	answerText.setAttribute('id', 'id_answerText');
+	
+	let isCorrectLabel = document.createElement('label');
+	isCorrectLabel.textContent = 'Correct Answer:';
+	isCorrectLabel.setAttribute('for', 'id_isCorrect');
+	let isCorrect = document.createElement('input');
+	isCorrect.setAttribute('type', 'checkbox');
+	isCorrect.setAttribute('id', 'id_isCorrect');
+
+	let valueLabel = document.createElement('label');
+	valueLabel.textContent = 'Answer Value:';
+	valueLabel.setAttribute('for', 'id_value');
+	let value = document.createElement('input');
+	value.setAttribute('type', 'number');
+	value.setAttribute('id', 'id_isCorrect');
+
+	let addAnswerButton = document.createElement('button');
+	addAnswerButton.textContent = 'Add Answer';
+
+	questionNameSection.appendChild(questionNameLabel);
+	questionNameSection.appendChild(questionName);
+	editSection.appendChild(createAnswertxt);
+	editSection.appendChild(answerText);
+	editSection.appendChild(isCorrectLabel);
+	editSection.appendChild(isCorrect);
+	editSection.appendChild(valueLabel);
+	editSection.appendChild(value);
+	editSection.appendChild(addAnswerButton);
+
+	outerSection.appendChild(questionNameSection);
+	outerSection.appendChild(editSection);
+	main.appendChild(outerSection);
 
 	let  = document.createElement('button');
 }
