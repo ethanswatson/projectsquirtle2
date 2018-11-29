@@ -18,7 +18,7 @@ class HostConsumer(AsyncWebsocketConsumer):
 
         await self.sendToClients(self.channel_name, 'hostnameMessage')
 
-        #await self.getPage()
+        await self.getPage()
 
     async def receive(self, text_data):
         message = json.loads(text_data)
@@ -34,11 +34,12 @@ class HostConsumer(AsyncWebsocketConsumer):
                 await self.nextQuestion()
             
         elif msgType == 'msgUpdate':
-            await self.sendQuestionUpdate(message['message'])
+            await self.updateQuestion(message['message'])
+            await self.sendCurrentQuestion()
             
         elif msgType == 'msgAdd':
-            newQuestion = message['message']
-            newQuestion = await self.addQuestion(newQuestion)
+            await self.addQuestion(message['message'])
+            await self.getPage()
         
         elif msgType == 'msgEdit':
             await self.sendCurrentQuestionFull()
@@ -66,7 +67,7 @@ class HostConsumer(AsyncWebsocketConsumer):
             await self.setSessionState('question')
 
     async def sendCurrentQuestionFull(self):
-        question = await self.getCurrentQuestion()
+        question = await self.getCurrentQuestionFull()
 
         if question != False:
        
@@ -115,9 +116,6 @@ class HostConsumer(AsyncWebsocketConsumer):
         await self.deleteQuestion()
         await self.sendCurrentQuestion()
         
-    async def sendQuestionUpdate(self, updatedQuestion):
-        await self.updateQuestion(updatedQuestion)
-        await self.sendCurrentQuestion()
 
     async def sendToClients(self, message, msgType):
         await self.channel_layer.group_send(
@@ -306,6 +304,7 @@ class HostConsumer(AsyncWebsocketConsumer):
             self.currentVotes = 0
             question = {
                 'questionText': currentQuestion.getQuestionText(),
+                'questionID': currentQuestion.id,
                 'answers': []
                 }
 

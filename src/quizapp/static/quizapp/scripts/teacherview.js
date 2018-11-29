@@ -227,10 +227,11 @@ function modifyQuestion(question) {
 		pointText.textContent = 'Answer Value: ';
         let pointEdit = document.createElement('input');
         pointEdit.setAttribute('type', 'number');
+        pointEdit.value = 0;
         let answerBox = document.createElement('div');
         answerBox.setAttribute('class', 'answer-box');
         let answerText = document.createElement('input');
-		answerText.value = 'Type Answer Here';
+		answerText.setAttribute('placeholder','Type Answer Here');
         answerBox.appendChild(answerText);
 		answerBox.appendChild(correctText);
         answerBox.appendChild(correctBox);
@@ -243,22 +244,25 @@ function modifyQuestion(question) {
     submitButton.textContent = 'Submit';
     submitButton.onclick = function(){
         answerSection = document.querySelector('#answerSection');
-        questionText = document.querySelector('#questionText');
+        questionText = document.querySelector('#questionText').value;
         newQuestion = {'questionText':questionText,
-         'answers':[]
+            'questionID': question['questionID'],
+            'answers':[]
         }
         while(answerSection.firstChild){
             answer = answerSection.firstChild;
             answerSection.removeChild(answerSection.firstChild);
-            let answerText = answer.firstChild.textContent;
+            let answerText = answer.firstChild.value;
+            answer.removeChild(answer.firstChild);
             answer.removeChild(answer.firstChild);
             let correctBox = answer.firstChild.checked;
             answer.removeChild(answer.firstChild);
+            answer.removeChild(answer.firstChild);
             let points = answer.firstChild.value;
-            newQuestion['answers'] += [{'answerText':answerText,
+            newQuestion['answers'].push({'answerText':answerText,
                 'correct':correctBox,
                 'points':points
-            }]            
+            });
         }
         chatSocket.send(JSON.stringify({
             'message': newQuestion,
@@ -266,11 +270,17 @@ function modifyQuestion(question) {
         }));
         newQuestion= '';
     }
+    let cancelButton = document.createElement('button');
+    cancelButton.textContent = 'Cancel';
+    cancelButton.onclick = function(){ 
+    	renderQuestion(question);	
+    };
     let buttonSection = document.createElement('section');
     buttonSection.appendChild(addAnswerButton); 
 	addAnswerButton.style.margin = '10px';
 	addAnswerButton.style.padding = '10px';
     buttonSection.appendChild(submitButton); 
+    buttonSection.appendChild(cancelButton);
 	submitButton.style.margin = '10px';
 	submitButton.style.padding = '10px';
     main.appendChild(buttonSection); 
@@ -285,7 +295,7 @@ function addQuestion(question, page) {
     let questionText = document.createElement('input');
     questionText.setAttribute('class', 'question-text');
     questionText.setAttribute('id', 'questionText')
-	questionText.value = 'Type Question Here';
+	questionText.setAttribute('placeholder','Type Question Here');
     questionTextSection.appendChild(questionText);
     main.appendChild(questionTextSection);
     let answerSection = document.createElement('section');
@@ -302,10 +312,11 @@ function addQuestion(question, page) {
 		pointText.textContent = 'Answer Value: ';
         let pointEdit = document.createElement('input');
         pointEdit.setAttribute('type', 'number');
+        pointEdit.value = 0;
         let answerBox = document.createElement('div');
         answerBox.setAttribute('class', 'answer-box');
         let answerText = document.createElement('input');
-		answerText.value = 'Type Answer Here';
+		answerText.setAttribute('placeholder','Type Answer Here');
         answerBox.appendChild(answerText);
 		answerBox.appendChild(correctText);
         answerBox.appendChild(correctBox);
@@ -317,7 +328,7 @@ function addQuestion(question, page) {
     let submitButton = document.createElement('button');
     submitButton.textContent = 'Submit';
     submitButton.onclick = function(){
-        answerSection = document.querySelector('#answerSection');
+        /*answerSection = document.querySelector('#answerSection');
         questionText = document.querySelector('#questionText');
         newQuestion = {'questionText':questionText,
          'answers':[]
@@ -327,13 +338,35 @@ function addQuestion(question, page) {
             answerSection.removeChild(answerSection.firstChild);
             let answerText = answer.firstChild.textContent;
             answer.removeChild(answer.firstChild);
+            answer.removeChild(answer.firstChild);
             let correctBox = answer.firstChild.checked;
             answer.removeChild(answer.firstChild);
+            answer.removeChild(answer.firstChild);
             let points = answer.firstChild.value;
-            newQuestion['answers'] += [{'answerText':answerText,
+            newQuestion['answers'].push({'answerText':answerText,
                 'correct':correctBox,
                 'points':points
-            }]            
+            });
+        }*/
+        answerSection = document.querySelector('#answerSection');
+        questionText = document.querySelector('#questionText').value;
+        newQuestion = {'questionText':questionText,
+            'answers':[]
+        }
+        while(answerSection.firstChild){
+            answer = answerSection.firstChild;
+            answerSection.removeChild(answerSection.firstChild);
+            let answerText = answer.firstChild.value;
+            answer.removeChild(answer.firstChild);
+            answer.removeChild(answer.firstChild);
+            let correctBox = answer.firstChild.checked;
+            answer.removeChild(answer.firstChild);
+            answer.removeChild(answer.firstChild);
+            let points = answer.firstChild.value;
+            newQuestion['answers'].push({'answerText':answerText,
+                'correct':correctBox,
+                'points':points
+            });
         }
         chatSocket.send(JSON.stringify({
             'message': newQuestion,
@@ -379,7 +412,6 @@ function createNext( generateNext ) {
 
     nextBox.onclick = function () {
         if (generateNext == 'results') {
-            console.log("Function entered");
             renderQueResults(curMessage);
         }
         else {

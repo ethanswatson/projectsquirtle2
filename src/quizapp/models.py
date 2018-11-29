@@ -64,22 +64,19 @@ class Session(models.Model):
             return False
 
     def updateQuestion(self, updatedQuestion):
-        updatedQuestion = json.loads(updatedQuestion)
-        question = self._quiz.question_set.get(id = updatedQuestion['id'])
+        question = self._quiz.question_set.get(id = updatedQuestion['questionID'])
         question.answer_set.all().delete()
-        question.setText(updatedQuestion['questionText'])
+        question.setQuestionText(updatedQuestion['questionText'])
         for answer in updatedQuestion['answers']:
-            question.addAnswer(answer['answerText'], answer['correct'], answer['points'])
-        _currentVotes = 0
+            question.addAnswer(answer['answerText'], answer['correct'], int(answer['points']))
+        self._currentVotes = 0
         question.save()
         self.save()
-        return question
     
     def addQuestion(self, newQuestion):
-        newQuestion = json.loads(newQuestion)
         question = self._quiz.question_set.create(_questionText = newQuestion['questionText'])
         for answer in newQuestion['answers']:
-            question.addAnswer(answer['answerText'], answer['correct'], answer['points'])
+            question.addAnswer(answer['answerText'], answer['correct'], int(answer['points']))
         question.save()
 
     def deleteQuestion(self):
