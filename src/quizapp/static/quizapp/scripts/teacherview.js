@@ -280,6 +280,7 @@ function modifyQuestion(question) {
         newQuestion = {'questionText':questionText,
          'answers':[]
         }
+		//This is where the errors are happening
         while(answerSection.firstChild){
             answer = answerSection.firstChild;
             let answerText = answer.firstChild.textContent;
@@ -357,6 +358,11 @@ function addQuestion(question, page) {
             'msgType': 'msgAdd'
         }));
         newQuestion= '';
+    	if(page === 'question'){
+    		renderQuestion(question);
+    	}else if(page === 'results'){
+    		renderQueResults(question);			
+    	}
     }
     main.appendChild(addAnswerButton); 
     let cancelButton = document.createElement('button');
