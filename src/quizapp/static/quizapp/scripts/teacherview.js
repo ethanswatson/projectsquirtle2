@@ -43,6 +43,7 @@ let chatSocket;
 let voteData;
 
 let curMessage;
+let nextMessage;
 
 let connectToSocket = function (roomName) {
     sessionId = roomName;
@@ -62,6 +63,10 @@ let connectToSocket = function (roomName) {
         } else if(msgType == 'msgQuestion') {
             curMessage = message;
             renderQuestion(message);
+        } else if(msgType == 'msgAnswerResults') { // Answer results
+            renderQueResults(message);
+        } else if(msgType == 'msgResults') { // Final results
+            renderFinalPage(message);
         }
     };
         
@@ -84,7 +89,7 @@ function landingAddUser(username) {
     
 }
 
-function requestNextQuestion() {
+function setNextState() {
     chatSocket.send(JSON.stringify({
         'message': '',
         'msgType': 'msgNext'
@@ -108,7 +113,7 @@ function renderLanding(quizNameText) {
     let startButton = document.createElement('button');
     startButton.setAttribute('class', 'start-quiz-btn');
     startButton.textContent = 'Start Quiz';
-    startButton.onclick = requestNextQuestion;
+    startButton.onclick = setNextState;
     quizNameSection.appendChild(startButton);
     main.appendChild(quizNameSection);
     let userSection = document.createElement('section');
@@ -122,6 +127,7 @@ function renderLanding(quizNameText) {
 
 function renderQuestion(question) {
     clearPage();
+    console.log(question);
     document.title = 'Question';
     let main = document.querySelector('main');
     let questionTextSection = document.createElement('section');
@@ -148,38 +154,59 @@ function renderQuestion(question) {
     }
     voteData = newData;
     main.appendChild(answerSection);
-    createNext('results');
+    createResultsButton();
 }
 
-function renderQueResults(question) {
+function renderQueResults(message) {
     clearPage();
+    console.log(message);
     document.title = 'Question Results';
     let main = document.querySelector('main');
     let questionTextSection = document.createElement('section');
     let questionText = document.createElement('p');
     questionText.setAttribute('class', 'question-text');
-    questionText.textContent = question.questionText;
+    questionText.textContent = message.questionText;
     questionTextSection.appendChild(questionText);
     main.appendChild(questionTextSection);
     let answerSection = document.createElement('section');
     answerSection.setAttribute('class', 'answer-section');
     let labels = ['A','B','C','D','E','F'];
-    for (let i = 0; i < question.answers.length && i < labels.length; i++) {
-        let answer = question.answers[i];
+    for (let i = 0; i < message.votes.length && i < labels.length; i++) {
+        let vote  = message.votes[i];
         let label = labels[i];
         let answerBox = document.createElement('div');
         answerBox.setAttribute('class', 'answer-box');
         answerBox.setAttribute('value', label);
         let answerText = document.createElement('p');
-        answerText.textContent = label + ': ' + answer.text + ': ' + voteData[i];
+        answerText.textContent = label + ': ' + vote.answerText + ': ' + vote.votes;
         answerBox.appendChild(answerText);
         answerSection.appendChild(answerBox);
     }
     main.appendChild(answerSection);
-    createNext('question');
+    createNextQueButton();
 }
 
-function createNext( generateNext ) {
+function renderFinalPage(question) {
+    clearPage();
+    console.log(question);
+    document.title = 'Quiz Results';
+    let main = document.querySelector('main');
+    let questionTextSection = document.createElement('section');
+    let questionText = document.createElement('p');
+    questionText.setAttribute('class', 'question-text');
+    questionText.textContent = 'Quiz Results';
+    questionTextSection.appendChild(questionText);
+    main.appendChild(questionTextSection);
+
+    if (question.quizEnd == false) {
+        createNextQueButton();
+    }
+    else {
+        createEndQuizText();
+    }
+}
+
+function createNextQueButton() {
     let main = document.querySelector('main');
     let nextSection = document.createElement('section');
     nextSection.setAttribute('class', 'answer-section');
@@ -188,20 +215,49 @@ function createNext( generateNext ) {
     nextBox.setAttribute('class', 'answer-button');
     nextBox.setAttribute('style', 'width: 10%; padding: 20px;');
     let nextText = document.createElement('p');
-    nextText.textContent = "Next";
+    nextText.textContent = "Next Question";
     nextBox.appendChild(nextText);
     nextSection.appendChild(nextBox);
     main.appendChild(nextSection);
 
     nextBox.onclick = function () {
-        if (generateNext == 'results') {
-            console.log("Function entered");
-            renderQueResults(curMessage);
-        }
-        else {
-            //Next Question
-            requestNextQuestion();
-        }
+        setNextState();
+    }
+}
+
+function createEndQuizText() {
+    let main = document.querySelector('main');
+    let nextSection = document.createElement('section');
+    nextSection.setAttribute('class', 'answer-section');
+
+    let nextBox = document.createElement('div');
+    nextBox.setAttribute('class', 'answer-button');
+    nextBox.setAttribute('style', 'width: 10%; padding: 20px;');
+    let nextText = document.createElement('p');
+    nextText.textContent = "Quiz has ended!";
+    nextBox.appendChild(nextText);
+    nextSection.appendChild(nextBox);
+    main.appendChild(nextSection);
+}
+
+function createResultsButton() {
+    let main = document.querySelector('main');
+    let nextSection = document.createElement('section');
+    nextSection.setAttribute('class', 'answer-section');
+
+    let nextBox = document.createElement('div');
+    nextBox.setAttribute('class', 'answer-button');
+    nextBox.setAttribute('style', 'width: 10%; padding: 20px;');
+    let nextText = document.createElement('p');
+    nextText.textContent = "Go To Results";
+    nextBox.appendChild(nextText);
+    nextSection.appendChild(nextBox);
+    main.appendChild(nextSection);
+
+    nextBox.onclick = function () {
+        console.log("Function entered");
+        //sendQueResults();
+        setNextState();
     }
 }
 
