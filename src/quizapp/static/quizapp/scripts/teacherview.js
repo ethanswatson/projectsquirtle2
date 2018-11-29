@@ -230,7 +230,7 @@ function modifyQuestion(question) {
     main.appendChild(questionTextSection);
     let answerSection = document.createElement('section');
     answerSection.setAttribute('class', 'answer-section');
-    answerSection.setAttribute('id', 'answerSecion');
+    answerSection.setAttribute('id', 'answerSection');
     let labels = ['A','B','C','D','E','F'];
     let newData = [];
     for (let i = 0; i < question.answers.length && i < labels.length; i++) {
@@ -280,9 +280,9 @@ function modifyQuestion(question) {
         newQuestion = {'questionText':questionText,
          'answers':[]
         }
-		//This is where the errors are happening
         while(answerSection.firstChild){
             answer = answerSection.firstChild;
+            answerSection.removeChild(answerSection.firstChild);
             let answerText = answer.firstChild.textContent;
             answer.removeChild(answer.firstChild);
             let correctBox = answer.firstChild.checked;
@@ -316,7 +316,7 @@ function addQuestion(question, page) {
     main.appendChild(questionTextSection);
     let answerSection = document.createElement('section');
     answerSection.setAttribute('class', 'answer-section');
-    answerSection.setAttribute('id', 'answerSecion');  
+    answerSection.setAttribute('id', 'answerSection');  
     let addAnswerButton = document.createElement('button');
     addAnswerButton.textContent = 'Add Answer';
     addAnswerButton.onclick = function(){
@@ -343,6 +343,7 @@ function addQuestion(question, page) {
         }
         while(answerSection.firstChild){
             answer = answerSection.firstChild;
+            answerSection.removeChild(answerSection.firstChild);
             let answerText = answer.firstChild.textContent;
             answer.removeChild(answer.firstChild);
             let correctBox = answer.firstChild.checked;
