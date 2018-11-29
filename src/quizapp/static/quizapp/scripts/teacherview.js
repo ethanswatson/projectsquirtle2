@@ -328,26 +328,7 @@ function addQuestion(question, page) {
     let submitButton = document.createElement('button');
     submitButton.textContent = 'Submit';
     submitButton.onclick = function(){
-        /*answerSection = document.querySelector('#answerSection');
-        questionText = document.querySelector('#questionText');
-        newQuestion = {'questionText':questionText,
-         'answers':[]
-        }
-        while(answerSection.firstChild){
-            answer = answerSection.firstChild;
-            answerSection.removeChild(answerSection.firstChild);
-            let answerText = answer.firstChild.textContent;
-            answer.removeChild(answer.firstChild);
-            answer.removeChild(answer.firstChild);
-            let correctBox = answer.firstChild.checked;
-            answer.removeChild(answer.firstChild);
-            answer.removeChild(answer.firstChild);
-            let points = answer.firstChild.value;
-            newQuestion['answers'].push({'answerText':answerText,
-                'correct':correctBox,
-                'points':points
-            });
-        }*/
+        
         answerSection = document.querySelector('#answerSection');
         questionText = document.querySelector('#questionText').value;
         newQuestion = {'questionText':questionText,
