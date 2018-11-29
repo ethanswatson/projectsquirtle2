@@ -6,8 +6,9 @@
 //             questionText: 'A Fake Question',
 //             answers: [
 //                 {
-//                     id: 1,
 //                     text:'Option 1'
+//                     correct: true,
+//                     points: 0
 //                 },
 //                 {
 //                     id: 2,
@@ -44,6 +45,8 @@ let voteData;
 
 let curMessage;
 
+var newQuestion;
+
 let connectToSocket = function (roomName) {
     sessionId = roomName;
     chatSocket = new WebSocket(
@@ -62,6 +65,8 @@ let connectToSocket = function (roomName) {
         } else if(msgType == 'msgQuestion') {
             curMessage = message;
             renderQuestion(message);
+        }else if(msgType == 'msgEdit'){
+            modifyQuestion(message);
         }
     };
         
@@ -114,10 +119,7 @@ function renderLanding(quizNameText) {
     let userSection = document.createElement('section');
     userSection.setAttribute('class', 'user-section');
     main.appendChild(userSection);
-    for (let i = 0; i < users.length; i++) {
-        let username = users[i];
-        landingAddUser(username);
-    }
+    
 }
 
 function renderQuestion(question) {
@@ -125,12 +127,24 @@ function renderQuestion(question) {
     document.title = 'Question';
     let main = document.querySelector('main');
 
-    let modifyButton = document.createElement('button');
-	modifyButton.textContent = 'Modify Quiz';
-	modifyButton.style.margin = '10px';
-	modifyButton.style.padding = '10px';
-	modifyButton.onclick = function(){modifyQuiz(question, 'question')};
-	main.appendChild(modifyButton);
+    let addQuestionButton = document.createElement('button');
+	addQuestionButton.textContent = 'Add Question';
+	addQuestionButton.style.margin = '10px';
+	addQuestionButton.style.padding = '10px';
+	addQuestionButton.onclick = function(){addQuestion(question, 'question')};
+    main.appendChild(addQuestionButton);
+
+    let modQuestionButton = document.createElement('button');
+	modQuestionButton.textContent = 'Modify Question';
+	modQuestionButton.style.margin = '10px';
+	modQuestionButton.style.padding = '10px';
+	modQuestionButton.onclick = function(){
+        chatSocket.send(JSON.stringify({
+            'message': '',
+            'msgType': 'msgEdit'
+        }));
+    };
+	main.appendChild(modQuestionButton);
 
     let questionTextSection = document.createElement('section');
     let questionText = document.createElement('p');
@@ -165,10 +179,10 @@ function renderQueResults(question) {
     let main = document.querySelector('main');
 
     let modifyButton = document.createElement('button');
-	modifyButton.textContent = 'Modify Quiz';
+	modifyButton.textContent = 'Add Question';
 	modifyButton.style.margin = '10px';
 	modifyButton.style.padding = '10px';
-	modifyButton.onclick = function(){modifyQuiz(question, 'results')};
+	modifyButton.onclick = function(){addQuestion(question, 'results')};
 	main.appendChild(modifyButton);
 
     let questionTextSection = document.createElement('section');
@@ -195,7 +209,101 @@ function renderQueResults(question) {
     createNext('question');
 }
 
-function modifyQuiz(question, page){
+function modifyQuestion(question) {
+    clearPage();
+    document.title = 'Question';
+    let main = document.querySelector('main');
+
+    let modifyButton = document.createElement('button');
+	modifyButton.textContent = 'Modify Quiz';
+	modifyButton.style.margin = '10px';
+	modifyButton.style.padding = '10px';
+	modifyButton.onclick = function(){addQuestion(question, 'question')};
+	main.appendChild(modifyButton);
+
+    let questionTextSection = document.createElement('section');
+    let questionText = document.createElement('input');
+    questionText.setAttribute('class', 'question-text');
+    questionText.setAttribute('id', 'questionText')
+    questionText.value = question.questionText;
+    questionTextSection.appendChild(questionText);
+    main.appendChild(questionTextSection);
+    let answerSection = document.createElement('section');
+    answerSection.setAttribute('class', 'answer-section');
+    answerSection.setAttribute('id', 'answerSecion');
+    let labels = ['A','B','C','D','E','F'];
+    let newData = [];
+    for (let i = 0; i < question.answers.length && i < labels.length; i++) {
+        newData.push(0);
+        let answer = question.answers[i];
+        let correct = answer.correct;
+        let correctBox = document.createElement('input');
+        correctBox.setAttribute('type', 'checkbox');
+        if(correct){correctBox.checked = true};
+        let points = answer.points;
+        let pointEdit = document.createElement('input');
+        pointEdit.setAttribute('type', 'number');
+        pointEdit.value = points;
+        let label = labels[i];
+        let answerBox = document.createElement('div');
+        answerBox.setAttribute('class', 'answer-box');
+        answerBox.setAttribute('value', label);
+        let answerText = document.createElement('input');
+        answerText.value = answer.text;
+        answerBox.appendChild(answerText);
+        answerBox.appendChild(correctBox);
+        answerBox.appendChild(pointEdit);
+        answerSection.appendChild(answerBox);
+    }
+    voteData = newData;
+    let addAnswerButton = document.createElement('button');
+    addAnswerButton.textContent = 'Add Answer';
+    addAnswerButton.onclick = function(){
+        let correctBox = document.createElement('input');
+        correctBox.setAttribute('type', 'checkbox');
+        let pointEdit = document.createElement('input');
+        pointEdit.setAttribute('type', 'number');
+        let answerBox = document.createElement('div');
+        answerBox.setAttribute('class', 'answer-box');
+        let answerText = document.createElement('input');
+        answerBox.appendChild(answerText);
+        answerBox.appendChild(correctBox);
+        answerBox.appendChild(pointEdit);
+        answerSection.appendChild(answerBox);
+    }
+    main.appendChild(answerSection);
+    let submitButton = document.createElement('button');
+    submitButton.textContent = 'submit';
+    submitButton.onclick = function(){
+        answerSection = document.querySelector('#answerSection');
+        questionText = document.querySelector('#questionText');
+        newQuestion = {'questionText':questionText,
+         'answers':[]
+        }
+        while(answerSection.firstChild){
+            answer = answerSection.firstChild;
+            let answerText = answer.firstChild.textContent;
+            answer.removeChild(answer.firstChild);
+            let correctBox = answer.firstChild.checked;
+            answer.removeChild(answer.firstChild);
+            let points = answer.firstChild.value;
+            newQuestion['answers'] += [{'answerText':answerText,
+                'correct':correctBox,
+                'points':points
+            }]            
+        }
+        chatSocket.send(JSON.stringify({
+            'message': newQuestion,
+            'msgType': 'msgUpdate' //add question is msgAdd
+        }));
+        newQuestion= '';
+    }
+    main.appendChild(addAnswerButton); 
+    main.appendChild(submitButton); 
+   
+
+}
+function addQuestion(question, page){
     clearPage();
 	document.title = 'Modify Quiz';
 	let main = document.querySelector('main');
@@ -209,18 +317,10 @@ function modifyQuiz(question, page){
 			renderQueResults(question);			
 		}
 	};
-	let addNextButton = document.createElement('button');
-	addNextButton.textContent = 'Add Next Question';
-	addNextButton.onclick = function(){ 
-		if(page === 'question'){
-			renderQuestion(question);
-		}else if(page === 'results'){
-			renderQueResults(question);			
-		}
-	};
-	let addLastButton = document.createElement('button');
-	addLastButton.textContent = 'Add Last Question';
-	addLastButton.onclick = function(){ 
+
+	let addButton = document.createElement('button');
+	addButton.textContent = 'Add Question';
+	addButton.onclick = function(){ 
 		if(page === 'question'){
 			renderQuestion(question);
 		}else if(page === 'results'){
@@ -229,8 +329,7 @@ function modifyQuiz(question, page){
 	};
     let buttonSection = document.createElement('section');
 	buttonSection.appendChild(cancelButton);
-	buttonSection.appendChild(addNextButton);
-	buttonSection.appendChild(addLastButton);
+	buttonSection.appendChild(addButton);
 	main.appendChild(buttonSection);
 	
     let outerSection = document.createElement('section');
