@@ -21,8 +21,9 @@ def joinQuiz(request):
         form = JoinQuizForm(request.POST)
         if form.is_valid():
             sessionId = form.cleaned_data.get('sessionId')
-            if Session.objects.filter(_sessionID=sessionId).exists():
-                return redirect(reverse('quizapp:roomJoin', kwargs={'room_name': sessionId}))
+            sessionIdUpper = sessionId.upper()
+            if Session.objects.filter(_sessionID=sessionIdUpper).exists():
+                return redirect(reverse('quizapp:roomJoin', kwargs={'room_name': sessionIdUpper}))
             
     
     form = JoinQuizForm()
