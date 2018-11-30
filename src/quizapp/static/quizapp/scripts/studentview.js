@@ -15,7 +15,6 @@ var connectToSocket = function(newRoomName){
         var data = JSON.parse(e.data);
         var msgType = data['msgType'];
 
-        console.log(msgType);
 
 		if (msgType == 'msgQuestion') {
             setQuestionPage(data);
@@ -26,7 +25,6 @@ var connectToSocket = function(newRoomName){
         }else if(msgType == 'msgUserName'){
             wasAccepted(data);
         }else if(msgType == 'msgRequestUserName'){
-            console.log('username requested');
             requestUserName();
         }else if (msgType == 'msgStart'){
             setStart(userName);
@@ -43,7 +41,6 @@ var connectToSocket = function(newRoomName){
 
 
 var requestUserName = function(){
-    console.log('username requested');
  
     document.querySelector('#waiting').style.display='none';
 
@@ -201,7 +198,6 @@ var setResults = function(data){
     var message = JSON.parse(data['message']);
     var currentUserScore = message['currentUserScore'];
     var users = message['users'];
-    console.log(users);
 
     document.querySelector('#waiting').style.display='none';
 

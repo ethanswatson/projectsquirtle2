@@ -98,7 +98,6 @@ function renderLanding(quizNameText, users) {
         userText.textContent = users[i];
         userSection.appendChild(userText);
     }
-    console.log(users);
     main.appendChild(userSection);
     
 }

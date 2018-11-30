@@ -11,14 +11,10 @@ class HostConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         self.sessionID = self.scope['url_route']['kwargs']['sessionID']
-        print(self.sessionID)
+        
         user = self.scope['user']
-        print(user)
-        print(user.is_authenticated)
         if user.is_authenticated:
             sessionOwner = await self.getSessionOwner(self.sessionID)
-            print(sessionOwner)
-            print(user.id)
             if sessionOwner == user.id:
                 await self.setHostName(self.channel_name, self.sessionID)
                 self.clientGroupName = 'quiz%s' % self.sessionID
@@ -193,11 +189,9 @@ class HostConsumer(AsyncWebsocketConsumer):
     async def requestCurrentPage(self, message):
         clientName = message['message']['channelName']
         state = self.session.getSessionState()
-        print(state)
         if state == 'start':
             await self.sendToClient(clientName, '', 'msgStart')
         elif state == 'question':
-            print(message['message']['voted'])
             if message['message']['voted'] == False:
                 currentQuestion = await self.getCurrentQuestion()
                 if currentQuestion != False:
@@ -416,7 +410,6 @@ class ClientConsumer(AsyncWebsocketConsumer):
     async def vote(self, message):
         self.scope['session']['voted'] = True
         self.scope['session'].save()
-        print(self.scope['session']['voted'])
         userID = message['userID']
         answerID = message['answerID']
         message = {
