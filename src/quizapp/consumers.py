@@ -20,6 +20,7 @@ class HostConsumer(AsyncWebsocketConsumer):
 
         await self.getPage()
 
+
     async def receive(self, text_data):
         message = json.loads(text_data)
         msgType = message['msgType']
@@ -44,8 +45,8 @@ class HostConsumer(AsyncWebsocketConsumer):
         elif msgType == 'msgEdit':
             await self.sendCurrentQuestionFull()
 
-        elif msgType == 'msgRequestCurrent':
-            await self.sendCurrentQuestion()
+        elif msgType == 'msgRequestPage':
+            await self.getPage()
 
         elif msgType == 'msgDelete':
             await self.deleteQuestionMessage()

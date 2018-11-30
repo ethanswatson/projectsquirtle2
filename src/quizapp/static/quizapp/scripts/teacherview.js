@@ -6,18 +6,23 @@ let voteData;
 
 let curMessage;
 
-var newQuestion;
+let newQuestion;
 
-let connectToSocket = function (roomName) {
+let quizTitle;
+
+
+let connectToSocket = function (roomName, quizName) {
     sessionId = roomName;
+    quizTitle = quizName;
     chatSocket = new WebSocket(
         'ws://' + window.location.host +
         '/ws/quizapp/host/' + roomName + '/');
-
+        
     chatSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);
         var message = data['message'];
         var msgType = data['msgType'];
+        console.log(msgType);
         if (msgType=='msgJoin') {
             landingAddUser(message['userName']);
         } else if(msgType=='msgVote') {
@@ -28,13 +33,24 @@ let connectToSocket = function (roomName) {
             renderQuestion(message);
         }else if(msgType == 'msgEdit'){
             modifyQuestion(message);
+        }else if(msgType == 'msgStart'){
+            renderLanding(quizTitle);
         }
     };
-        
+    
     chatSocket.onclose = function(e) {
         console.error('Chat socket closed unexpectedly');
     };
+
+    renderLanding(quizTitle);
 };
+
+function requestPage(){
+    chatSocket.send(JSON.stringify({
+        'message': '',
+        'msgType': 'msgRequestPage'
+    }));
+}
 
 function clearPage() {
     let main = document.querySelector('main');
@@ -273,7 +289,7 @@ function modifyQuestion(question) {
     let cancelButton = document.createElement('button');
     cancelButton.textContent = 'Cancel';
     cancelButton.onclick = function(){ 
-    	renderQuestion(question);	
+    	requestPage();	
     };
     let buttonSection = document.createElement('section');
     buttonSection.appendChild(addAnswerButton); 
@@ -358,11 +374,7 @@ function addQuestion(question, page) {
     let cancelButton = document.createElement('button');
     cancelButton.textContent = 'Cancel';
     cancelButton.onclick = function(){ 
-    	if(page === 'question'){
-    		renderQuestion(question);
-    	}else if(page === 'results'){
-    		renderQueResults(question);			
-    	}
+    	requestPage();
     };
     let buttonSection = document.createElement('section');
     buttonSection.appendChild(addAnswerButton); 
