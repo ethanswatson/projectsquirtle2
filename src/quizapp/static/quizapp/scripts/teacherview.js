@@ -1,41 +1,3 @@
-// Dummy data. Will be replaced with data from websockets
-// let quiz = {
-//     quizName: 'Dummy Quiz',
-//     questions: [
-//         {
-//             questionText: 'A Fake Question',
-//             answers: [
-//                 {
-//                     id: 1,
-//                     text:'Option 1'
-//                 },
-//                 {
-//                     id: 2,
-//                     text: 'Option 2'
-//                 },
-//                 {
-//                     id: 3,
-//                     text: 'Option 3'
-//                 },
-//                 {
-//                     id: 4,
-//                     text: 'Option 4'
-//                 },
-//                 {
-//                     id: 5,
-//                     text: 'Option 5'
-//                 },
-//                 {
-//                     id: 6,
-//                     text: 'Option 6'
-//                 },
-//             ]
-//         }
-//     ]
-// }
-
-// let users = ['user a', 'user b', 'user c', 'user d', 'user e', 'user f', 'user g', 'user h', 'user i', 'user j']
-
 let sessionId;
 
 let chatSocket;
@@ -44,12 +6,18 @@ let voteData;
 
 let curMessage;
 
-let connectToSocket = function (roomName) {
+let newQuestion;
+
+let quizTitle;
+
+
+let connectToSocket = function (roomName, quizName) {
     sessionId = roomName;
+    quizTitle = quizName;
     chatSocket = new WebSocket(
         'ws://' + window.location.host +
         '/ws/quizapp/host/' + roomName + '/');
-
+        
     chatSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);
         var message = data['message'];
@@ -57,18 +25,29 @@ let connectToSocket = function (roomName) {
         if (msgType=='msgJoin') {
             landingAddUser(message['userName']);
         } else if(msgType=='msgVote') {
-            console.log(message['answerID']); //Testing to see if answerID comes through
             incrementVote(message['answerID']-1); //database values start at 1 instead of 0
         } else if(msgType == 'msgQuestion') {
             curMessage = message;
             renderQuestion(message);
+        }else if(msgType == 'msgEdit'){
+            modifyQuestion(message);
+        }else if(msgType == 'msgStart'){
+            renderLanding(quizTitle, message);
         }
     };
-        
+    
     chatSocket.onclose = function(e) {
         console.error('Chat socket closed unexpectedly');
     };
+
 };
+
+function requestPage(){
+    chatSocket.send(JSON.stringify({
+        'message': '',
+        'msgType': 'msgRequestPage'
+    }));
+}
 
 function clearPage() {
     let main = document.querySelector('main');
@@ -91,7 +70,7 @@ function requestNextQuestion() {
     }));
 }
 
-function renderLanding(quizNameText) {
+function renderLanding(quizNameText, users) {
     clearPage();
     document.title = quizNameText;
     let main = document.querySelector('main');
@@ -113,17 +92,40 @@ function renderLanding(quizNameText) {
     main.appendChild(quizNameSection);
     let userSection = document.createElement('section');
     userSection.setAttribute('class', 'user-section');
-    main.appendChild(userSection);
-    for (let i = 0; i < users.length; i++) {
-        let username = users[i];
-        landingAddUser(username);
+    for(let i = 0; i < users.length; i++){
+        let userText = document.createElement('p');
+        userText.setAttribute('class', 'user-name-text');
+        userText.textContent = users[i];
+        userSection.appendChild(userText);
     }
+    main.appendChild(userSection);
+    
 }
 
 function renderQuestion(question) {
     clearPage();
     document.title = 'Question';
     let main = document.querySelector('main');
+
+    let addQuestionButton = document.createElement('button');
+	addQuestionButton.textContent = 'Add Question';
+	addQuestionButton.style.margin = '10px';
+	addQuestionButton.style.padding = '10px';
+	addQuestionButton.onclick = function(){addQuestion(question, 'question')};
+    main.appendChild(addQuestionButton);
+
+    let modQuestionButton = document.createElement('button');
+	modQuestionButton.textContent = 'Modify Question';
+	modQuestionButton.style.margin = '10px';
+	modQuestionButton.style.padding = '10px';
+	modQuestionButton.onclick = function(){
+        chatSocket.send(JSON.stringify({
+            'message': '',
+            'msgType': 'msgEdit'
+        }));
+    };
+	main.appendChild(modQuestionButton);
+
     let questionTextSection = document.createElement('section');
     let questionText = document.createElement('p');
     questionText.setAttribute('class', 'question-text');
@@ -155,6 +157,14 @@ function renderQueResults(question) {
     clearPage();
     document.title = 'Question Results';
     let main = document.querySelector('main');
+
+    let modifyButton = document.createElement('button');
+	modifyButton.textContent = 'Add Question';
+	modifyButton.style.margin = '10px';
+	modifyButton.style.padding = '10px';
+	modifyButton.onclick = function(){addQuestion(question, 'results')};
+	main.appendChild(modifyButton);
+
     let questionTextSection = document.createElement('section');
     let questionText = document.createElement('p');
     questionText.setAttribute('class', 'question-text');
@@ -179,6 +189,209 @@ function renderQueResults(question) {
     createNext('question');
 }
 
+function modifyQuestion(question) {
+    clearPage();
+    document.title = 'Modify Question';
+    let main = document.querySelector('main');
+
+    let questionTextSection = document.createElement('section');
+    let questionText = document.createElement('input');
+    questionText.setAttribute('class', 'question-text');
+    questionText.setAttribute('id', 'questionText')
+    questionText.value = question.questionText;
+    questionTextSection.appendChild(questionText);
+    main.appendChild(questionTextSection);
+    let answerSection = document.createElement('section');
+    answerSection.setAttribute('class', 'answer-section');
+    answerSection.setAttribute('id', 'answerSection');
+    let labels = ['A','B','C','D','E','F'];
+    let newData = [];
+    for (let i = 0; i < question.answers.length && i < labels.length; i++) {
+        newData.push(0);
+        let answer = question.answers[i];
+		let correctText = document.createElement('p');
+		correctText.textContent = 'Correct Answer: ';
+        let correct = answer.correct;
+        let correctBox = document.createElement('input');
+        correctBox.setAttribute('type', 'checkbox');
+        if(correct){correctBox.checked = true};
+        let points = answer.points;
+        let pointEdit = document.createElement('input');
+        pointEdit.setAttribute('type', 'number');
+        pointEdit.value = points;
+		let pointText = document.createElement('p');
+		pointText.textContent = 'Answer Value: ';
+        let label = labels[i];
+        let answerBox = document.createElement('div');
+        answerBox.setAttribute('class', 'answer-box');
+        answerBox.setAttribute('value', label);
+        let answerText = document.createElement('input');
+        answerText.value = answer.text;
+        answerBox.appendChild(answerText);
+		answerBox.appendChild(correctText);
+        answerBox.appendChild(correctBox);
+		answerBox.appendChild(pointText);
+        answerBox.appendChild(pointEdit);
+        answerSection.appendChild(answerBox);
+    }
+    voteData = newData;
+    let addAnswerButton = document.createElement('button');
+    addAnswerButton.textContent = 'Add Answer';
+    addAnswerButton.onclick = function(){
+		let correctText = document.createElement('p');
+		correctText.textContent = 'Correct Answer: ';
+        let correctBox = document.createElement('input');
+        correctBox.setAttribute('type', 'checkbox');
+		let pointText = document.createElement('p');
+		pointText.textContent = 'Answer Value: ';
+        let pointEdit = document.createElement('input');
+        pointEdit.setAttribute('type', 'number');
+        pointEdit.value = 0;
+        let answerBox = document.createElement('div');
+        answerBox.setAttribute('class', 'answer-box');
+        let answerText = document.createElement('input');
+		answerText.setAttribute('placeholder','Type Answer Here');
+        answerBox.appendChild(answerText);
+		answerBox.appendChild(correctText);
+        answerBox.appendChild(correctBox);
+		answerBox.appendChild(pointText);
+        answerBox.appendChild(pointEdit);
+        answerSection.appendChild(answerBox);
+    }
+    main.appendChild(answerSection);
+    let submitButton = document.createElement('button');
+    submitButton.textContent = 'Submit';
+    submitButton.onclick = function(){
+        answerSection = document.querySelector('#answerSection');
+        questionText = document.querySelector('#questionText').value;
+        newQuestion = {'questionText':questionText,
+            'questionID': question['questionID'],
+            'answers':[]
+        }
+        while(answerSection.firstChild){
+            answer = answerSection.firstChild;
+            answerSection.removeChild(answerSection.firstChild);
+            let answerText = answer.firstChild.value;
+            answer.removeChild(answer.firstChild);
+            answer.removeChild(answer.firstChild);
+            let correctBox = answer.firstChild.checked;
+            answer.removeChild(answer.firstChild);
+            answer.removeChild(answer.firstChild);
+            let points = answer.firstChild.value;
+            newQuestion['answers'].push({'answerText':answerText,
+                'correct':correctBox,
+                'points':points
+            });
+        }
+        chatSocket.send(JSON.stringify({
+            'message': newQuestion,
+            'msgType': 'msgUpdate'
+        }));
+        newQuestion= '';
+    }
+    let cancelButton = document.createElement('button');
+    cancelButton.textContent = 'Cancel';
+    cancelButton.onclick = function(){ 
+    	requestPage();	
+    };
+    let buttonSection = document.createElement('section');
+    buttonSection.appendChild(addAnswerButton); 
+	addAnswerButton.style.margin = '10px';
+	addAnswerButton.style.padding = '10px';
+    buttonSection.appendChild(submitButton); 
+    buttonSection.appendChild(cancelButton);
+	submitButton.style.margin = '10px';
+	submitButton.style.padding = '10px';
+    main.appendChild(buttonSection); 
+}
+
+function addQuestion(question, page) {
+    clearPage();
+    document.title = 'Add Question';
+    let main = document.querySelector('main');
+
+    let questionTextSection = document.createElement('section');
+    let questionText = document.createElement('input');
+    questionText.setAttribute('class', 'question-text');
+    questionText.setAttribute('id', 'questionText')
+	questionText.setAttribute('placeholder','Type Question Here');
+    questionTextSection.appendChild(questionText);
+    main.appendChild(questionTextSection);
+    let answerSection = document.createElement('section');
+    answerSection.setAttribute('class', 'answer-section');
+    answerSection.setAttribute('id', 'answerSection');  
+    let addAnswerButton = document.createElement('button');
+    addAnswerButton.textContent = 'Add Answer';
+    addAnswerButton.onclick = function(){
+		let correctText = document.createElement('p');
+		correctText.textContent = 'Correct Answer: ';
+        let correctBox = document.createElement('input');
+        correctBox.setAttribute('type', 'checkbox');
+		let pointText = document.createElement('p');
+		pointText.textContent = 'Answer Value: ';
+        let pointEdit = document.createElement('input');
+        pointEdit.setAttribute('type', 'number');
+        pointEdit.value = 0;
+        let answerBox = document.createElement('div');
+        answerBox.setAttribute('class', 'answer-box');
+        let answerText = document.createElement('input');
+		answerText.setAttribute('placeholder','Type Answer Here');
+        answerBox.appendChild(answerText);
+		answerBox.appendChild(correctText);
+        answerBox.appendChild(correctBox);
+		answerBox.appendChild(pointText);
+        answerBox.appendChild(pointEdit);
+        answerSection.appendChild(answerBox);
+    }
+    main.appendChild(answerSection);
+    let submitButton = document.createElement('button');
+    submitButton.textContent = 'Submit';
+    submitButton.onclick = function(){
+        
+        answerSection = document.querySelector('#answerSection');
+        questionText = document.querySelector('#questionText').value;
+        newQuestion = {'questionText':questionText,
+            'answers':[]
+        }
+        while(answerSection.firstChild){
+            answer = answerSection.firstChild;
+            answerSection.removeChild(answerSection.firstChild);
+            let answerText = answer.firstChild.value;
+            answer.removeChild(answer.firstChild);
+            answer.removeChild(answer.firstChild);
+            let correctBox = answer.firstChild.checked;
+            answer.removeChild(answer.firstChild);
+            answer.removeChild(answer.firstChild);
+            let points = answer.firstChild.value;
+            newQuestion['answers'].push({'answerText':answerText,
+                'correct':correctBox,
+                'points':points
+            });
+        }
+        chatSocket.send(JSON.stringify({
+            'message': newQuestion,
+            'msgType': 'msgAdd'
+        }));
+        newQuestion= '';
+    }
+    let cancelButton = document.createElement('button');
+    cancelButton.textContent = 'Cancel';
+    cancelButton.onclick = function(){ 
+    	requestPage();
+    };
+    let buttonSection = document.createElement('section');
+    buttonSection.appendChild(addAnswerButton); 
+	addAnswerButton.style.margin = '10px';
+	addAnswerButton.style.padding = '10px';
+    buttonSection.appendChild(cancelButton);
+	cancelButton.style.margin = '10px';
+	cancelButton.style.padding = '10px';
+    buttonSection.appendChild(submitButton); 
+	submitButton.style.margin = '10px';
+	submitButton.style.padding = '10px';
+    main.appendChild(buttonSection); 
+}
+
 function createNext( generateNext ) {
     let main = document.querySelector('main');
     let nextSection = document.createElement('section');
@@ -195,7 +408,6 @@ function createNext( generateNext ) {
 
     nextBox.onclick = function () {
         if (generateNext == 'results') {
-            console.log("Function entered");
             renderQueResults(curMessage);
         }
         else {
@@ -208,3 +420,4 @@ function createNext( generateNext ) {
 function incrementVote( voteID ) {
     voteData[voteID] += 1;
 }
+

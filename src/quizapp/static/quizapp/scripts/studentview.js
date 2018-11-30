@@ -12,8 +12,9 @@ var connectToSocket = function(newRoomName){
 		'/ws/quizapp/client/' + roomName + '/');
 
 	chatSocket.onmessage = function(e) {
-            var data = JSON.parse(e.data);
-            var msgType = data['msgType'];
+        var data = JSON.parse(e.data);
+        var msgType = data['msgType'];
+
 
 		if (msgType == 'msgQuestion') {
             setQuestionPage(data);
@@ -24,8 +25,11 @@ var connectToSocket = function(newRoomName){
         }else if(msgType == 'msgUserName'){
             wasAccepted(data);
         }else if(msgType == 'msgRequestUserName'){
-            console.log('username requested');
             requestUserName();
+        }else if (msgType == 'msgStart'){
+            setStart(userName);
+        }else if (msgType == 'msgWaiting'){
+            setWaiting();
         }
 	};
 
@@ -34,8 +38,9 @@ var connectToSocket = function(newRoomName){
     };
 }
 
+
+
 var requestUserName = function(){
-    console.log('username requested');
  
     document.querySelector('#waiting').style.display='none';
 
@@ -83,7 +88,6 @@ var requestUserName = function(){
 var wasAccepted = function(data){
     if(data['message']['accepted'] == true){
         userName = data['message']['userName'];
-        setStart(userName);
     }else if(data['message']['accepted'] == false){
         window.alert("That username is already taken. Please choose another username.");
     }
@@ -194,7 +198,6 @@ var setResults = function(data){
     var message = JSON.parse(data['message']);
     var currentUserScore = message['currentUserScore'];
     var users = message['users'];
-    console.log(users);
 
     document.querySelector('#waiting').style.display='none';
 

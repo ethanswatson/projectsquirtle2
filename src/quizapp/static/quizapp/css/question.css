@@ -48,3 +48,19 @@
 .session-id-text {
 	font-size: 26px;
 }
+
+.modify-box{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    vertical-align: center;
+    justify-content: space-evenly;
+	width: 50%;
+	margin: 10px 20px;
+	padding: 5px;
+	border-radius: 3px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: darkblue;
+	background-color: #54A8B2;
+}
