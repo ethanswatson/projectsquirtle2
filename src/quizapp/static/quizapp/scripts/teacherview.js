@@ -44,6 +44,7 @@ let voteData;
 
 let curMessage;
 let nextMessage;
+let dataVisPalette = ['#F1C40F', '#2DCC70', '#E77E23', '#3598DB', '#E84C3D', '#9B58B5'];
 
 let connectToSocket = function (roomName) {
     sessionId = roomName;
@@ -178,6 +179,7 @@ function renderQueResults(message) {
         let answerBox = document.createElement('div');
         answerBox.setAttribute('class', 'result-box-quater');
         answerBox.setAttribute('value', label);
+        answerBox.style.backgroundColor = dataVisPalette[i];
         let answerText = document.createElement('p');
         answerText.textContent = label;
         answerBox.appendChild(answerText);
@@ -192,6 +194,7 @@ function renderQueResults(message) {
 
         let queVoteBox = document.createElement('div');
         queVoteBox.setAttribute('class', 'result-box-fifth');
+        queVoteBox.style.backgroundColor = dataVisPalette[i];
         let queVoteText = document.createElement('p');
         queVoteText.textContent = vote.votes;
         queVoteBox.appendChild(queVoteText);
@@ -199,6 +202,7 @@ function renderQueResults(message) {
 
         let quePercBox = document.createElement('div');
         quePercBox.setAttribute('class', 'result-box-fifth');
+        quePercBox.style.backgroundColor = dataVisPalette[i];
         let quePercText = document.createElement('p');
         let percOfNum = (vote.votes / voteSum) * 100;
         quePercText.textContent = percOfNum.toFixed(2) + '%';
