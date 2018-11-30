@@ -254,6 +254,7 @@ function renderFinalPage(question) {
 
         let userScoreBox = document.createElement('div');
         userScoreBox.setAttribute('class', 'topuser-box-score');
+        userScoreBox.style.backgroundColor = colorArray[i];
         let userScoreText = document.createElement('p');
         userScoreText.textContent = userScore;
         userScoreBox.appendChild(userScoreText);
