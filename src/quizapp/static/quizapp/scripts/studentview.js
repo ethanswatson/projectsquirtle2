@@ -12,8 +12,10 @@ var connectToSocket = function(newRoomName){
 		'/ws/quizapp/client/' + roomName + '/');
 
 	chatSocket.onmessage = function(e) {
-            var data = JSON.parse(e.data);
-            var msgType = data['msgType'];
+        var data = JSON.parse(e.data);
+        var msgType = data['msgType'];
+
+        console.log(msgType);
 
 		if (msgType == 'msgQuestion') {
             setQuestionPage(data);
@@ -28,6 +30,8 @@ var connectToSocket = function(newRoomName){
             requestUserName();
         }else if (msgType == 'msgStart'){
             setStart(userName);
+        }else if (msgType == 'msgWaiting'){
+            setWaiting();
         }
 	};
 
@@ -35,6 +39,8 @@ var connectToSocket = function(newRoomName){
         	console.error('Chat socket closed unexpectedly');
     };
 }
+
+
 
 var requestUserName = function(){
     console.log('username requested');
