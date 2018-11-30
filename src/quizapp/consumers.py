@@ -17,7 +17,6 @@ class HostConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
         await self.sendToClients(self.channel_name, 'hostnameMessage')
-
         await self.getPage()
 
 
@@ -128,7 +127,6 @@ class HostConsumer(AsyncWebsocketConsumer):
         )
 
     async def sendToSelf(self, message, msgType):
-
         await self.send(
             text_data = json.dumps(
             {
@@ -168,7 +166,7 @@ class HostConsumer(AsyncWebsocketConsumer):
             message = []
             for user in users:
                 message += [user.getUserID()]
-            self.sendToSelf(message, 'msgStart')
+            await self.sendToSelf(message, 'msgStart')
         elif state == 'question':
             currentQuestion = await self.getCurrentQuestion()
             if currentQuestion != False:

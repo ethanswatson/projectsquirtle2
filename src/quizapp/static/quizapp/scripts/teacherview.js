@@ -22,11 +22,9 @@ let connectToSocket = function (roomName, quizName) {
         var data = JSON.parse(e.data);
         var message = data['message'];
         var msgType = data['msgType'];
-        console.log(msgType);
         if (msgType=='msgJoin') {
             landingAddUser(message['userName']);
         } else if(msgType=='msgVote') {
-            console.log(message['answerID']); //Testing to see if answerID comes through
             incrementVote(message['answerID']-1); //database values start at 1 instead of 0
         } else if(msgType == 'msgQuestion') {
             curMessage = message;
@@ -34,7 +32,7 @@ let connectToSocket = function (roomName, quizName) {
         }else if(msgType == 'msgEdit'){
             modifyQuestion(message);
         }else if(msgType == 'msgStart'){
-            renderLanding(quizTitle);
+            renderLanding(quizTitle, message);
         }
     };
     
@@ -42,7 +40,6 @@ let connectToSocket = function (roomName, quizName) {
         console.error('Chat socket closed unexpectedly');
     };
 
-    renderLanding(quizTitle);
 };
 
 function requestPage(){
@@ -73,7 +70,7 @@ function requestNextQuestion() {
     }));
 }
 
-function renderLanding(quizNameText) {
+function renderLanding(quizNameText, users) {
     clearPage();
     document.title = quizNameText;
     let main = document.querySelector('main');
@@ -95,6 +92,13 @@ function renderLanding(quizNameText) {
     main.appendChild(quizNameSection);
     let userSection = document.createElement('section');
     userSection.setAttribute('class', 'user-section');
+    for(let i = 0; i < users.length; i++){
+        let userText = document.createElement('p');
+        userText.setAttribute('class', 'user-name-text');
+        userText.textContent = users[i];
+        userSection.appendChild(userText);
+    }
+    console.log(users);
     main.appendChild(userSection);
     
 }
