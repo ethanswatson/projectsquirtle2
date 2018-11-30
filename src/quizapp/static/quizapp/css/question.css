@@ -11,6 +11,13 @@
 	margin: auto;
 }
 
+.topuser-section {
+    display: flex;
+	flex-wrap: wrap;
+	width: 50%;
+	margin: auto;
+}
+
 .answer-box{
 	flex: 1 0 35%;
 	margin: 10px 20px;
@@ -34,6 +41,21 @@
 
 .result-box-fifth{
 	flex-basis: 75px;
+	background-color: white;
+}
+
+.topuser-box-placement{
+	flex-basis: 50px;
+	background-color: white;
+}
+
+.topuser-box-name{
+	flex-basis: calc(100% - 200px);
+	background-color: #54A8B2;
+}
+
+.topuser-box-score{
+	flex-basis: 150px;
 	background-color: white;
 }
 

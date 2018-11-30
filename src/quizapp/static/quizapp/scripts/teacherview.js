@@ -206,12 +206,12 @@ function renderQueResults(message) {
         answerSection.appendChild(quePercBox);
     }
     main.appendChild(answerSection);
-    createNextQueButton();
+    createNextUserPlacementsButton();
 }
 
 function renderFinalPage(question) {
     clearPage();
-    console.log(question);
+    console.log(question.users);
     document.title = 'Quiz Results';
     let main = document.querySelector('main');
     let questionTextSection = document.createElement('section');
@@ -220,6 +220,42 @@ function renderFinalPage(question) {
     questionText.textContent = 'Top 5:';
     questionTextSection.appendChild(questionText);
     main.appendChild(questionTextSection);
+    let topUsersSection = document.createElement('section');
+    topUsersSection.setAttribute('class', 'topuser-section');
+    let usersArray = question.users;
+    let colorArray = ['gold', 'silver', '#cd7f32', 'white', 'white'];
+
+    for (i=0; i < usersArray.length; i++) {
+        let user = usersArray[i];
+        console.log(user);
+        let userScore = user.points;
+        console.log(userScore);
+        let userName = user.userID;
+        console.log(userName);
+
+        let userPlaceBox = document.createElement('div');
+        userPlaceBox.setAttribute('class', 'topuser-box-placement');
+        userPlaceBox.style.backgroundColor = colorArray[i];
+        let userPlaceText = document.createElement('p');
+        userPlaceText.textContent = i+1;
+        userPlaceBox.appendChild(userPlaceText);
+        topUsersSection.appendChild(userPlaceBox);
+
+        let userNameBox = document.createElement('div');
+        userNameBox.setAttribute('class', 'topuser-box-name');
+        let userNameText = document.createElement('p');
+        userNameText.textContent = userName;
+        userNameBox.appendChild(userNameText);
+        topUsersSection.appendChild(userNameBox);
+
+        let userScoreBox = document.createElement('div');
+        userScoreBox.setAttribute('class', 'topuser-box-score');
+        let userScoreText = document.createElement('p');
+        userScoreText.textContent = userScore;
+        userScoreBox.appendChild(userScoreText);
+        topUsersSection.appendChild(userScoreBox);
+    }
+    main.appendChild(topUsersSection);
 
     if (question.quizEnd == false) {
         createNextQueButton();
@@ -248,13 +284,32 @@ function createNextQueButton() {
     }
 }
 
+function createNextUserPlacementsButton() {
+    let main = document.querySelector('main');
+    let nextSection = document.createElement('section');
+    nextSection.setAttribute('class', 'answer-section');
+
+    let nextBox = document.createElement('div');
+    nextBox.setAttribute('class', 'next-button');
+    nextBox.setAttribute('style', 'width: 10%; padding: 20px;');
+    let nextText = document.createElement('p');
+    nextText.textContent = "User Placements";
+    nextBox.appendChild(nextText);
+    nextSection.appendChild(nextBox);
+    main.appendChild(nextSection);
+
+    nextBox.onclick = function () {
+        setNextState();
+    }
+}
+
 function createEndQuizText() {
     let main = document.querySelector('main');
     let nextSection = document.createElement('section');
     nextSection.setAttribute('class', 'answer-section');
 
     let nextBox = document.createElement('div');
-    nextBox.setAttribute('class', 'answer-button');
+    nextBox.setAttribute('class', 'next-button');
     nextBox.setAttribute('style', 'width: 10%; padding: 20px;');
     let nextText = document.createElement('p');
     nextText.textContent = "Quiz has ended!";
