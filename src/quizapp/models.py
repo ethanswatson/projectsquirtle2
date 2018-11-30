@@ -122,6 +122,13 @@ class Session(models.Model):
         user = AnonymousUser.objects.create(_session = self, _userID = userID, _userChannelName = channelName)
         user.save()
         return user
+
+    def clearAnswers(self):
+        questions = list(self._quiz.question_set.all())
+        for question in questions:
+            answers = list(question.answer_set.all())
+            for answer in answers:
+                answer.clear()
     
     def getUser(self, userID):
         return self.anonymoususer_set.get(_userID = userID)
@@ -256,9 +263,13 @@ class Answer(models.Model):
         self._pointValue = newPointValue
     def vote(self, user):
         self._votes += 1
-        self._voters.add(user)
         self.save()
     
     def __str__(self):
         return self._text
+
+    def clear(self):
+        self._votes = 0
+        self.save()
+
 

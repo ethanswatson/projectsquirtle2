@@ -209,6 +209,7 @@ def editAnswer(request, quizID, questionID, answerID):
 def startQuiz(request, quizID):
     user = request.user
     quiz = user.quiz_set.get(id = quizID)
-    session = quiz.session_set.create()
+    session = quiz.session_set.create(_owner = user.id)
+    session.clearAnswers()
     sessionID = session.idGen()
     return redirect(reverse('quizapp:roomMain', kwargs={'room_name': sessionID}))

@@ -211,7 +211,8 @@ class HostConsumer(AsyncWebsocketConsumer):
 
 
     async def disconnect(self, close_code):
-        pass
+        if self.getSessionState() == 'end':
+            await self.clearSession()
 
     async def getAnswerResults(self):
         question = await self.getQuestionObject()
@@ -336,6 +337,10 @@ class HostConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def getUsers(self):
         return self.session.getUsers()
+        
+    def clearSession(self):
+        self.session.clearAnswers()
+        self.session.delete()
         
 
    
