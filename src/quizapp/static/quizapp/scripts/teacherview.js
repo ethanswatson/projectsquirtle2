@@ -159,28 +159,51 @@ function renderQuestion(question) {
 
 function renderQueResults(message) {
     clearPage();
-    console.log(message);
     document.title = 'Question Results';
     let main = document.querySelector('main');
     let questionTextSection = document.createElement('section');
     let questionText = document.createElement('p');
     questionText.setAttribute('class', 'question-text');
-    questionText.textContent = message.questionText;
+    questionText.textContent = 'Question Results:';
     questionTextSection.appendChild(questionText);
     main.appendChild(questionTextSection);
     let answerSection = document.createElement('section');
-    answerSection.setAttribute('class', 'answer-section');
+    answerSection.setAttribute('class', 'result-section');
     let labels = ['A','B','C','D','E','F'];
+    let questionArray = message.votes;
+    let voteSum = sumOfArray(questionArray);
     for (let i = 0; i < message.votes.length && i < labels.length; i++) {
         let vote  = message.votes[i];
         let label = labels[i];
         let answerBox = document.createElement('div');
-        answerBox.setAttribute('class', 'answer-box');
+        answerBox.setAttribute('class', 'result-box-quater');
         answerBox.setAttribute('value', label);
         let answerText = document.createElement('p');
-        answerText.textContent = label + ': ' + vote.answerText + ': ' + vote.votes;
+        answerText.textContent = label;
         answerBox.appendChild(answerText);
         answerSection.appendChild(answerBox);
+
+        let queTextBox = document.createElement('div');
+        queTextBox.setAttribute('class', 'result-box-half');
+        let queText = document.createElement('p');
+        queText.textContent = vote.answerText;
+        queTextBox.appendChild(queText);
+        answerSection.appendChild(queTextBox);
+
+        let queVoteBox = document.createElement('div');
+        queVoteBox.setAttribute('class', 'result-box-fifth');
+        let queVoteText = document.createElement('p');
+        queVoteText.textContent = vote.votes;
+        queVoteBox.appendChild(queVoteText);
+        answerSection.appendChild(queVoteBox);
+
+        let quePercBox = document.createElement('div');
+        quePercBox.setAttribute('class', 'result-box-fifth');
+        let quePercText = document.createElement('p');
+        let percOfNum = (vote.votes / voteSum) * 100;
+        quePercText.textContent = percOfNum.toFixed(2) + '%';
+        quePercBox.appendChild(quePercText);
+        answerSection.appendChild(quePercBox);
     }
     main.appendChild(answerSection);
     createNextQueButton();
@@ -194,7 +217,7 @@ function renderFinalPage(question) {
     let questionTextSection = document.createElement('section');
     let questionText = document.createElement('p');
     questionText.setAttribute('class', 'question-text');
-    questionText.textContent = 'Quiz Results';
+    questionText.textContent = 'Top 5:';
     questionTextSection.appendChild(questionText);
     main.appendChild(questionTextSection);
 
@@ -212,7 +235,7 @@ function createNextQueButton() {
     nextSection.setAttribute('class', 'answer-section');
 
     let nextBox = document.createElement('div');
-    nextBox.setAttribute('class', 'answer-button');
+    nextBox.setAttribute('class', 'next-button');
     nextBox.setAttribute('style', 'width: 10%; padding: 20px;');
     let nextText = document.createElement('p');
     nextText.textContent = "Next Question";
@@ -246,7 +269,7 @@ function createResultsButton() {
     nextSection.setAttribute('class', 'answer-section');
 
     let nextBox = document.createElement('div');
-    nextBox.setAttribute('class', 'answer-button');
+    nextBox.setAttribute('class', 'next-button');
     nextBox.setAttribute('style', 'width: 10%; padding: 20px;');
     let nextText = document.createElement('p');
     nextText.textContent = "Go To Results";
@@ -256,11 +279,19 @@ function createResultsButton() {
 
     nextBox.onclick = function () {
         console.log("Function entered");
-        //sendQueResults();
         setNextState();
     }
 }
 
 function incrementVote( voteID ) {
     voteData[voteID] += 1;
+}
+
+function sumOfArray(array) {
+    let sum = 0;
+    for (i = 0; i < array.length; i++)
+    {
+        sum += array[i].votes;
+    }
+    return sum;
 }
