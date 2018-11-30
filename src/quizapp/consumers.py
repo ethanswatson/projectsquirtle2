@@ -11,14 +11,25 @@ class HostConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         self.sessionID = self.scope['url_route']['kwargs']['sessionID']
-        await self.setHostName(self.channel_name, self.sessionID)
-        self.clientGroupName = 'quiz%s' % self.sessionID
+        print(self.sessionID)
+        user = self.scope['user']
+        print(user)
+        print(user.is_authenticated)
+        if user.is_authenticated:
+            sessionOwner = await self.getSessionOwner(self.sessionID)
+            print(sessionOwner)
+            print(user.id)
+            if sessionOwner == user.id:
+                await self.setHostName(self.channel_name, self.sessionID)
+                self.clientGroupName = 'quiz%s' % self.sessionID
 
-        await self.accept()
+                await self.accept()
 
-        await self.sendToClients(self.channel_name, 'hostnameMessage')
+                await self.sendToClients(self.channel_name, 'hostnameMessage')
+                await self.getPage()
+        else:
+            pass
 
-        await self.getPage()
 
     async def receive(self, text_data):
         message = json.loads(text_data)
@@ -44,8 +55,8 @@ class HostConsumer(AsyncWebsocketConsumer):
         elif msgType == 'msgEdit':
             await self.sendCurrentQuestionFull()
 
-        elif msgType == 'msgRequestCurrent':
-            await self.sendCurrentQuestion()
+        elif msgType == 'msgRequestPage':
+            await self.getPage()
 
         elif msgType == 'msgDelete':
             await self.deleteQuestionMessage()
@@ -127,7 +138,6 @@ class HostConsumer(AsyncWebsocketConsumer):
         )
 
     async def sendToSelf(self, message, msgType):
-
         await self.send(
             text_data = json.dumps(
             {
@@ -167,7 +177,7 @@ class HostConsumer(AsyncWebsocketConsumer):
             message = []
             for user in users:
                 message += [user.getUserID()]
-            self.sendToSelf(message, 'msgStart')
+            await self.sendToSelf(message, 'msgStart')
         elif state == 'question':
             currentQuestion = await self.getCurrentQuestion()
             if currentQuestion != False:
@@ -181,16 +191,20 @@ class HostConsumer(AsyncWebsocketConsumer):
 
 
     async def requestCurrentPage(self, message):
-        clientName = message['message']
+        clientName = message['message']['channelName']
         state = self.session.getSessionState()
+        print(state)
         if state == 'start':
             await self.sendToClient(clientName, '', 'msgStart')
-
         elif state == 'question':
-            currentQuestion = await self.getCurrentQuestion()
-            if currentQuestion != False:
-                # Send message to client channel group
-                await self.sendToClient(clientName, currentQuestion, 'msgQuestion')
+            print(message['message']['voted'])
+            if message['message']['voted'] == False:
+                currentQuestion = await self.getCurrentQuestion()
+                if currentQuestion != False:
+                    # Send message to client channel group
+                    await self.sendToClient(clientName, currentQuestion, 'msgQuestion')
+            else:
+                await self.sendToClient(clientName, '', 'msgWaiting')
 
         elif state == 'results' or state == 'end':
             results = await self.getResults()
@@ -252,7 +266,7 @@ class HostConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def setHostName(self, name, sessionID):
-        self.session = Session.objects.get(_sessionId = sessionID)
+        self.session = Session.objects.get(_sessionID = sessionID)
         self.session.setHostName(name)
         self.currentVotes = self.session.getVotes()
         self.session.save()
@@ -336,6 +350,11 @@ class HostConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def getUsers(self):
         return self.session.getUsers()
+
+    @database_sync_to_async
+    def getSessionOwner(self, sessionID):
+        session = Session.objects.get(_sessionID = sessionID)
+        return session.getOwner()
         
 
    
@@ -344,7 +363,7 @@ class ClientConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         self.sessionID = self.scope['url_route']['kwargs']['sessionID']
-        self.session = Session.objects.get(_sessionId = self.sessionID)
+        self.session = Session.objects.get(_sessionID = self.sessionID)
         self.clientGroupName = 'quiz%s' % self.sessionID
         
 
@@ -395,6 +414,9 @@ class ClientConsumer(AsyncWebsocketConsumer):
             
 
     async def vote(self, message):
+        self.scope['session']['voted'] = True
+        self.scope['session'].save()
+        print(self.scope['session']['voted'])
         userID = message['userID']
         answerID = message['answerID']
         message = {
@@ -441,11 +463,15 @@ class ClientConsumer(AsyncWebsocketConsumer):
     # Receive questionMessage from group
     async def msgQuestion(self, question):
         # Send message to WebSocket
+        self.scope['session']['voted'] = False
+        self.scope['session'].save()
         await self.sendToSelf(question['message'], 'msgQuestion')
 
 
     async def requestCurrentPage(self):
-        await self.sendToHost(self.channel_name, 'requestCurrentPage')
+        message = {'voted': self.scope['session'].get('voted', False),
+            'channelName': self.channel_name}
+        await self.sendToHost(message, 'requestCurrentPage')
 
     async def msgStart(self, message):
         await self.sendToSelf('', 'msgStart')
@@ -477,9 +503,12 @@ class ClientConsumer(AsyncWebsocketConsumer):
     async def hostnameMessage(self, data):
         self.hostChannel = data['message']
 
+    async def msgWaiting(self, message):
+        await self.sendToSelf(message, 'msgWaiting')
+
     @database_sync_to_async
     def getHostName(self, sessionID):
-        return Session.objects.get(_sessionId = sessionID).getHostName()
+        return Session.objects.get(_sessionID = sessionID).getHostName()
 
     @database_sync_to_async
     def getSessionState(self):

@@ -42,7 +42,8 @@ class Quiz(models.Model):
 
 class Session(models.Model):
     _quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    _sessionId = models.CharField(max_length=6, default='') 
+    _owner = models.IntegerField(default = -1)
+    _sessionID = models.CharField(max_length=6, default='') 
     _hostChannelName = models.CharField(max_length=255)
     _questionCounter = models.IntegerField(default = -1)
     _currentVotes = models.IntegerField(default = 0)
@@ -90,17 +91,19 @@ class Session(models.Model):
                 print("Something Went Wrong, I Couldn't Get That Question.")
                 return -1
             self._currentVotes = 0
-            #self.save()
+            self.save()
             return nextQ
         return False
 
     def advanceQuestion(self):
         self._questionCounter += 1
         self._currentVotes = 0
+        self.save()
 
     def skipQuestion(self):
         self._questionCounter += 1
         self._currentVotes = 0
+        self.save()
 
     def increaseVotes(self, userID, answerID):
         answer = Answer.objects.get(id = answerID)
@@ -136,10 +139,10 @@ class Session(models.Model):
         return self._currentVotes
 
     def idGen(self, size=6):
-        if self._sessionId is '':
-            self._sessionId = ''.join(self.getRandomChar() for _ in range(size))
+        if self._sessionID is '':
+            self._sessionID = ''.join(self.getRandomChar() for _ in range(size))
             self.save()
-        return self._sessionId	
+        return self._sessionID	
 
     def getRandomChar(self):
         chars = string.ascii_uppercase + string.digits
@@ -150,19 +153,23 @@ class Session(models.Model):
 
     def setHostName(self, newName):
         self._hostChannelName = newName
-        return
+        self.save()
 
-    def getSessionId(self):
-        return self._sessionId
+    def getSessionID(self):
+        return self._sessionID
 
     def getSessionState(self):
         return self._sessionState
 
     def setSessionState(self, newState):
         self._sessionState = newState
+        self.save()
 
     def getUsers(self):
         return self.anonymoususer_set.all()
+
+    def getOwner(self):
+        return self._owner
 
 
 class AnonymousUser(models.Model):
