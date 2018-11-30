@@ -21,7 +21,7 @@ def joinQuiz(request):
         form = JoinQuizForm(request.POST)
         if form.is_valid():
             sessionId = form.cleaned_data.get('sessionId')
-            if Session.objects.filter(_sessionId=sessionId).exists():
+            if Session.objects.filter(_sessionID=sessionId).exists():
                 return redirect(reverse('quizapp:roomJoin', kwargs={'room_name': sessionId}))
             
     
@@ -47,7 +47,7 @@ def roomJoin(request, room_name):
 
 
 def teacherView(request, room_name):
-    session = Session.objects.get(_sessionId=room_name)
+    session = Session.objects.get(_sessionID=room_name)
     quizName = session.getQuiz().getQuizName()
     return render(request, 'quizapp/teacherview.html', {'quizName': quizName, 'room_name_json': mark_safe(json.dumps(room_name))})
 

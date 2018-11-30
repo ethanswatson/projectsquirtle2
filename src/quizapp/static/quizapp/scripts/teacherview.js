@@ -6,14 +6,18 @@ let voteData;
 
 let curMessage;
 
-var newQuestion;
+let newQuestion;
 
-let connectToSocket = function (roomName) {
+let quizTitle;
+
+
+let connectToSocket = function (roomName, quizName) {
     sessionId = roomName;
+    quizTitle = quizName;
     chatSocket = new WebSocket(
         'ws://' + window.location.host +
         '/ws/quizapp/host/' + roomName + '/');
-
+        
     chatSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);
         var message = data['message'];
@@ -21,20 +25,29 @@ let connectToSocket = function (roomName) {
         if (msgType=='msgJoin') {
             landingAddUser(message['userName']);
         } else if(msgType=='msgVote') {
-            console.log(message['answerID']); //Testing to see if answerID comes through
             incrementVote(message['answerID']-1); //database values start at 1 instead of 0
         } else if(msgType == 'msgQuestion') {
             curMessage = message;
             renderQuestion(message);
         }else if(msgType == 'msgEdit'){
             modifyQuestion(message);
+        }else if(msgType == 'msgStart'){
+            renderLanding(quizTitle, message);
         }
     };
-        
+    
     chatSocket.onclose = function(e) {
         console.error('Chat socket closed unexpectedly');
     };
+
 };
+
+function requestPage(){
+    chatSocket.send(JSON.stringify({
+        'message': '',
+        'msgType': 'msgRequestPage'
+    }));
+}
 
 function clearPage() {
     let main = document.querySelector('main');
@@ -57,7 +70,7 @@ function requestNextQuestion() {
     }));
 }
 
-function renderLanding(quizNameText) {
+function renderLanding(quizNameText, users) {
     clearPage();
     document.title = quizNameText;
     let main = document.querySelector('main');
@@ -79,6 +92,12 @@ function renderLanding(quizNameText) {
     main.appendChild(quizNameSection);
     let userSection = document.createElement('section');
     userSection.setAttribute('class', 'user-section');
+    for(let i = 0; i < users.length; i++){
+        let userText = document.createElement('p');
+        userText.setAttribute('class', 'user-name-text');
+        userText.textContent = users[i];
+        userSection.appendChild(userText);
+    }
     main.appendChild(userSection);
     
 }
@@ -273,7 +292,7 @@ function modifyQuestion(question) {
     let cancelButton = document.createElement('button');
     cancelButton.textContent = 'Cancel';
     cancelButton.onclick = function(){ 
-    	renderQuestion(question);	
+    	requestPage();	
     };
     let buttonSection = document.createElement('section');
     buttonSection.appendChild(addAnswerButton); 
@@ -358,11 +377,7 @@ function addQuestion(question, page) {
     let cancelButton = document.createElement('button');
     cancelButton.textContent = 'Cancel';
     cancelButton.onclick = function(){ 
-    	if(page === 'question'){
-    		renderQuestion(question);
-    	}else if(page === 'results'){
-    		renderQueResults(question);			
-    	}
+    	requestPage();
     };
     let buttonSection = document.createElement('section');
     buttonSection.appendChild(addAnswerButton); 
