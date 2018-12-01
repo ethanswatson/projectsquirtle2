@@ -29,22 +29,16 @@ def joinQuiz(request):
     form = JoinQuizForm()
     return render(request, 'quizapp/joinquiz.html', {'form': form})
 
-#WebSocket for teacher/student views
-
-def roomTest(request, room_name):
-    return render(request, 'quizapp/sessionmain.html', {
-            'room_name_json': mark_safe(json.dumps(room_name))
-        })
-
 def roomJoin(request, room_name):
     if request.session.get('quiz', False):
         data = request.session.get('quiz')
+        quizName = session.getQuiz().getQuizName()
         userName = data['userName']
         roomName = data['roomName']
         if roomName == room_name:
-            return render(request, 'quizapp/sessionjoin.html', {'room_name_json': mark_safe(json.dumps(room_name)), 'joined': True, 'userName':userName})
+            return render(request, 'quizapp/sessionjoin.html', {'room_name_json': mark_safe(json.dumps(room_name)), 'joined': True, 'userName':userName, 'quizName': quizName})
     
-    return render(request, 'quizapp/sessionjoin.html', {'room_name_json': mark_safe(json.dumps(room_name)), 'joined': False, 'userName': False})
+    return render(request, 'quizapp/sessionjoin.html', {'room_name_json': mark_safe(json.dumps(room_name)), 'joined': False, 'userName': False, 'quizName': quizName})
 
 
 def teacherView(request, room_name):
