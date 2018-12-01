@@ -158,7 +158,7 @@ function renderQuestion(question) {
 	addQuestionButton.textContent = 'Add Question';
 	addQuestionButton.style.margin = '10px';
 	addQuestionButton.style.padding = '10px';
-	addQuestionButton.onclick = function(){addQuestion(question, 'question')};
+	addQuestionButton.onclick = function(){addQuestion()};
     main.appendChild(addQuestionButton);
 
     let modQuestionButton = document.createElement('button');
@@ -207,12 +207,12 @@ function renderQueResults(message) {
     document.title = 'Question Results';
     let main = document.querySelector('main');
 
-    let modifyButton = document.createElement('button');
-	modifyButton.textContent = 'Add Question';
-	modifyButton.style.margin = '10px';
-	modifyButton.style.padding = '10px';
-	modifyButton.onclick = function(){addQuestion(question, 'results')};
-	main.appendChild(modifyButton);
+    let addQuestionButton = document.createElement('button');
+	addQuestionButton.textContent = 'Add Question';
+	addQuestionButton.style.margin = '10px';
+	addQuestionButton.style.padding = '10px';
+	addQuestionButton.onclick = function(){addQuestion()};
+    main.appendChild(addQuestionButton);
 
     let questionTextSection = document.createElement('section');
     let questionText = document.createElement('p');
@@ -261,6 +261,9 @@ function renderQueResults(message) {
         quePercBox.appendChild(quePercText);
         answerSection.appendChild(quePercBox);
     }
+
+
+
     main.appendChild(answerSection);
     createNextUserPlacementsButton();
 }
@@ -269,6 +272,14 @@ function renderFinalPage(question) {
     clearPage();
     document.title = 'Quiz Results';
     let main = document.querySelector('main');
+
+    let addQuestionButton = document.createElement('button');
+	addQuestionButton.textContent = 'Add Question';
+	addQuestionButton.style.margin = '10px';
+	addQuestionButton.style.padding = '10px';
+	addQuestionButton.onclick = function(){addQuestion()};
+    main.appendChild(addQuestionButton);
+
     let questionTextSection = document.createElement('section');
     let questionText = document.createElement('p');
     questionText.setAttribute('class', 'question-text');
@@ -319,6 +330,7 @@ function renderFinalPage(question) {
 
 function modifyQuestion(question) {
     clearPage();
+    overlayHide();
     document.title = 'Modify Question';
     let main = document.querySelector('main');
 
@@ -433,8 +445,9 @@ function modifyQuestion(question) {
     main.appendChild(buttonSection); 
 }
 
-function addQuestion(question, page) {
+function addQuestion(page) {
     clearPage();
+    overlayHide()
     document.title = 'Add Question';
     let main = document.querySelector('main');
 

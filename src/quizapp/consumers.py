@@ -46,6 +46,9 @@ class HostConsumer(AsyncWebsocketConsumer):
             
         elif msgType == 'msgAdd':
             await self.addQuestion(message['message'])
+            state = self.session.getSessionState()
+            if(state == 'end'):
+                await self.setSessionState('results')
             await self.getPage()
         
         elif msgType == 'msgEdit':
