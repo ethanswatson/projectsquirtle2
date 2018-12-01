@@ -8,16 +8,21 @@
 </head>
 <body>
     {% include "quizapp/partials/header.html" %}
-
+    
     <main></main>
     <div id="overlay-vote-box">
         <img id="squirtle-mug" src="{% static 'quizapp/images/squirtlemugshot.png' %}">
     </div>
+    
+    
 
+    <div style = 'position: fixed; font-size: 30px; left: 0px; bottom: 0px;'>
+        {{room_name_json}}
+    </div>
     {% include "quizapp/partials/footer.html" %}
     <script src="{% static 'quizapp/scripts/teacherview.js' %}"></script>
     <script>
-        connectToSocket({{ room_name_json }}, "{{ quizName }}");
+        connectToSocket('{{ room_name_json }}', '{{ quizName }}');
         
     </script>
 </body>

@@ -88,11 +88,15 @@ function clearOverlay() {
 
 function overlayHide() {
     let overlay = document.getElementById("overlay-vote-box");
+    //let sessionIDText = document.getElementById("sessionID");
+    //sessionIDText.style.visibility='hidden';
     overlay.style.visibility='hidden';
 }
 
 function overlayShow() {
     let overlay = document.getElementById("overlay-vote-box");
+    //let sessionIDText = document.getElementById("sessionID");
+    //sessionIDText.style.visibility='visible';
     overlay.style.visibility='visible';
 }
 

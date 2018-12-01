@@ -141,3 +141,11 @@
 	border-color: darkblue;
 	background-color: #54A8B2;
 }
+
+
+.session-id-bottom{
+	position: fixed;
+	font-size: 30px;
+	left: 0px;
+	bottom: 0px;
+}
