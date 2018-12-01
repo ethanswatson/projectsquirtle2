@@ -68,6 +68,7 @@ var requestUserName = function(){
     text.setAttribute('id', 'userName');
     text.setAttribute('class', 'session-id');
     text.setAttribute('style','size: 10;');
+    text.setAttribute('maxlength', '15');
 
     var button = document.createElement('input');
     button.setAttribute('type','button');
