@@ -46,6 +46,9 @@ class HostConsumer(AsyncWebsocketConsumer):
             
         elif msgType == 'msgAdd':
             await self.addQuestion(message['message'])
+            state = self.session.getSessionState()
+            if(state == 'end'):
+                await self.setSessionState('results')
             await self.getPage()
         
         elif msgType == 'msgEdit':
@@ -175,13 +178,20 @@ class HostConsumer(AsyncWebsocketConsumer):
                 message += [user.getUserID()]
             await self.sendToSelf(message, 'msgStart')
         elif state == 'question':
+
             currentQuestion = await self.getCurrentQuestion()
             if currentQuestion != False:
                 await self.sendToSelf(currentQuestion, 'msgQuestion')
+
         elif state == 'results' or state == 'end':
+
             results = await self.getResults()
+            isEnd =  await self.checkForEnd()
+            results['quizEnd'] = isEnd
             await self.sendToSelf(results, 'msgResults')
+
         elif state == 'answerResults':
+            
             message = await self.getAnswerResults()
             await self.sendToSelf(message, 'msgAnswerResults')
 
@@ -219,7 +229,8 @@ class HostConsumer(AsyncWebsocketConsumer):
 
 
     async def disconnect(self, close_code):
-        pass
+        if self.getSessionState() == 'end':
+            await self.clearSession()
 
     async def getAnswerResults(self):
         question = await self.getQuestionObject()
@@ -296,12 +307,14 @@ class HostConsumer(AsyncWebsocketConsumer):
                 }
 
             for answer in currentQuestion.getAnswers():
+                self.currentVotes += answer.getVotes()
                 question['answers'] += [
                     {
                         'id': answer.id,
                         'text': answer.getText()
                     }
                 ]
+            question['votes'] = self.currentVotes
             return question
         return False
 
@@ -349,6 +362,10 @@ class HostConsumer(AsyncWebsocketConsumer):
     def getSessionOwner(self, sessionID):
         session = Session.objects.get(_sessionID = sessionID)
         return session.getOwner()
+        
+    def clearSession(self):
+        self.session.clearAnswers()
+        self.session.delete()
         
 
    

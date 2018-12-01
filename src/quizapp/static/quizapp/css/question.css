@@ -4,6 +4,20 @@
     flex-wrap: wrap;
 }
 
+.result-section {
+    display: flex;
+	flex-wrap: wrap;
+	width: 75%;
+	margin: auto;
+}
+
+.topuser-section {
+    display: flex;
+	flex-wrap: wrap;
+	width: 50%;
+	margin: auto;
+}
+
 .answer-box{
 	flex: 1 0 35%;
 	margin: 10px 20px;
@@ -13,6 +27,50 @@
 	border-style: solid;
 	border-color: darkblue;
 	background-color: #54A8B2;
+}
+
+.result-box-half{
+	flex-basis: calc(100% - 200px);
+	background-color: #54A8B2;
+}
+
+.result-box-quater{
+	flex-basis: 50px;
+	background-color: white;
+}
+
+.result-box-fifth{
+	flex-basis: 75px;
+	background-color: white;
+}
+
+.topuser-box-placement{
+	flex-basis: 50px;
+	background-color: white;
+}
+
+.topuser-box-name{
+	flex-basis: calc(100% - 200px);
+	background-color: #54A8B2;
+}
+
+.topuser-box-score{
+	flex-basis: 150px;
+	background-color: white;
+}
+
+.full-box{
+	flex-basis: 100%;
+}
+
+.point-box-text{
+	flex-basis: calc(100% - 150px);
+	background-color: #54A8B2;
+}
+
+.point-box-value{
+	flex-basis: 150px;
+	background-color: white;
 }
 
 .question-text {
@@ -49,6 +107,39 @@
 	font-size: 26px;
 }
 
+.fixed-vote-box
+{
+    position: fixed;
+    top: 20px;
+}
+
+#overlay-vote-box
+{
+	visibility: hidden;
+	position: fixed;
+	display: flex;
+	flex-wrap: wrap;
+	padding: 5px;
+	width: 75px;
+	height: 36px;
+	left: 1%;
+	top: 85%;
+	background-color: #54A8B2;
+	z-index: 10;
+}
+
+.overlay-text-box
+{
+	width: 100%;
+	height: 100%;
+}
+
+.overlay-text
+{
+	font-size: 12;
+	text-align: center;
+	vertical-align: middle;
+
 .modify-box{
     display: flex;
     flex-direction: column;
@@ -63,4 +154,12 @@
 	border-style: solid;
 	border-color: darkblue;
 	background-color: #54A8B2;
+}
+
+
+.session-id-bottom{
+	position: fixed;
+	font-size: 30px;
+	left: 0px;
+	bottom: 0px;
 }
