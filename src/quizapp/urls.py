@@ -20,7 +20,6 @@ urlpatterns = [
     path('accounts/editAnswer/quiz-<int:quizID>/question-<int:questionID>/answer-<int:answerID>/', views.editAnswer, name = 'editAnswer'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('startquiz/quiz-<int:quizID>/', views.startQuiz, name='startQuiz'),
-    path('testquiz/<room_name>/', views.roomTest, name='roomTest'),
     path('joinquiz/<room_name>/', views.roomJoin, name="roomJoin"),
     path('favicon.ico', RedirectView.as_view(url='/static/quizapp/images/favicon.png')),
     path('hostquiz/<room_name>/', views.teacherView , name='roomMain'),
