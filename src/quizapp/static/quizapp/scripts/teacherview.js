@@ -116,9 +116,20 @@ function setNextState() {
     }));
 }
 
+function playRap(audio){
+    audio.play();
+}
+
+function stopRap(audio){
+    audio.pause();
+    audio.currentTime = 0;
+}
+
 function renderLanding(quizNameText, users) {
     clearPage();
     overlayHide();
+    let pokeRap = document.getElementById("pokeRap");
+    playRap(pokeRap);
     document.title = quizNameText;
     let main = document.querySelector('main');
     let quizNameSection = document.createElement('section');
@@ -134,7 +145,12 @@ function renderLanding(quizNameText, users) {
     let startButton = document.createElement('button');
     startButton.setAttribute('class', 'start-quiz-btn');
     startButton.textContent = 'Start Quiz';
-    startButton.onclick = setNextState;
+    startButton.onclick = function(){
+        let buncha = document.getElementById("buncha");
+        buncha.play();     
+        stopRap(pokeRap);
+        setNextState();
+    }
     quizNameSection.appendChild(startButton);
     main.appendChild(quizNameSection);
     let userSection = document.createElement('section');

@@ -1,4 +1,32 @@
 <footer>
     {% load static %}
-    <img style="z-index:-5" src="{% static 'quizapp/images/squirtle.png' %}"/>
+    <img id="squirtlePng" style="z-index:-5" src="{% static 'quizapp/images/squirtle.png' %}"/>
+    <audio id="squirtle1"><source src="{% static 'quizapp/sounds/squirtle1.mp3' %}" type="audio/mpeg"></audio>
+    <audio id="squirtle2"><source src="{% static 'quizapp/sounds/squirtle2.mp3' %}" type="audio/mpeg"></audio>
+    <audio id="squirtle3"><source src="{% static 'quizapp/sounds/squirtle3.mp3' %}" type="audio/mpeg"></audio>
+    <audio id="squirtle4"><source src="{% static 'quizapp/sounds/squirtle4.mp3' %}" type="audio/mpeg"></audio>
+    <script>
+        let squirtlePng = document.getElementById("squirtlePng");
+        let squirtle1 = document.getElementById("squirtle1");
+        let squirtle2 = document.getElementById("squirtle2");
+        let squirtle3 = document.getElementById("squirtle3");
+        let squirtle4 = document.getElementById("squirtle4");
+        squirtlePng.onclick = function(){           
+            var randomNum = Math.random() * 4;
+            console.log(Math.floor(randomNum));
+            var floorNum = Math.floor(randomNum);
+            if(floorNum === 0){
+                squirtle1.play();
+            }
+            if(floorNum === 1){
+                squirtle2.play();
+            }
+            if(floorNum === 2){
+                squirtle3.play();
+            }
+            if(floorNum === 3 || floorNum === 4){
+                squirtle4.play();
+            }
+        }
+    </script>
 </footer>

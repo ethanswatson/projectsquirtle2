@@ -213,20 +213,59 @@ var setResults = function(data){
         main.removeChild(main.firstChild);
     }
 
+    let questionTextSection = document.createElement('section');
     var top = document.createElement('p');
-    top.textContent = "Final Results";
+    top.setAttribute('class', 'question-text');
+    top.textContent = "Top 5:";
+    questionTextSection.appendChild(top);
+    main.appendChild(questionTextSection);
 
-    main.appendChild(top);
-
+    let topUsersSection = document.createElement('section');
+    topUsersSection.setAttribute('class', 'topuser-section');
+    let usersArray = data.users;
+    console.log(users);
+    console.log(usersArray);
+    let colorArray = ['gold', 'silver', '#cd7f32', 'white', 'white'];
     for(i = 0; i < users.length; i++){
-        var userScore = document.createElement('p');
-        userScore.textContent = users[i]['userID'] + ": " + users[i]['points'];
-        main.appendChild(userScore);
-    }
 
+        let user = users[i];
+        console.log(user);
+        let userScore = user.points;
+        console.log(userScore);
+        let userName = user.userID;
+        console.log(userName);
+
+        let userPlaceBox = document.createElement('div');
+        userPlaceBox.setAttribute('class', 'topuser-box-placement');
+        userPlaceBox.style.backgroundColor = colorArray[i];
+        let userPlaceText = document.createElement('p');
+        userPlaceText.textContent = i+1;
+        userPlaceBox.appendChild(userPlaceText);
+        topUsersSection.appendChild(userPlaceBox);
+
+        let userNameBox = document.createElement('div');
+        userNameBox.setAttribute('class', 'topuser-box-name');
+        let userNameText = document.createElement('p');
+        userNameText.textContent = userName;
+        userNameBox.appendChild(userNameText);
+        topUsersSection.appendChild(userNameBox);
+
+        let userScoreBox = document.createElement('div');
+        userScoreBox.setAttribute('class', 'topuser-box-score');
+        userScoreBox.style.backgroundColor = colorArray[i];
+        let userScoreText = document.createElement('p');
+        userScoreText.textContent = userScore;
+        userScoreBox.appendChild(userScoreText);
+        topUsersSection.appendChild(userScoreBox);
+    }
+    main.appendChild(topUsersSection);
+
+    let currentUserBox = document.createElement('section');
     var currentUser = document.createElement('p');
-        currentUser.textContent = "Your score was: " + currentUserScore;
-        main.appendChild(currentUser);
+    currentUser.setAttribute('class', 'question-text');
+    currentUser.textContent = "Your score was: " + currentUserScore;
+    currentUserBox.appendChild(currentUser);
+    main.appendChild(currentUserBox);
 }
 
 
@@ -242,15 +281,59 @@ var setAnswerResult = function(data){
         main.removeChild(main.firstChild);
     }
 
+    let correctSection = document.createElement('section');
+    let pointSection = document.createElement('section');
+
+    correctSection.setAttribute('class', 'topuser-section');
+    pointSection.setAttribute('class', 'topuser-section');
+
+    let correctBox = document.createElement('div');
+    let pointEarnedTextBox = document.createElement('div');
+    let pointEarnedValueBox = document.createElement('div');
+    let pointTotalTextBox = document.createElement('div');
+    let pointTotalValueBox = document.createElement('div');
+
+    correctBox.setAttribute('class', 'full-box');
+    pointEarnedTextBox.setAttribute('class', 'point-box-text');
+    pointEarnedValueBox.setAttribute('class', 'point-box-value');
+    pointTotalTextBox.setAttribute('class', 'point-box-text');
+    pointTotalValueBox.setAttribute('class', 'point-box-value');
+
+    if(answerCorrect) {
+        correctBox.style.backgroundColor = '#77dd77';
+    } else{
+        correctBox.style.backgroundColor = '#ff6961';
+    }
+
     var correct = document.createElement('p');
-    var points = document.createElement('p');
-    var total = document.createElement('p');
+    var pointsText = document.createElement('p');
+    var pointsValue = document.createElement('p');
+    var totalText = document.createElement('p');
+    var totalValue = document.createElement('p');
 
-    correct.textContent = answerCorrect;
-    points.textContent = "Earned Points: " + answerPointValue;
-    total.textContent = "Total Points: " + userTotalScore;
+    if(answerCorrect) {
+        correct.textContent = 'True';
+    } else{
+        correct.textContent = 'False';
+    }
 
-    main.appendChild(correct);
-    main.appendChild(points);
-    main.appendChild(total);
+    pointsText.textContent = "Earned Points: ";
+    pointsValue.textContent = answerPointValue;
+    totalText.textContent = "Total Points: ";
+    totalValue.textContent = userTotalScore;
+
+    correctBox.appendChild(correct);
+    pointEarnedTextBox.appendChild(pointsText);
+    pointEarnedValueBox.appendChild(pointsValue);
+    pointTotalTextBox.appendChild(totalText);
+    pointTotalValueBox.appendChild(totalValue);
+
+    correctSection.appendChild(correctBox);
+    pointSection.appendChild(pointEarnedTextBox);
+    pointSection.appendChild(pointEarnedValueBox);
+    pointSection.appendChild(pointTotalTextBox);
+    pointSection.appendChild(pointTotalValueBox);
+
+    main.appendChild(correctSection);
+    main.appendChild(pointSection);
 }
