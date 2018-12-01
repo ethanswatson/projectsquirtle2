@@ -59,6 +59,20 @@
 	background-color: white;
 }
 
+.full-box{
+	flex-basis: 100%;
+}
+
+.point-box-text{
+	flex-basis: calc(100% - 150px);
+	background-color: #54A8B2;
+}
+
+.point-box-value{
+	flex-basis: 150px;
+	background-color: white;
+}
+
 .question-text {
     font-size: 35px;
 }
