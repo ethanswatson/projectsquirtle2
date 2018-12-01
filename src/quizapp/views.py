@@ -29,28 +29,23 @@ def joinQuiz(request):
     form = JoinQuizForm()
     return render(request, 'quizapp/joinquiz.html', {'form': form})
 
-#WebSocket for teacher/student views
-
-def roomTest(request, room_name):
-    return render(request, 'quizapp/sessionmain.html', {
-            'room_name_json': mark_safe(json.dumps(room_name))
-        })
-
 def roomJoin(request, room_name):
+    session = Session.objects.get(_sessionID=room_name)
+    quizName = session.getQuiz().getQuizName()
     if request.session.get('quiz', False):
         data = request.session.get('quiz')
         userName = data['userName']
         roomName = data['roomName']
         if roomName == room_name:
-            return render(request, 'quizapp/sessionjoin.html', {'room_name_json': mark_safe(json.dumps(room_name)), 'joined': True, 'userName':userName})
+            return render(request, 'quizapp/studentview.html', {'room_name_json': room_name, 'joined': True, 'userName':userName, 'quizName': quizName})
     
-    return render(request, 'quizapp/sessionjoin.html', {'room_name_json': mark_safe(json.dumps(room_name)), 'joined': False, 'userName': False})
+    return render(request, 'quizapp/studentview.html', {'room_name_json': room_name, 'joined': False, 'userName': False, 'quizName': quizName})
 
 
 def teacherView(request, room_name):
     session = Session.objects.get(_sessionID=room_name)
     quizName = session.getQuiz().getQuizName()
-    return render(request, 'quizapp/teacherview.html', {'quizName': quizName, 'room_name_json': mark_safe(json.dumps(room_name))})
+    return render(request, 'quizapp/teacherview.html', {'quizName': quizName, 'room_name_json': room_name})
 
 #Login View is handled by django, as well as logout, and password vies. you do need to create the html templates for each, but it handles the rest. Django authentication is described here https://docs.djangoproject.com/en/2.1/topics/auth/default/
 

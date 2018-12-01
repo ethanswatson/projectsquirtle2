@@ -3,7 +3,7 @@
 <html lang=en>
 <head>
 	<meta charset="utf-8"/>
-	<title>Session Joined</title>
+	<title>{{quizName}}</title>
 	{% load staticfiles %}
 		<link rel="stylesheet" href="{% static 'quizapp/css/question.css' %}">
 		<link rel = 'stylesheet', type='text/css', href="{% static 'quizapp/css/style.css' %}"/>
@@ -23,7 +23,7 @@
 	
 </body>
 <script>
-	connectToSocket({{room_name_json}});
+	connectToSocket('{{room_name_json}}');
 </script>
 </html>
 

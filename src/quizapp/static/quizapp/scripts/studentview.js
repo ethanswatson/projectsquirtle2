@@ -27,7 +27,7 @@ var connectToSocket = function(newRoomName){
         }else if(msgType == 'msgRequestUserName'){
             requestUserName();
         }else if (msgType == 'msgStart'){
-            setStart(userName);
+            setStart();
         }else if (msgType == 'msgWaiting'){
             setWaiting();
         }
@@ -75,6 +75,11 @@ var requestUserName = function(){
     button.setAttribute('class', 'submit-btn');
     button.setAttribute('style','width: 150px;');
     button.setAttribute('onclick', 'sendusername()');
+    text.onkeyup = function(e) {
+    	if (e.keyCode === 13) {  // enter, return
+		    button.click();
+	    }
+    };
 
     main.appendChild(div);
     div.appendChild(section);
@@ -177,7 +182,7 @@ var sendMessage = function(answerID){
     
 }
 
-var setStart = function(userName){
+var setStart = function(){
 
     document.querySelector('#waiting').style.display='block';
 
@@ -186,10 +191,11 @@ var setStart = function(userName){
     while (main.firstChild){
         main.removeChild(main.firstChild);
     }
-
+  
     var waitMessage = document.createElement('h2');
     waitMessage.setAttribute('style', 'margin: 5%');
-    waitMessage.textContent = "Please wait for the quiz to start. " + userName;
+    waitMessage.textContent = "Please wait for the quiz to start.";
+    
     main.appendChild(waitMessage);
 }
 
