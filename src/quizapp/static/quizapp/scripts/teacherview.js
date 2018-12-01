@@ -45,6 +45,25 @@ let voteData;
 let curMessage;
 let nextMessage;
 let dataVisPalette = ['#F1C40F', '#2DCC70', '#E77E23', '#3598DB', '#E84C3D', '#9B58B5'];
+let voteCount = 0;
+let fixedIMG = document.getElementById('squirtle-mug');
+fixedIMG.style.height = '36px';
+fixedIMG.style.width = '36px';
+let fixedVoteBox = document.getElementById("overlay-vote-box");
+//let fixedVoteText = document.createElement('overlay-text');
+let overlayTextBox = document.createElement('overlay-text-box');
+let voteText = document.createElement('overlay-text');
+voteText.style.textAlign = 'center';
+voteText.style.verticalAlign = 'middle';
+voteText.style.height = '36px';
+voteText.style.width = '36px';
+overlayTextBox.appendChild(voteText);
+overlayTextBox.style.height = '36px';
+overlayTextBox.style.width = '36px';
+fixedVoteBox.appendChild(fixedIMG);
+voteText.textContent = voteCount;
+fixedVoteBox.appendChild(overlayTextBox);
+
 
 let connectToSocket = function (roomName) {
     sessionId = roomName;
@@ -59,8 +78,7 @@ let connectToSocket = function (roomName) {
         if (msgType=='msgJoin') {
             landingAddUser(message['userName']);
         } else if(msgType=='msgVote') {
-            console.log(message['answerID']); //Testing to see if answerID comes through
-            incrementVote(message['answerID']-1); //database values start at 1 instead of 0
+            incrementVote();
         } else if(msgType == 'msgQuestion') {
             curMessage = message;
             renderQuestion(message);
@@ -81,6 +99,21 @@ function clearPage() {
     main.innerHTML = '';
 }
 
+function clearOverlay() {
+    let overlay = document.getElementById("overlay-vote-box");
+    overlay.innerHTML = '';
+}
+
+function overlayHide() {
+    let overlay = document.getElementById("overlay-vote-box");
+    overlay.style.visibility='hidden';
+}
+
+function overlayShow() {
+    let overlay = document.getElementById("overlay-vote-box");
+    overlay.style.visibility='visible';
+}
+
 function landingAddUser(username) {
     let userSection = document.querySelector('.user-section');
     let userText = document.createElement('p');
@@ -99,6 +132,7 @@ function setNextState() {
 
 function renderLanding(quizNameText) {
     clearPage();
+    overlayHide();
     document.title = quizNameText;
     let main = document.querySelector('main');
     let quizNameSection = document.createElement('section');
@@ -128,7 +162,10 @@ function renderLanding(quizNameText) {
 
 function renderQuestion(question) {
     clearPage();
-    console.log(question);
+    //clearOverlay();
+    overlayShow();
+    voteCount = 0;
+    voteText.textContent = voteCount;
     document.title = 'Question';
     let main = document.querySelector('main');
     let questionTextSection = document.createElement('section');
@@ -153,6 +190,7 @@ function renderQuestion(question) {
         answerBox.appendChild(answerText);
         answerSection.appendChild(answerBox);
     }
+
     voteData = newData;
     main.appendChild(answerSection);
     createResultsButton();
@@ -160,6 +198,7 @@ function renderQuestion(question) {
 
 function renderQueResults(message) {
     clearPage();
+    overlayHide();
     document.title = 'Question Results';
     let main = document.querySelector('main');
     let questionTextSection = document.createElement('section');
@@ -343,8 +382,9 @@ function createResultsButton() {
     }
 }
 
-function incrementVote( voteID ) {
-    voteData[voteID] += 1;
+function incrementVote() {
+    voteCount += 1;
+    voteText.textContent = voteCount;
 }
 
 function sumOfArray(array) {
