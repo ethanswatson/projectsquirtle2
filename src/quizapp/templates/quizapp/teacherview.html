@@ -17,8 +17,8 @@
     {% include "quizapp/partials/footer.html" %}
     <script src="{% static 'quizapp/scripts/teacherview.js' %}"></script>
     <script>
-        connectToSocket({{ room_name_json }});
-        renderLanding('{{ quizName }}');
+        connectToSocket({{ room_name_json }}, "{{ quizName }}");
+        
     </script>
 </body>
 </html>
