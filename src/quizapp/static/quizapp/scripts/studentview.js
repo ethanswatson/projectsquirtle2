@@ -75,7 +75,7 @@ var requestUserName = function(){
     button.setAttribute('class', 'submit-btn');
     button.setAttribute('style','width: 150px;');
     button.setAttribute('onclick', 'sendusername()');
-    button.onkeyup = function(e) {
+    text.onkeyup = function(e) {
     	if (e.keyCode === 13) {  // enter, return
 		    button.click();
 	    }
