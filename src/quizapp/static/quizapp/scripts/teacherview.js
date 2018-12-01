@@ -149,7 +149,7 @@ function renderQuestion(question) {
     clearPage();
     //clearOverlay();
     overlayShow();
-    voteCount = 0;
+    voteCount = question.votes;
     voteText.textContent = voteCount;
     document.title = 'Question';
     let main = document.querySelector('main');
@@ -267,7 +267,6 @@ function renderQueResults(message) {
 
 function renderFinalPage(question) {
     clearPage();
-    console.log(question.users);
     document.title = 'Quiz Results';
     let main = document.querySelector('main');
     let questionTextSection = document.createElement('section');
@@ -283,11 +282,8 @@ function renderFinalPage(question) {
 
     for (i=0; i < usersArray.length; i++) {
         let user = usersArray[i];
-        console.log(user);
         let userScore = user.points;
-        console.log(userScore);
         let userName = user.userID;
-        console.log(userName);
 
         let userPlaceBox = document.createElement('div');
         userPlaceBox.setAttribute('class', 'topuser-box-placement');
@@ -313,7 +309,6 @@ function renderFinalPage(question) {
         topUsersSection.appendChild(userScoreBox);
     }
     main.appendChild(topUsersSection);
-
     if (question.quizEnd == false) {
         createNextQueButton();
     }
@@ -594,7 +589,6 @@ function createResultsButton() {
     main.appendChild(nextSection);
 
     nextBox.onclick = function () {
-        console.log("Function entered");
         setNextState();
 
     }

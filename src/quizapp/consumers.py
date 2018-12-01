@@ -175,13 +175,20 @@ class HostConsumer(AsyncWebsocketConsumer):
                 message += [user.getUserID()]
             await self.sendToSelf(message, 'msgStart')
         elif state == 'question':
+
             currentQuestion = await self.getCurrentQuestion()
             if currentQuestion != False:
                 await self.sendToSelf(currentQuestion, 'msgQuestion')
+
         elif state == 'results' or state == 'end':
+
             results = await self.getResults()
+            isEnd =  await self.checkForEnd()
+            results['quizEnd'] = isEnd
             await self.sendToSelf(results, 'msgResults')
+
         elif state == 'answerResults':
+            
             message = await self.getAnswerResults()
             await self.sendToSelf(message, 'msgAnswerResults')
 
@@ -297,12 +304,14 @@ class HostConsumer(AsyncWebsocketConsumer):
                 }
 
             for answer in currentQuestion.getAnswers():
+                self.currentVotes += answer.getVotes()
                 question['answers'] += [
                     {
                         'id': answer.id,
                         'text': answer.getText()
                     }
                 ]
+            question['votes'] = self.currentVotes
             return question
         return False
 
