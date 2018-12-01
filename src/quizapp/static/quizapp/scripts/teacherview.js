@@ -118,6 +118,7 @@ function setNextState() {
 
 function playRap(audio){
     audio.play();
+    audio.loop = true;
 }
 
 function stopRap(audio){
