@@ -30,9 +30,10 @@ def joinQuiz(request):
     return render(request, 'quizapp/joinquiz.html', {'form': form})
 
 def roomJoin(request, room_name):
+    session = Session.objects.get(_sessionID=room_name)
+    quizName = session.getQuiz().getQuizName()
     if request.session.get('quiz', False):
         data = request.session.get('quiz')
-        quizName = session.getQuiz().getQuizName()
         userName = data['userName']
         roomName = data['roomName']
         if roomName == room_name:
