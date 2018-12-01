@@ -90,11 +90,24 @@ section{
   	text-align: center;	
 }
 
+.next-button{
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    margin: 25px 5px 25px 10px;
+	background: #10223B;
+    text-decoration: none;
+	border: 1px solid #4a6899;	
+}
+
 .answer-button:hover{
 	background: #294277;
 }
 
-
+.next-button:hover{
+	background: #294277;
+}
 
 .wrapper{
 	display: flex;
