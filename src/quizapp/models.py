@@ -181,7 +181,7 @@ class Session(models.Model):
 
 class AnonymousUser(models.Model):
     _session = models.ForeignKey(Session, on_delete=models.CASCADE)
-    _userID = models.TextField(max_length = 50, default = '')
+    _userID = models.TextField(max_length = 15, default = '')
     _points = models.IntegerField(default = 0)
     _previousPoints = models.IntegerField(default = 0)
     _previousCorrect = models.BooleanField(default = False)
