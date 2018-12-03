@@ -313,9 +313,9 @@ var setAnswerResult = function(data){
     var totalValue = document.createElement('p');
 
     if(answerCorrect) {
-        correct.textContent = 'True';
+        correct.textContent = 'Correct';
     } else{
-        correct.textContent = 'False';
+        correct.textContent = 'Incorrect';
     }
 
     pointsText.textContent = "Earned Points: ";
