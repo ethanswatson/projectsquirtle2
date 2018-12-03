@@ -122,7 +122,7 @@ var setWaiting = function(){
 
     var thankYouMessage = document.createElement('h2');
     thankYouMessage.setAttribute('style', 'margin: 5%');
-    thankYouMessage.textContent = "Thanks you answering! Please wait for the next question.";
+    thankYouMessage.textContent = "Thank you for answering! Please wait for the next question.";
     main.appendChild(thankYouMessage);
 
 }
@@ -313,9 +313,9 @@ var setAnswerResult = function(data){
     var totalValue = document.createElement('p');
 
     if(answerCorrect) {
-        correct.textContent = 'True';
+        correct.textContent = 'Correct';
     } else{
-        correct.textContent = 'False';
+        correct.textContent = 'Incorrect';
     }
 
     pointsText.textContent = "Earned Points: ";
