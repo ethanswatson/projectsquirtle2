@@ -122,7 +122,7 @@ var setWaiting = function(){
 
     var thankYouMessage = document.createElement('h2');
     thankYouMessage.setAttribute('style', 'margin: 5%');
-    thankYouMessage.textContent = "Thanks you answering! Please wait for the next question.";
+    thankYouMessage.textContent = "Thank you for answering! Please wait for the next question.";
     main.appendChild(thankYouMessage);
 
 }
