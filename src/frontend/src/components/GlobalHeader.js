@@ -1,9 +1,11 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import colors from '../constants/Colors';
+import Button from './shared/Button';
 import projectSquirtleLogo from '../images/projectSquirtle.png';
 
 const StyledHeader = styled.header`
-  background-color: #ca6610;
+  background-color: ${colors.squirtle_orange};
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -32,8 +34,8 @@ const StyledLogo = styled.img`
 function LoginModule() {
   return (
     <StyledDiv>
-      <span>Login</span>
-      <span>Register</span>
+      <Button>Login</Button>
+      <Button>Register</Button>
     </StyledDiv>
   );
 }
