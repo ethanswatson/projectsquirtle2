@@ -14,7 +14,8 @@ from .models import Quiz
 # Create your views here.
 
 def index(request):
-    return render(request, 'quizapp/index.html')
+    # return render(request, 'quizapp/index.html')
+    return render(request, 'build/index.html')
 
 def joinQuiz(request):
     if request.method == 'POST':
