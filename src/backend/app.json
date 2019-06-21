@@ -1,0 +1,10 @@
+{
+  "name": "Project Squirtle v2",
+  "description": "A Squirtle themed Kahoot clone built with Django and React",
+  "keywords": ["Django", "Channels", "React", "Squirtle"],
+  "repository": "https://github.com/ethanswatson/projectsquirtle2",
+  "scripts": {
+    "postdeploy": "python manage.py makemigrations && python manage.py migrate"
+  },
+  "addons": ["heroku-postgresql", "heroku-redis"]
+}

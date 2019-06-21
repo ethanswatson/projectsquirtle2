@@ -1,0 +1,16 @@
+matrix:
+  include:
+    - language: node_js
+      node_js: 'stable'
+      before_script:
+        - cd src/frontend/
+        - npm install
+      script:
+        - npm run test
+        - npm run build
+
+    - language: python
+      python: 3.6
+      before_script:
+        - sudo apt install redis-server
+        -
