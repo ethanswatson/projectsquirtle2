@@ -1,1 +1,1 @@
-web: daphne projectsquirtle.asgi:application --port $PORT --bind 0.0.0.0
+web: daphne projectsquirtle.asgi:quizapp --port $PORT --bind 0.0.0.0
