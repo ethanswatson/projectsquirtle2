@@ -1,22 +1,19 @@
 ```
- ____              _      _   _        ____                        _ 
+ ____              _      _   _        ____                        _
 / ___|  __ _ _   _(_)_ __| |_| | ___  / ___|  __ _ _   _  __ _  __| |
 \___ \ / _` | | | | | '__| __| |/ _ \ \___ \ / _` | | | |/ _` |/ _` |
  ___) | (_| | |_| | | |  | |_| |  __/  ___) | (_| | |_| | (_| | (_| |
 |____/ \__, |\__,_|_|_|   \__|_|\___| |____/ \__, |\__,_|\__,_|\__,_|
-          |_|                                   |_|                  
+          |_|                                   |_|
 ```
 
 In order to get the project working you will need to install the following python and linux packages.
 
 from your apt repositories
 
-sudo apt install python3.x-dev redis # replace x with version number. redis might be redis.server? not sure yet
+sudo apt install libpq-dev python3.x-dev redis # replace x with version number. redis might be redis.server? not sure yet
 
 pip install -r requirements.txt
-
-
-
 
 ```
 		_,........__
