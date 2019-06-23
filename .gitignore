@@ -2,6 +2,5 @@
 .vscode/
 db.sqlite3
 .idea
-migrations/
 env/
 .env
