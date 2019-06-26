@@ -14,7 +14,6 @@ from .models import Quiz
 # Create your views here.
 
 def index(request):
-    print('index rendered')
     return render(request, 'quizapp/index.html')
     # return render(request, 'build/index.html')
 
