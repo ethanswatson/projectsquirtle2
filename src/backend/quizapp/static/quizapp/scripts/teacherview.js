@@ -40,9 +40,15 @@ let quizTitle;
 let connectToSocket = function(roomName, quizName) {
   sessionId = roomName;
   quizTitle = quizName;
+  let wsScheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
   console.log(`ws://${window.location.host}/ws/quizapp/host/${roomName}/`);
   chatSocket = new WebSocket(
-    'ws://' + window.location.host + '/ws/quizapp/host/' + roomName + '/'
+    wsScheme +
+      '://' +
+      window.location.host +
+      '/ws/quizapp/host/' +
+      roomName +
+      '/'
   );
 
   chatSocket.onmessage = function(e) {
