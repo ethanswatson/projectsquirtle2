@@ -7,13 +7,18 @@
           |_|                                   |_|
 ```
 
-In order to get the project working you will need to install the following python and linux packages.
+sudo apt install libpq-dev, python3-dev, and redis-server
 
-from your apt repositories
+Create a file named `.env` in src/backend/ containing `DATABASE_URL=sqlite:///db.sqlite3`
 
-sudo apt install libpq-dev python3.x-dev redis # replace x with version number. redis might be redis.server? not sure yet
+In src/backend/ run:
+`pip install -r requirements.txt`
+`python manage.py makemigrations`
+`python manage.py runserver`
 
-pip install -r requirements.txt
+In src/frontend/ run:
+`npm install`
+`npm start`
 
 ```
 		_,........__
@@ -48,5 +53,5 @@ pip install -r requirements.txt
                 \          \      |          |
                ,'           )     `.         |
                 7____,,..--'      /          |
-                                  `---.__,--.'mh
+                                  `---.__,--.'
 ```
