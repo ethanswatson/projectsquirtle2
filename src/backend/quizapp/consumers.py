@@ -10,6 +10,7 @@ import json
 class HostConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
+        print('Server got ws connection')
         self.sessionID = self.scope['url_route']['kwargs']['sessionID']
         
         user = self.scope['user']
