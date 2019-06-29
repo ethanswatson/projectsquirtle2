@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import colors from '../../constants/Colors';
-import Button from './Button';
+import { MdPerson } from 'react-icons/md';
 import projectSquirtleLogo from '../../images/projectSquirtle.png';
 
 const StyledHeader = styled.header`
-  background-color: ${colors.squirtle_orange};
+  background-color: ${colors.squirtle_blue};
+  color: ${colors.black};
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -19,6 +20,9 @@ const StyledDiv = styled.div`
   position: absolute;
   right: 0;
   margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const StyledLogoContainer = styled.div`
@@ -34,8 +38,8 @@ const StyledLogo = styled.img`
 function LoginModule() {
   return (
     <StyledDiv>
-      <Button>Login</Button>
-      <Button>Register</Button>
+      <MdPerson />
+      Login
     </StyledDiv>
   );
 }

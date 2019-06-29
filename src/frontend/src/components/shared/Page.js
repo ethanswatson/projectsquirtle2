@@ -4,12 +4,12 @@ import colors from '../../constants/Colors';
 import GlobalHeader from './GlobalHeader';
 
 const StyledPage = styled.main`
-  background-color: ${colors.squirtle_blue};
+  background-color: ${colors.squirtle_gray};
+  color: ${colors.white};
   height: 100vh;
   min-height: 100vh;
   diaplay: flex;
   flex-direction: row;
-  flex: 1;
   align-items: center;
 `;
 
