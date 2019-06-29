@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import colors from '../constants/Colors';
-import Button from './shared/Button';
-import projectSquirtleLogo from '../images/projectSquirtle.png';
+import colors from '../../constants/Colors';
+import Button from './Button';
+import projectSquirtleLogo from '../../images/projectSquirtle.png';
 
 const StyledHeader = styled.header`
   background-color: ${colors.squirtle_orange};

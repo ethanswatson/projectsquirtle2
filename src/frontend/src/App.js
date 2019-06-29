@@ -1,8 +1,8 @@
 import React from 'react';
-import GlobalHeader from './components/GlobalHeader';
+import HomePage from './pages/HomePage';
 
 function App() {
-  return <GlobalHeader />;
+  return <HomePage />;
 }
 
 export default App;
