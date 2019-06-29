@@ -8,9 +8,9 @@ class QuizTestCase(TestCase):
     def testGetQuestions(self):
         # setup
         owner = User.objects.create(username='test', password='password')
-        quiz = Quiz.objects.create(_owner=owner, _quizName='Test Quiz', _quizDescription='TestDescription')
-        question1 = Question.objects.create(_quiz=quiz, _questionText='Question 1')
-        question2 = Question.objects.create(_quiz=quiz, _questionText='Question 2')
+        quiz = Quiz.objects.create(owner=owner, quizName='Test Quiz', quizDescription='TestDescription')
+        question1 = Question.objects.create(quiz=quiz, questionText='Question 1')
+        question2 = Question.objects.create(quiz=quiz, questionText='Question 2')
 
         # act
         questionSet = quiz.getQuestions()
@@ -23,7 +23,7 @@ class QuizTestCase(TestCase):
     def testGetQuestionsEmpty(self):
         # setup
         owner = User(username='test', password='password')
-        quiz = Quiz(_owner=owner, _quizName='Test Quiz', _quizDescription='TestDescription')
+        quiz = Quiz(owner=owner, quizName='Test Quiz', quizDescription='TestDescription')
 
         # act
         questionSet = quiz.getQuestions()
@@ -36,10 +36,10 @@ class QuestionTestCase(TestCase):
     def testGetAnswers(self):
         #setup
         owner = User.objects.create(username='test', password='password')
-        quiz = Quiz.objects.create(_owner=owner, _quizName='Test Quiz', _quizDescription='TestDescription')
-        question = Question.objects.create(_quiz=quiz, _questionText='Question Text')
-        answer1 = Answer.objects.create(_question=question, _text="Answer 1", _correct=True, _pointValue=10)
-        answer2 = Answer.objects.create(_question=question, _text="Answer 2", _correct=True, _pointValue=10)
+        quiz = Quiz.objects.create(owner=owner, quizName='Test Quiz', quizDescription='TestDescription')
+        question = Question.objects.create(_quiz=quiz, questionText='Question Text')
+        answer1 = Answer.objects.create(question=question, text="Answer 1", correct=True, pointValue=10)
+        answer2 = Answer.objects.create(question=question, text="Answer 2", correct=True, pointValue=10)
 
         #act
         answerSet = question.getAnswers()
@@ -51,8 +51,8 @@ class QuestionTestCase(TestCase):
     def testAddAnswer(self):
         # setup
         owner = User.objects.create(username='test', password='password')
-        quiz = Quiz.objects.create(_owner=owner, _quizName='Test Quiz', _quizDescription='TestDescription')
-        question = Question.objects.create(_quiz=quiz, _questionText='Question Text')
+        quiz = Quiz.objects.create(owner=owner, quizName='Test Quiz', quizDescription='TestDescription')
+        question = Question.objects.create(quiz=quiz, questionText='Question Text')
 
         # act
         question.addAnswer(text='Hello', correct=False, pointValue=10)
@@ -68,9 +68,9 @@ class AnswerTestCase(TestCase):
         # setup
         owner = User.objects.create(username='Owner', password='password')
         voter = User.objects.create(username='Voter', password="password")
-        quiz = Quiz.objects.create(_owner=owner, _quizName='Test Quiz', _quizDescription='TestDescription')
-        question = Question.objects.create(_quiz=quiz, _questionText='Question Text')
-        answer = Answer.objects.create(_question=question, _text='Answer', _correct=True, _pointValue=10)
+        quiz = Quiz.objects.create(owner=owner, quizName='Test Quiz', quizDescription='TestDescription')
+        question = Question.objects.create(quiz=quiz, questionText='Question Text')
+        answer = Answer.objects.create(question=question, text='Answer', correct=True, pointValue=10)
 
         # act
         answer.vote(voter)
@@ -85,10 +85,10 @@ class SessionTestCase(TestCase):
     def testIdGen(self):
         # setup
         owner = User.objects.create(username='test', password='password')
-        quiz = Quiz.objects.create(_owner=owner, _quizName='Test Quiz', _quizDescription='TestDescription')
-        question = Question.objects.create(_quiz=quiz, _questionText='Question Text')
-        answer1 = Answer.objects.create(_question=question, _text="Answer 1", _correct=True, _pointValue=10)
-        session = Session.objects.create(_quiz=quiz)
+        quiz = Quiz.objects.create(owner=owner, quizName='Test Quiz', quizDescription='TestDescription')
+        question = Question.objects.create(quiz=quiz, questionText='Question Text')
+        answer1 = Answer.objects.create(question=question, text="Answer 1", correct=True, pointValue=10)
+        session = Session.objects.create(quiz=quiz)
         def mockGetRandomChar(self):
             return 'A'
         Session.getRandomChar = mockGetRandomChar

@@ -1,13 +1,19 @@
 from django.views.generic import RedirectView
 from django.urls import path, include
 from django.conf.urls import url
+from rest_framework import routers
 
 from . import views
 
 app_name = 'quizapp'
 
+router = routers.DefaultRouter()
+router.register(r'quiz', views.QuizViewSet)
+router.register(r'question', views.QuestionViewSet)
+router.register(r'answer', views.AnswerViewSet)
+
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', include(router.urls), name='index'),
     path('joinquiz/', views.joinQuiz, name='joinQuiz'),
     path('createaccount/', views.createAccount, name='createAccount'),
     path('accounts/profile/', views.profile, name='profile'),

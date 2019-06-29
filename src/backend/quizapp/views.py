@@ -6,12 +6,28 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.utils.safestring import mark_safe
-from .models import Session, Question
+from rest_framework import viewsets
+from .models import Session, Question, Quiz, Answer
+from .serializers import QuizSerializer, QuestionSerializer, AnswerSerializer
 import json
 
 from .forms import CreateQuizForm, CreateAnswerForm, JoinQuizForm
-from .models import Quiz    
+
 # Create your views here.
+
+class QuizViewSet(viewsets.ModelViewSet):
+    # API Endpoint for quizzes
+    queryset = Quiz.objects.all()
+    serializer_class = QuizSerializer
+
+class QuestionViewSet(viewsets.ModelViewSet):
+    # API Endpoint for questions
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer 
+
+class AnswerViewSet(viewsets.ModelViewSet):
+    queryset = Answer.objects.all()
+    serializer_class = AnswerSerializer
 
 def index(request):
     return render(request, 'quizapp/index.html')
@@ -114,7 +130,7 @@ def createQuiz(request):
         if form.is_valid():
             quizName = form.cleaned_data.get('quizName')
             quizDes = form.cleaned_data.get('quizDescription')
-            quiz = Quiz(_owner = user, _quizName = quizName, _quizDescription = quizDes)
+            quiz = Quiz(owner = user, quizName = quizName, quizDescription = quizDes)
             quiz.save()
             return redirect(reverse('quizapp:editQuiz', kwargs={'quizID':quiz.id}))
     else:
@@ -140,7 +156,7 @@ def editQuiz(request, quizID):
             if request.POST.get('questionText', False):
                 questionText = request.POST['questionText']
                 if not questionText.isspace():
-                    quiz.question_set.create(_questionText = questionText)
+                    quiz.question_set.create(questionText = questionText)
 
         if 'finishButton' in request.POST:
             return redirect(reverse('quizapp:profile'))
@@ -164,7 +180,7 @@ def editQuestion(request, quizID, questionID):
                 answerText = form.cleaned_data.get('answerText')
                 correct = form.cleaned_data.get('isCorrect')
                 points = form.cleaned_data.get('pointValue', 0)
-                question.answer_set.create(_text = answerText, _correct = correct, _pointValue = points)
+                question.answer_set.create(text = answerText, correct = correct, pointValue = points)
         elif 'questionButton' in request.POST or 'finishButton' in request.POST:
             if request.POST.get('questionText', False):
                 questionText = request.POST['questionText']
