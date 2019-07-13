@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import styled from '@emotion/styled';
 import Page from '../components/shared/Page';
-import Button from '../components/shared/Button';
+import Button from '@material-ui/core/Button';
+import Input from '@material-ui/core/Input';
 
 const StyledDiv = styled.div`
   display: flex;
@@ -20,9 +21,11 @@ export default class HomePage extends Component {
     return (
       <Page>
         <StyledDiv>
-          <StyledInput placeholder='Session ID' />
-          <Button>Join</Button>
-          Or Create a Quiz
+          <Input placeholder='Session ID' />
+          <Button variant='contained' color='primary' size='large'>
+            Join
+          </Button>
+          <Button>Or Create a Quiz</Button>
         </StyledDiv>
       </Page>
     );
