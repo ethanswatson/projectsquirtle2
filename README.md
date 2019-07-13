@@ -14,6 +14,7 @@ Create a file named `.env` in src/backend/ containing `DATABASE_URL=sqlite:///db
 In src/backend/ run:
 `pip install -r requirements.txt`
 `python manage.py makemigrations`
+`python manage.py migrate`
 `python manage.py runserver`
 
 In src/frontend/ run:
