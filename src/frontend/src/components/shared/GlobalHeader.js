@@ -14,6 +14,7 @@ const StyledHeader = styled.header`
   justify-content: center;
   align-items: center;
   position: relative;
+  max-height: 103px;
 `;
 
 const StyledDiv = styled.div`

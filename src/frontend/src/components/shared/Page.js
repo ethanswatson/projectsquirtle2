@@ -9,6 +9,8 @@ const StyledPage = styled.main`
   color: ${colors.white};
   height: 100vh;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 `;
 
 export default class Page extends Component {
